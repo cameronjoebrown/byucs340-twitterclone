@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
-import edu.byu.cs.tweeter.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 import edu.byu.cs.tweeter.presenter.LoginPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoginTask;
 import edu.byu.cs.tweeter.view.main.MainActivity;
@@ -59,14 +59,14 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     /**
      * The callback method that gets invoked for a successful login. Displays the MainActivity.
      *
-     * @param loginResponse the response from the login request.
+     * @param response the response from the login request.
      */
     @Override
-    public void loginSuccessful(LoginResponse loginResponse) {
+    public void loginSuccessful(LoginRegisterResponse response) {
         Intent intent = new Intent(this, MainActivity.class);
 
-        intent.putExtra(MainActivity.CURRENT_USER_KEY, loginResponse.getUser());
-        intent.putExtra(MainActivity.AUTH_TOKEN_KEY, loginResponse.getAuthToken());
+        intent.putExtra(MainActivity.CURRENT_USER_KEY, response.getUser());
+        intent.putExtra(MainActivity.AUTH_TOKEN_KEY, response.getAuthToken());
 
         loginInToast.cancel();
         startActivity(intent);
@@ -76,11 +76,11 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
      * The callback method that gets invoked for an unsuccessful login. Displays a toast with a
      * message indicating why the login failed.
      *
-     * @param loginResponse the response from the login request.
+     * @param response the response from the login request.
      */
     @Override
-    public void loginUnsuccessful(LoginResponse loginResponse) {
-        Toast.makeText(this, "Failed to login. " + loginResponse.getMessage(), Toast.LENGTH_LONG).show();
+    public void loginUnsuccessful(LoginRegisterResponse response) {
+        Toast.makeText(this, "Failed to login. " + response.getMessage(), Toast.LENGTH_LONG).show();
     }
 
     /**

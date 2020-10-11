@@ -16,4 +16,19 @@
     <string name="title_activity_login">Sign in</string>
     <string name="followeeCount">Following: -42</string>
     <string name="followerCount">Followers: -42</string>
+
+    <!-- Login and Register Page Strings -->
+    <string name="alias">\@Handle</string>
+    <string name="password">Password</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="email">Email</string>
+    <string name="usernameOrEmail">Email or \@Handle</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="goRegister">"Don't have an account? Swipe to register.</string>
+    <string name="goLogin">Already have an account? Swipe to login.</string>
+    <string name="imageURL">Profile Pic URL</string>
+    <string name="profile">Profile</string>
+    <string name="handleFormat">\@Handle must start with \@</string>
 </resources>

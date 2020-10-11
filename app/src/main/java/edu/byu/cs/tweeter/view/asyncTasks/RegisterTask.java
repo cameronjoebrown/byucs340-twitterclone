@@ -6,14 +6,14 @@ import android.util.Log;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
-import edu.byu.cs.tweeter.presenter.LoginPresenter;
+import edu.byu.cs.tweeter.presenter.RegisterPresenter;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
-public class LoginTask extends AsyncTask<LoginRequest, Void, LoginRegisterResponse> {
+public class RegisterTask extends AsyncTask<RegisterRequest, Void, LoginRegisterResponse> {
 
-    private final LoginPresenter presenter;
+    private final RegisterPresenter presenter;
     private final Observer observer;
     private Exception exception;
 
@@ -22,48 +22,48 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginRegisterRespon
      * completes.
      */
     public interface Observer {
-        void loginSuccessful(LoginRegisterResponse response);
-        void loginUnsuccessful(LoginRegisterResponse response);
+        void registerSuccessful(LoginRegisterResponse response);
+        void registerUnsuccessful(LoginRegisterResponse response);
         void handleException(Exception ex);
     }
 
     /**
      * Creates an instance.
      *
-     * @param presenter the presenter this task should use to login.
+     * @param presenter the presenter this task should use to register
      * @param observer the observer who wants to be notified when this task completes.
      */
-    public LoginTask(LoginPresenter presenter, Observer observer) {
+    public RegisterTask(RegisterPresenter presenter, Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }
-
         this.presenter = presenter;
         this.observer = observer;
     }
 
     /**
-     * The method that is invoked on a background thread to log the user in. This method is
-     * invoked indirectly by calling {@link #execute(LoginRequest...)}.
+     * The method that is invoked on a background thread to register the user. This method is
+     * invoked indirectly by calling {@link #execute(RegisterRequest...)}.
      *
-     * @param loginRequests the request object (there will only be one).
+     * @param registerRequests the request object (there will only be one).
      * @return the response.
      */
     @Override
-    protected LoginRegisterResponse doInBackground(LoginRequest... loginRequests) {
+    protected LoginRegisterResponse doInBackground(RegisterRequest... registerRequests) {
         LoginRegisterResponse response = null;
 
-        try {
-            response = presenter.login(loginRequests[0]);
+       try {
+           response = presenter.register(registerRequests[0]);
 
-            if(response.isSuccess()) {
-                loadImage(response.getUser());
-            }
-        } catch (IOException ex) {
-            exception = ex;
-        }
+           if(response.isSuccess()) {
+               loadImage(response.getUser());
+           }
+       }
+       catch(IOException ex) {
+           exception = ex;
+       }
 
-        return response;
+       return response;
     }
 
     /**
@@ -82,7 +82,7 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginRegisterRespon
 
     /**
      * Notifies the observer (on the thread of the invoker of the
-     * {@link #execute(LoginRequest...)} method) when the task completes.
+     * {@link #execute(RegisterRequest...)} method) when the task completes.
      *
      * @param response the response that was received by the task.
      */
@@ -90,10 +90,12 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginRegisterRespon
     protected void onPostExecute(LoginRegisterResponse response) {
         if(exception != null) {
             observer.handleException(exception);
-        } else if(response.isSuccess()) {
-            observer.loginSuccessful(response);
-        } else {
-            observer.loginUnsuccessful(response);
+        }
+        else if(response.isSuccess()) {
+            observer.registerSuccessful(response);
+        }
+        else {
+            observer.registerUnsuccessful(response);
         }
     }
 }
