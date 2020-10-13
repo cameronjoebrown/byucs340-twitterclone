@@ -23,7 +23,7 @@ jobs:
 #         command: sudo chmod +x ./gradlew
       - run:
           name: Accept Licenses
-          command: yes | sdkmanager --licenses && yes | sdkmanager --update
+          command: yes | sdkmanager --licenses && yes | sdkmanager --update || true
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
