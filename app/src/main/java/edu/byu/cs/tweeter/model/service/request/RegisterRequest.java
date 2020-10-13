@@ -5,23 +5,23 @@ package edu.byu.cs.tweeter.model.service.request;
  * the server register a user.
  */
 public class RegisterRequest {
-    private final String alias;
+    private final String username;
     private final String password;
     private final String firstName;
     private final String lastName;
     private final String profilePicURL;
 
-    public RegisterRequest(String alias, String password, String firstName,
+    public RegisterRequest(String username, String password, String firstName,
                            String lastName, String profilePicURL) {
-        this.alias = alias;
+        this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.profilePicURL = profilePicURL;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
