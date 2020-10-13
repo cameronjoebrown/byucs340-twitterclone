@@ -11,9 +11,16 @@ jobs:
       - checkout
       - run:
           command: ./gradlew build
+
   test:
     executor: android/android
     steps:
       - test
       - run:
           command: ./gradlew test
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test
