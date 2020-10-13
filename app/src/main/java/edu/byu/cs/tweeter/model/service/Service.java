@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.model.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
@@ -27,5 +28,16 @@ public class Service {
     void loadImage(User user) throws IOException {
         byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
         user.setImageBytes(bytes);
+    }
+
+    /**
+     * Loads the profile image data for each user included in the list.
+     *
+     * @param users the users whose profile images need to be loaded.
+     */
+    void loadImages(List<User> users) throws IOException {
+        for(User user : users) {
+            loadImage(user);
+        }
     }
 }
