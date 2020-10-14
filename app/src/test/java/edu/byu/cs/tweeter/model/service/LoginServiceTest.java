@@ -1,13 +1,18 @@
 package edu.byu.cs.tweeter.model.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class LoginServiceTest {
 
@@ -43,5 +48,31 @@ public class LoginServiceTest {
         loginServiceSpy = Mockito.spy(new LoginService());
         Mockito.when(loginServiceSpy.getServerFacade()).thenReturn(mockServerFacade);
 
+    }
+
+    /**
+     * Verify that for successful requests the {@link LoginService#login(LoginRequest)}
+     * method returns the same result as the {@link ServerFacade}.
+     * .
+     *
+     * @throws IOException if an IO error occurs.
+     */
+    @Test
+    public void testLogin_validRequest() throws IOException {
+        Response response = loginServiceSpy.login(validRequest);
+        Assertions.assertEquals(successResponse, response);
+    }
+
+    /**
+     * Verify that for invalid requests the {@link LoginService#login(LoginRequest)}
+     * method returns the same result as the {@link ServerFacade}.
+     * .
+     *
+     * @throws IOException if an IO error occurs.
+     */
+    @Test
+    public void testLogin_invalidRequest() throws IOException {
+        Response response = loginServiceSpy.login(invalidRequest);
+        Assertions.assertEquals(failureResponse, response);
     }
 }

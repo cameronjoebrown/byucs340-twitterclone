@@ -53,7 +53,7 @@ public class LogoutServiceTest {
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testLogout_validRequest_correctResponse() throws IOException {
+    public void testLogout_validRequest() throws IOException {
         Response response = logoutServiceSpy.logout(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
@@ -66,7 +66,7 @@ public class LogoutServiceTest {
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testLogout_invalidRequest_correctResponse() throws IOException {
+    public void testLogout_invalidRequest() throws IOException {
         Response response = logoutServiceSpy.logout(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
     }
