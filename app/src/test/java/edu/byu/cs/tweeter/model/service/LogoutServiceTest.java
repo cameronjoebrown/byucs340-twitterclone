@@ -58,4 +58,16 @@ public class LogoutServiceTest {
         Assertions.assertEquals(successResponse, response);
     }
 
+    /**
+     * Verify that for invalid requests the {@link LogoutService#logout(LogoutRequest)}
+     * method returns the same result as the {@link ServerFacade}.
+     * .
+     *
+     * @throws IOException if an IO error occurs.
+     */
+    @Test
+    public void testLogout_invalidRequest_correctResponse() throws IOException {
+        Response response = logoutServiceSpy.logout(invalidRequest);
+        Assertions.assertEquals(failureResponse, response);
+    }
 }
