@@ -14,7 +14,7 @@ public class LogoutRequest {
      *
      * @param authToken the authToken of the user to be logged out
      */
-    LogoutRequest(AuthToken authToken) {
+    public LogoutRequest(AuthToken authToken) {
         this.authToken = authToken;
     }
 

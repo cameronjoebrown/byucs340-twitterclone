@@ -12,10 +12,12 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.Response;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -35,7 +37,8 @@ public class ServerFacade {
      * @return the login response.
      */
     public LoginRegisterResponse login(LoginRequest request) {
-        User user = new User("Test", "User",
+        String username = request.getUsername();
+        User user = new User("Test", "User", username,
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
         return new LoginRegisterResponse(user, new AuthToken());
     }
@@ -49,9 +52,16 @@ public class ServerFacade {
      * @return the login response.
      */
     public LoginRegisterResponse register(RegisterRequest request) {
-        User user = new User("Test", "User",
+        String username = request.getUsername();
+        String firstName = request.getFirstName();
+        String lastName = request.getLastName();
+        User user = new User(firstName, lastName, username,
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
         return new LoginRegisterResponse(user, new AuthToken());
+    }
+
+    public Response logout(LogoutRequest request) {
+        return new Response(true);
     }
 
     /**
@@ -199,7 +209,7 @@ public class ServerFacade {
 
         if(request.getLimit() > 0) {
             if (allFollowers != null) {
-                int followersIndex = getFolloweesStartingIndex(request.getLastFollower(), allFollowers);
+                int followersIndex = getFollowersStartingIndex(request.getLastFollower(), allFollowers);
 
                 for(int limitCounter = 0; followersIndex < allFollowers.size() && limitCounter < request.getLimit(); followersIndex++, limitCounter++) {
                     responseFollowers.add(allFollowers.get(followersIndex));
@@ -265,4 +275,6 @@ public class ServerFacade {
 
         return followersByFollowee;
     }
+
+
 }

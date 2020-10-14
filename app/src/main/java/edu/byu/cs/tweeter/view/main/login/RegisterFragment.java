@@ -3,15 +3,6 @@ package edu.byu.cs.tweeter.view.main.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
-import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
-import edu.byu.cs.tweeter.presenter.RegisterPresenter;
-import edu.byu.cs.tweeter.view.asyncTasks.RegisterTask;
-import edu.byu.cs.tweeter.view.main.MainActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,6 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.presenter.RegisterPresenter;
+import edu.byu.cs.tweeter.view.asyncTasks.RegisterTask;
+import edu.byu.cs.tweeter.view.main.MainActivity;
 
 
 /**
@@ -148,7 +147,7 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
             Intent mainIntent = new Intent(RegisterFragment.this.getActivity(), MainActivity.class);
             mainIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
                     Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mainIntent.putExtra("username", response.getUser().getAlias());
+            mainIntent.putExtra("username", response.getUser().getUsername());
             startActivity(mainIntent);
         }
 

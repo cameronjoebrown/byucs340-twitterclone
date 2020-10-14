@@ -2,9 +2,6 @@ package edu.byu.cs.tweeter.view.main.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -15,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
@@ -117,7 +115,7 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
             Intent mainIntent = new Intent(LoginFragment.this.getActivity(), MainActivity.class);
             mainIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
                     Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mainIntent.putExtra("username", response.getUser().getAlias());
+            mainIntent.putExtra("username", response.getUser().getUsername());
             startActivity(mainIntent);
         }
 
