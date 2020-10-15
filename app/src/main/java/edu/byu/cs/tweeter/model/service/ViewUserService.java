@@ -1,4 +1,4 @@
 package edu.byu.cs.tweeter.model.service;
 
-public class ViewUserService {
+public class ViewUserService extends Service {
 }

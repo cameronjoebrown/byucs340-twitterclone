@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.model.service;
 import java.io.IOException;
 import java.util.List;
 
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
@@ -38,6 +39,17 @@ public class Service {
     void loadImages(List<User> users) throws IOException {
         for(User user : users) {
             loadImage(user);
+        }
+    }
+
+    /**
+     * Loads the profile image data for each status included in the list.
+     *
+     * @param statuses the statuses for which profile images need to be loaded.
+     */
+    void loadStatusImages(List<Status> statuses) throws IOException {
+        for(Status status : statuses) {
+            loadImage(status.getUser());
         }
     }
 }
