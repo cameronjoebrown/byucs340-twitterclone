@@ -12,7 +12,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
-import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class LoginServiceTest {
 
@@ -59,7 +58,7 @@ public class LoginServiceTest {
      */
     @Test
     public void testLogin_validRequest() throws IOException {
-        Response response = loginServiceSpy.login(validRequest);
+        LoginRegisterResponse response = loginServiceSpy.login(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
 
@@ -72,7 +71,20 @@ public class LoginServiceTest {
      */
     @Test
     public void testLogin_invalidRequest() throws IOException {
-        Response response = loginServiceSpy.login(invalidRequest);
+        LoginRegisterResponse response = loginServiceSpy.login(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
+    }
+
+    /**
+     * Verify that the {@link LoginService#login(LoginRequest)} method loads the
+     * profile image of the user included in the result.
+     *
+     * @throws IOException if an IO error occurs.
+     */
+    @Test
+    public void testLogin_validRequest_loadsProfileImages() throws IOException {
+        LoginRegisterResponse response = loginServiceSpy.login(validRequest);
+
+        Assertions.assertNotNull(response.getUser().getImageBytes());
     }
 }
