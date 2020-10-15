@@ -10,7 +10,9 @@ import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
  * The presenter for the story functionality of the application.
  */
 public class StoryPresenter {
+
     private final View view;
+
     /**
      * The interface by which this presenter communicates with it's view.
      */
