@@ -100,5 +100,6 @@ public class StoryServiceTest {
     public void testGetStory_invalidRequest_returnsNoStory() throws IOException {
         FeedStoryResponse response = storyServiceSpy.getStory(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
+        Assertions.assertNotNull(response.getMessage());
     }
 }

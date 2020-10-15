@@ -70,7 +70,7 @@ public class LoginServiceTest {
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testLogin_invalidRequest() throws IOException {
+    public void testLogin_invalidRequest_unableToLogin() throws IOException {
         LoginRegisterResponse response = loginServiceSpy.login(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
     }

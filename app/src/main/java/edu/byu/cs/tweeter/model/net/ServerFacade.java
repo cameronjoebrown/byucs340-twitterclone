@@ -1,26 +1,33 @@
 package edu.byu.cs.tweeter.model.net;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import edu.byu.cs.tweeter.BuildConfig;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
-import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.service.response.Response;
+import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -28,11 +35,46 @@ import edu.byu.cs.tweeter.model.service.response.Response;
  */
 public class ServerFacade {
 
-    private static Map<User, List<User>> followeesByFollower;
-    private static Map<User, List<User>> followersByFollowee;
+    // This is the hard coded followee data returned by the 'getFollowees()' and 'getFollowers()' method
+    private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
+    private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
 
-    private static Map<User, List<Status>> storyByUser;
+    private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
+    private final User user2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
+    private final User user3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
+    private final User user4 = new User("Bonnie", "Beatty", FEMALE_IMAGE_URL);
+    private final User user5 = new User("Chris", "Colston", MALE_IMAGE_URL);
+    private final User user6 = new User("Cindy", "Coats", FEMALE_IMAGE_URL);
+    private final User user7 = new User("Dan", "Donaldson", MALE_IMAGE_URL);
+    private final User user8 = new User("Dee", "Dempsey", FEMALE_IMAGE_URL);
+    private final User user9 = new User("Elliott", "Enderson", MALE_IMAGE_URL);
+    private final User user10 = new User("Elizabeth", "Engle", FEMALE_IMAGE_URL);
+    private final User user11 = new User("Frank", "Frandson", MALE_IMAGE_URL);
+    private final User user12 = new User("Fran", "Franklin", FEMALE_IMAGE_URL);
+    private final User user13 = new User("Gary", "Gilbert", MALE_IMAGE_URL);
+    private final User user14 = new User("Giovanna", "Giles", FEMALE_IMAGE_URL);
+    private final User user15 = new User("Henry", "Henderson", MALE_IMAGE_URL);
+    private final User user16 = new User("Helen", "Hopwell", FEMALE_IMAGE_URL);
+    private final User user17 = new User("Igor", "Isaacson", MALE_IMAGE_URL);
+    private final User user18 = new User("Isabel", "Isaacson", FEMALE_IMAGE_URL);
+    private final User user19 = new User("Justin", "Jones", MALE_IMAGE_URL);
+    private final User user20 = new User("Jill", "Johnson", FEMALE_IMAGE_URL);
 
+    // Hard coded Mock Feed Statuses
+    private final Status status1 = new Status("This is a tweet.", user1, generateRandomDate());
+    private final Status status2 = new Status("This is another tweet.", user4, generateRandomDate());
+    private final Status status3 = new Status("What's up @JustinJones", user1, generateRandomDate());
+    private final Status status4 = new Status("Here's a link: http://google.com", user5, generateRandomDate());
+    private final Status status5 = new Status("Hello Everybody", user2, generateRandomDate());
+    private final Status status6 = new Status("Hello @FrankFrandson", user2, generateRandomDate());
+    private final Status status7 = new Status("Hello Everybody", user2, generateRandomDate());
+    private final Status status8 = new Status("Link: http://google.com", user2, generateRandomDate());
+    private final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user3, generateRandomDate());
+    private final Status status10 = new Status("Go to this link: http://github.com", user19, generateRandomDate());
+    private final Status status11 = new Status("I love @IgorIsaacson", user13, generateRandomDate());
+    private final Status status12 = new Status("Link: http://google.com", user14, generateRandomDate());
+    private final Status status13 = new Status("Cool Link: http://www.google.com", user15, generateRandomDate());
+    private final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user16, generateRandomDate());
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current
@@ -45,7 +87,7 @@ public class ServerFacade {
     public LoginRegisterResponse login(LoginRequest request) {
         String username = request.getUsername();
         User user = new User("Test", "User", username,
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+                MALE_IMAGE_URL);
         return new LoginRegisterResponse(user, new AuthToken());
     }
 
@@ -62,23 +104,58 @@ public class ServerFacade {
         String firstName = request.getFirstName();
         String lastName = request.getLastName();
         User user = new User(firstName, lastName, username,
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+                MALE_IMAGE_URL);
         return new LoginRegisterResponse(user, new AuthToken());
     }
 
+    /**
+     *
+     * @param request contains all info needed to perform a logout
+     * @return the result of the logout operation
+     */
     public Response logout(LogoutRequest request) {
         return new Response(true);
     }
 
     /**
-     * Returns an instance of FollowGenerator that can be used to generate Follow data. This is
-     * written as a separate method to allow mocking of the generator.
      *
-     * @return the generator.
+     * @param request contains all info needed to perform a follow operation
+     * @return the result of the follow operation
      */
-    FollowGenerator getFollowGenerator() {
-        return FollowGenerator.getInstance();
+    public Response follow(FollowUnfollowRequest request) {
+        // TODO: Follow Functionality (Add Follow Relationship)
+        return new Response(true);
     }
+
+    /**
+     *
+     * @param request contains all info needed to perform an unfollow operation
+     * @return the result of the unfollow operation
+     */
+    public Response unfollow(FollowUnfollowRequest request) {
+        // TODO: Unfollow Functionality (remove Follow relationship)
+        return new Response(true);
+    }
+
+    public ViewUserResponse viewUser(ViewUserRequest request) {
+        User user = null;
+        for(User u : getDummyFollows()) {
+            if(u.getUsername().equals(request.getUsername())) {
+                user = u;
+                break;
+            }
+        }
+        if(user == null) {
+            return new ViewUserResponse("User does not exist");
+        }
+        return new ViewUserResponse(user, true);
+    }
+
+    public PostStatusResponse postStatus(PostStatusRequest request) {
+        // TODO: Add status to Story. How do we allow it to be added in next refresh?
+        return new PostStatusResponse(new Status(request.getStatusText(), request.getUser(), request.getTimeStamp()));
+    }
+
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -103,25 +180,19 @@ public class ServerFacade {
             }
         }
 
-        if(followeesByFollower == null) {
-            followeesByFollower = initializeFollowees();
-        }
-
-        List<User> allFollowees = followeesByFollower.get(request.getFollower());
+        List<User> allFollowees = getDummyFollows();
         List<User> responseFollowees = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
 
         if(request.getLimit() > 0) {
-            if (allFollowees != null) {
-                int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
+            int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
 
-                for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
-                    responseFollowees.add(allFollowees.get(followeesIndex));
-                }
-
-                hasMorePages = followeesIndex < allFollowees.size();
+            for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
+                responseFollowees.add(allFollowees.get(followeesIndex));
             }
+
+            hasMorePages = followeesIndex < allFollowees.size();
         }
 
         return new FollowingResponse(responseFollowees, hasMorePages);
@@ -149,46 +220,12 @@ public class ServerFacade {
                     // We found the index of the last item returned last time. Increment to get
                     // to the first one we should return
                     followeesIndex = i + 1;
+                    break;
                 }
             }
         }
 
         return followeesIndex;
-    }
-
-    /**
-     * Generates the followee data.
-     */
-    private Map<User, List<User>> initializeFollowees() {
-
-        Map<User, List<User>> followeesByFollower = new HashMap<>();
-
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
-
-        // Populate a map of followees, keyed by follower so we can easily handle followee requests
-        for(Follow follow : follows) {
-            List<User> followees = followeesByFollower.get(follow.getFollower());
-
-            if(followees == null) {
-                followees = new ArrayList<>();
-                followeesByFollower.put(follow.getFollower(), followees);
-            }
-
-            followees.add(follow.getFollowee());
-        }
-
-        return followeesByFollower;
-    }
-
-    /**
-     * Returns an instance of StatusGenerator that can be used to generate Status data. This is
-     * written as a separate method to allow mocking of the generator.
-     *
-     * @return the generator.
-     */
-    StatusGenerator getStatusGenerator() {
-        return StatusGenerator.getInstance();
     }
 
     /**
@@ -214,25 +251,19 @@ public class ServerFacade {
             }
         }
 
-        if(followersByFollowee == null) {
-            followersByFollowee = initializeFollowers();
-        }
-
-        List<User> allFollowers = followersByFollowee.get(request.getFollowee());
+        List<User> allFollowers = getDummyFollows();
         List<User> responseFollowers = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
 
         if(request.getLimit() > 0) {
-            if (allFollowers != null) {
-                int followersIndex = getFollowersStartingIndex(request.getLastFollower(), allFollowers);
+            int followersIndex = getFollowersStartingIndex(request.getLastFollower(), allFollowers);
 
-                for(int limitCounter = 0; followersIndex < allFollowers.size() && limitCounter < request.getLimit(); followersIndex++, limitCounter++) {
-                    responseFollowers.add(allFollowers.get(followersIndex));
-                }
-
-                hasMorePages = followersIndex < allFollowers.size();
+            for(int limitCounter = 0; followersIndex < allFollowers.size() && limitCounter < request.getLimit(); followersIndex++, limitCounter++) {
+                responseFollowers.add(allFollowers.get(followersIndex));
             }
+
+            hasMorePages = followersIndex < allFollowers.size();
         }
 
         return new FollowerResponse(responseFollowers, hasMorePages);
@@ -267,30 +298,6 @@ public class ServerFacade {
         return followersIndex;
     }
 
-    /**
-     * Generates the follower data.
-     */
-    private Map<User, List<User>> initializeFollowers() {
-
-        Map<User, List<User>> followersByFollowee = new HashMap<>();
-
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
-
-        // Populate a map of followers, keyed by followee so we can easily handle follower requests
-        for(Follow follow : follows) {
-            List<User> followers = followersByFollowee.get(follow.getFollowee());
-
-            if(followers == null) {
-                followers = new ArrayList<>();
-                followersByFollowee.put(follow.getFollowee(), followers);
-            }
-
-            followers.add(follow.getFollower());
-        }
-
-        return followersByFollowee;
-    }
 
     public FeedStoryResponse getStory(FeedStoryRequest request) {
         // Used in place of assert statements because Android does not support them
@@ -304,25 +311,19 @@ public class ServerFacade {
             }
         }
 
-        if(storyByUser == null) {
-            storyByUser = initializeStory(request.getUser());
-        }
-
-        List<Status> allStatuses = storyByUser.get(request.getUser());
+        List<Status> allStatuses = getDummyStory(request.getUser());
         List<Status> responseStatuses = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
 
         if(request.getLimit() > 0) {
-            if (allStatuses != null) {
-                int storyIndex = getStoryStartingIndex(request.getLastStatus(), allStatuses);
+            int storyIndex = getFeedStoryStartingIndex(request.getLastStatus(), allStatuses);
 
-                for(int limitCounter = 0; storyIndex < allStatuses.size() && limitCounter < request.getLimit(); storyIndex++, limitCounter++) {
-                    responseStatuses.add(allStatuses.get(storyIndex));
-                }
-
-                hasMorePages = storyIndex < allStatuses.size();
+            for(int limitCounter = 0; storyIndex < allStatuses.size() && limitCounter < request.getLimit(); storyIndex++, limitCounter++) {
+                responseStatuses.add(allStatuses.get(storyIndex));
             }
+
+            hasMorePages = storyIndex < allStatuses.size();
         }
 
         return new FeedStoryResponse(responseStatuses, hasMorePages);
@@ -338,7 +339,7 @@ public class ServerFacade {
      * @param allStatuses the generated list of statuses from which we are returning paged results.
      * @return the index of the first status to be returned.
      */
-    private int getStoryStartingIndex(Status lastStatus, List<Status> allStatuses) {
+    private int getFeedStoryStartingIndex(Status lastStatus, List<Status> allStatuses) {
 
         int storyIndex = 0;
 
@@ -357,28 +358,101 @@ public class ServerFacade {
         return storyIndex;
     }
 
-    /**
-     * Generates the Story data
-     */
-    private Map<User, List<Status>> initializeStory(User user) {
-
-        Map<User, List<Status>> storyByUser = new HashMap<>();
-
-        List<Status> statuses = getStatusGenerator().generateUserStatuses(user, 20);
-
-        // Populate a map of statuses, keyed by user so we can easily handle story requests
-        for(Status status : statuses) {
-            List<Status> story = storyByUser.get(status.getUser());
-
-            if(story == null) {
-                story = new ArrayList<>();
-                storyByUser.put(status.getUser(), story);
+    public FeedStoryResponse getFeed(FeedStoryRequest request) {
+        // Used in place of assert statements because Android does not support them
+        if(BuildConfig.DEBUG) {
+            if(request.getLimit() < 0) {
+                throw new AssertionError();
             }
 
-            story.add(status);
+            if(request.getUser() == null) {
+                throw new AssertionError();
+            }
         }
 
-        return storyByUser;
+        List<Status> allStatuses = getDummyFeed(request.getUser());
+        List<Status> responseStatuses = new ArrayList<>(request.getLimit());
+
+        boolean hasMorePages = false;
+
+        if(request.getLimit() > 0) {
+            int feedIndex = getFeedStoryStartingIndex(request.getLastStatus(), allStatuses);
+
+            for(int limitCounter = 0; feedIndex < allStatuses.size() && limitCounter < request.getLimit(); feedIndex++, limitCounter++) {
+                responseStatuses.add(allStatuses.get(feedIndex));
+            }
+
+            hasMorePages = feedIndex < allStatuses.size();
+        }
+
+        return new FeedStoryResponse(responseStatuses, hasMorePages);
+    }
+
+    /**
+     * Returns the list of dummy followee/follower data. This is written as a separate method to allow
+     * mocking of the followees/follower.
+     *
+     * @return the generator.
+     */
+    List<User> getDummyFollows() {
+        return Arrays.asList(user1, user2, user3, user4, user5, user6, user7,
+                user8, user9, user10, user11, user12, user13, user14, user15, user16, user17, user18,
+                user19, user20);
+    }
+
+
+    /**
+     * Returns the list of dummy story data. This is written as a separate method to allow
+     * mocking of the story
+     *
+     * @param user the user whose story is requested so we can generate some tweets for their story
+     *
+     * @return the generator.
+     */
+    List<Status> getDummyStory(User user) {
+        // Creating tweets and assigning to the specified user
+        final Status status1 = new Status("Tweet.", user, generateRandomDate());
+        final Status status2 = new Status("Yello", user, generateRandomDate());
+        final Status status3 = new Status("What's up @JustinJones", user, generateRandomDate());
+        final Status status4 = new Status("a link: http://google.com", user, generateRandomDate());
+        final Status status5 = new Status("Hello", user, generateRandomDate());
+        final Status status6 = new Status("Hello @FrankFrandson", user, generateRandomDate());
+        final Status status7 = new Status("Hello Yall", user, generateRandomDate());
+        final Status status8 = new Status("Link: http://google.com", user, generateRandomDate());
+        final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user, generateRandomDate());
+        final Status status10 = new Status("Go to this link: http://github.com", user, generateRandomDate());
+        final Status status11 = new Status("I love @IgorIsaacson", user, generateRandomDate());
+        final Status status12 = new Status("Link: http://google.com", user, generateRandomDate());
+        final Status status13 = new Status("Cool Link: http://www.google.com", user, generateRandomDate());
+        final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user, generateRandomDate());
+
+        return Arrays.asList(status1, status2, status3, status4, status5, status6, status7, status8,
+                             status9, status10, status11, status12, status13, status14);
+    }
+
+    /**
+     * Returns the list of dummy feed data. This is written as a separate method to allow
+     * mocking of the feed
+     *
+     * @param user the user whose feed is requested so we can generate some tweets for their feed
+     *
+     * @return the generator.
+     */
+    List<Status> getDummyFeed(User user) {
+        return Arrays.asList(status1, status2, status3, status4, status5, status6, status7, status8,
+                status9, status10, status11, status12, status13, status14);
+    }
+
+    private LocalDateTime generateRandomDate() {
+
+        long randomDays = 0;
+        randomDays = ThreadLocalRandom.current().nextLong(1, 1000);
+
+        long randomMinutes = ThreadLocalRandom.current().nextLong(1, 750);
+
+        LocalDate date = LocalDate.now().minusDays(randomDays);
+        LocalTime time = LocalTime.now().minusMinutes(randomMinutes);
+        return LocalDateTime.of(date, time);
     }
 
 }

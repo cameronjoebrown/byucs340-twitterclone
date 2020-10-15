@@ -16,7 +16,7 @@ public class FollowUnfollowRequest {
      * @param followee the {@link User} who is to be followed or unfollowed
      * @param follower the {@link User} who is following or unfollowing the followee
      */
-    FollowUnfollowRequest(User followee, User follower) {
+    public FollowUnfollowRequest(User followee, User follower) {
         this.followee = followee;
         this.follower = follower;
     }

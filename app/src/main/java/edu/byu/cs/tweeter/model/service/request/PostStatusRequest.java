@@ -20,7 +20,7 @@ public class PostStatusRequest {
      * @param user the user whose status it is
      * @param timeStamp the time that the status was created
      */
-    PostStatusRequest(String statusText, User user, LocalDateTime timeStamp) {
+    public PostStatusRequest(String statusText, User user, LocalDateTime timeStamp) {
         this.statusText = statusText;
         this.user = user;
         this.timeStamp = timeStamp;
