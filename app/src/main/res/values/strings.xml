@@ -31,4 +31,18 @@
     <string name="imageURL">Profile Pic URL</string>
     <string name="profile">Profile</string>
     <string name="handleFormat">\@Handle must start with \@</string>
+
+    <!-- Menu Strings -->
+    <string name="logoutTitle">Sign Out</string>
+    <string name="searchTitle">Search</string>
+
+    <string name="createStatus">Create Status</string>
+    <string name="post">Post</string>
+    <string name="whatToShare">What do you want to share?</string>
+    <string name="emptyTweet">Your post cannot be empty. Add some text and try again.</string>
+
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+
+    <string name="timeStamp">Time Stamp</string>
 </resources>

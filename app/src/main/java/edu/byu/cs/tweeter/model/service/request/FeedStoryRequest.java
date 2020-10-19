@@ -48,6 +48,7 @@ public class FeedStoryRequest {
     }
 
     /**
+    /**
      * Returns the last status that was returned in the previous request or null if there was no
      * previous request or if no statuses were returned in the previous request.
      *

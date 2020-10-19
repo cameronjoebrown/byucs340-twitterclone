@@ -75,6 +75,8 @@ public class ServerFacade {
     private final Status status12 = new Status("Link: http://google.com", user14, generateRandomDate());
     private final Status status13 = new Status("Cool Link: http://www.google.com", user15, generateRandomDate());
     private final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user16, generateRandomDate());
+    private final Status status15 = new Status("This is a going to be a really long tweet because we want to simulate how well the textview will do" +
+                                                          " with moving text to another line. Anyways, that is all.", user16, generateRandomDate());
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current
@@ -317,7 +319,7 @@ public class ServerFacade {
         boolean hasMorePages = false;
 
         if(request.getLimit() > 0) {
-            int storyIndex = getFeedStoryStartingIndex(request.getLastStatus(), allStatuses);
+            int storyIndex = getStoryStartingIndex(request.getLastStatus(), allStatuses);
 
             for(int limitCounter = 0; storyIndex < allStatuses.size() && limitCounter < request.getLimit(); storyIndex++, limitCounter++) {
                 responseStatuses.add(allStatuses.get(storyIndex));
@@ -339,7 +341,7 @@ public class ServerFacade {
      * @param allStatuses the generated list of statuses from which we are returning paged results.
      * @return the index of the first status to be returned.
      */
-    private int getFeedStoryStartingIndex(Status lastStatus, List<Status> allStatuses) {
+    private int getStoryStartingIndex(Status lastStatus, List<Status> allStatuses) {
 
         int storyIndex = 0;
 
@@ -370,13 +372,13 @@ public class ServerFacade {
             }
         }
 
-        List<Status> allStatuses = getDummyFeed(request.getUser());
+        List<Status> allStatuses = getDummyFeed();
         List<Status> responseStatuses = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
 
         if(request.getLimit() > 0) {
-            int feedIndex = getFeedStoryStartingIndex(request.getLastStatus(), allStatuses);
+            int feedIndex = getFeedStartingIndex(request.getLastStatus(), allStatuses);
 
             for(int limitCounter = 0; feedIndex < allStatuses.size() && limitCounter < request.getLimit(); feedIndex++, limitCounter++) {
                 responseStatuses.add(allStatuses.get(feedIndex));
@@ -386,6 +388,35 @@ public class ServerFacade {
         }
 
         return new FeedStoryResponse(responseStatuses, hasMorePages);
+    }
+
+    /**
+     * Determines the index for the first status in the specified 'allStatuses' list that should
+     * be returned in the current request. This will be the index of the next status after the
+     * specified 'lastStatus'.
+     *
+     * @param lastStatus the last status that was returned in the previous request or null if
+     *                     there was no previous request.
+     * @param allStatuses the generated list of statuses from which we are returning paged results.
+     * @return the index of the first status to be returned.
+     */
+    private int getFeedStartingIndex(Status lastStatus, List<Status> allStatuses) {
+
+        int feedIndex = 0;
+
+        if(lastStatus != null) {
+            // This is a paged request for something after the first page. Find the first item
+            // we should return
+            for (int i = 0; i < allStatuses.size(); i++) {
+                if(lastStatus.equals(allStatuses.get(i))) {
+                    // We found the index of the last item returned last time. Increment to get
+                    // to the first one we should return
+                    feedIndex = i + 1;
+                }
+            }
+        }
+
+        return feedIndex;
     }
 
     /**
@@ -434,13 +465,12 @@ public class ServerFacade {
      * Returns the list of dummy feed data. This is written as a separate method to allow
      * mocking of the feed
      *
-     * @param user the user whose feed is requested so we can generate some tweets for their feed
      *
      * @return the generator.
      */
-    List<Status> getDummyFeed(User user) {
+    List<Status> getDummyFeed() {
         return Arrays.asList(status1, status2, status3, status4, status5, status6, status7, status8,
-                status9, status10, status11, status12, status13, status14);
+                status9, status10, status11, status12, status13, status14, status15);
     }
 
     private LocalDateTime generateRandomDate() {

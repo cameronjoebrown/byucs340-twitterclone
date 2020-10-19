@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +23,14 @@ import edu.byu.cs.tweeter.view.main.MainActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment implements LoginPresenter.View {
+public class LoginFragment extends Fragment implements LoginPresenter.View, LoginTask.Observer {
+
+    private static final String LOG_TAG = "LoginFragment";
 
     private EditText usernameEditText, passwordEditText;
     private Button loginButton;
     private LoginPresenter presenter;
-    private LoginObserver loginObserver;
+    private Toast loginToast;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -46,7 +48,6 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         presenter = new LoginPresenter(this);
-        loginObserver = new LoginObserver();
 
         usernameEditText = view.findViewById(R.id.userNameEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
@@ -62,7 +63,12 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
             String username = usernameEditText.getText().toString();
             String password = passwordEditText.getText().toString();
 
-            loginObserver.login(username, password);
+            loginToast = Toast.makeText(getActivity(), "Logging In", Toast.LENGTH_LONG);
+            loginToast.show();
+
+            LoginRequest loginRequest = new LoginRequest(username, password);
+            LoginTask loginTask = new LoginTask(presenter, this);
+            loginTask.execute(loginRequest);
 
         });
 
@@ -76,17 +82,13 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        if(username.equals("") || password.equals("")){
-            loginButton.setEnabled(false);
-        } else {
-            loginButton.setEnabled(true);
-        }
+        loginButton.setEnabled(!username.equals("") && !password.equals(""));
     }
 
     /**
      * Enables or disables the RegisterButton if input fields are filled or not
      */
-    private TextWatcher textChangeWatcher = new TextWatcher() {
+    private final TextWatcher textChangeWatcher = new TextWatcher() {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -103,33 +105,45 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
         }
     };
 
-    private class LoginObserver implements LoginTask.Observer {
-        void login(String username, String password) {
-            LoginRequest loginRequest = new LoginRequest(username, password);
-            LoginTask loginTask = new LoginTask(presenter, this);
-            loginTask.execute(loginRequest);
-        }
+    /**
+     * The callback method that gets invoked for a successful login. Displays the MainActivity.
+     *
+     * @param response the response from the login request.
+     */
+    @Override
+    public void loginSuccessful(LoginRegisterResponse response) {
+        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
 
-        @Override
-        public void loginSuccessful(LoginRegisterResponse response) {
-            Intent mainIntent = new Intent(LoginFragment.this.getActivity(), MainActivity.class);
-            mainIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mainIntent.putExtra("username", response.getUser().getUsername());
-            startActivity(mainIntent);
-        }
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        @Override
-        public void loginUnsuccessful(LoginRegisterResponse response) {
-            Toast toast =
-                    Toast.makeText(getContext(), response.getMessage(),Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.TOP, 0, 20);
-            toast.show();
-        }
+        mainIntent.putExtra(MainActivity.CURRENT_USER_KEY, response.getUser());
+        mainIntent.putExtra(MainActivity.AUTH_TOKEN_KEY, response.getAuthToken());
 
-        @Override
-        public void handleException(Exception ex) {
+        loginToast.cancel();
+        startActivity(mainIntent);
+    }
 
-        }
+    /**
+     * The callback method that gets invoked for an unsuccessful login. Displays a toast with a
+     * message indicating why the login failed.
+     *
+     * @param response the response from the login request.
+     */
+    @Override
+    public void loginUnsuccessful(LoginRegisterResponse response) {
+        Toast.makeText(getActivity(), "Failed to login. " + response.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * A callback indicating that an exception was thrown in an asynchronous method called on the
+     * presenter.
+     *
+     * @param exception the exception.
+     */
+    @Override
+    public void handleException(Exception exception) {
+        Log.e(LOG_TAG, exception.getMessage(), exception);
+        Toast.makeText(getActivity(), "Failed to login because of exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

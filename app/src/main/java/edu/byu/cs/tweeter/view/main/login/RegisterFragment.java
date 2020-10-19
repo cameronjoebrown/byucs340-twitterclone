@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,15 @@ import edu.byu.cs.tweeter.view.main.MainActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegisterFragment extends Fragment implements RegisterPresenter.View {
+public class RegisterFragment extends Fragment implements RegisterPresenter.View, RegisterTask.Observer {
+
+    private static final String LOG_TAG = "RegisterFragment";
 
     private EditText usernameEditText, passwordEditText, firstNameEditText,
             lastNameEditText, profilePicURLEditText;
     private Button registerButton;
     private RegisterPresenter presenter;
-    private RegisterObserver registerObserver;
+    private Toast registerToast;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -48,7 +51,6 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
         presenter = new RegisterPresenter(this);
-        registerObserver = new RegisterObserver();
 
         usernameEditText = view.findViewById(R.id.usernameEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
@@ -77,9 +79,14 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
             String lastName = lastNameEditText.getText().toString();
             String imageURL = profilePicURLEditText.getText().toString();
 
+            registerToast = Toast.makeText(getActivity(), "Registering", Toast.LENGTH_LONG);
+            registerToast.show();
+
             if(validateUsername(username)) {
-                registerObserver.register(username, password, firstName,
+                RegisterRequest registerRequest = new RegisterRequest(username, password, firstName,
                         lastName, imageURL);
+                RegisterTask registerTask = new RegisterTask(presenter, this);
+                registerTask.execute(registerRequest);
             }
             else {
                 Toast.makeText(getContext(),R.string.handleFormat, Toast.LENGTH_SHORT).show();
@@ -100,12 +107,8 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
         String imageURL = profilePicURLEditText.getText().toString();
 
 
-        if(username.equals("") || password.equals("") || firstName.equals("") ||
-                lastName.equals("") || imageURL.equals("")){
-            registerButton.setEnabled(false);
-        } else {
-            registerButton.setEnabled(true);
-        }
+        registerButton.setEnabled(!username.equals("") && !password.equals("") && !firstName.equals("") &&
+                !lastName.equals("") && !imageURL.equals(""));
     }
 
     private boolean validateUsername(String username) {
@@ -115,7 +118,7 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
     /**
      * After text fields have changed, it checks to see if Register button should be enabled.
      */
-    private TextWatcher textChangeWatcher = new TextWatcher() {
+    private final TextWatcher textChangeWatcher = new TextWatcher() {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -132,36 +135,29 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
         }
     };
 
-    private class RegisterObserver implements RegisterTask.Observer {
+    @Override
+    public void registerSuccessful(LoginRegisterResponse response) {
+        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
 
-        void register(String username, String password, String firstName, String lastName,
-                      String imageURL) {
-            RegisterRequest registerRequest = new RegisterRequest(username, password, firstName,
-                    lastName, imageURL);
-            RegisterTask registerTask = new RegisterTask(presenter, this);
-            registerTask.execute(registerRequest);
-        }
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        @Override
-        public void registerSuccessful(LoginRegisterResponse response) {
-            Intent mainIntent = new Intent(RegisterFragment.this.getActivity(), MainActivity.class);
-            mainIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mainIntent.putExtra("username", response.getUser().getUsername());
-            startActivity(mainIntent);
-        }
+        mainIntent.putExtra(MainActivity.CURRENT_USER_KEY, response.getUser());
+        mainIntent.putExtra(MainActivity.AUTH_TOKEN_KEY, response.getAuthToken());
 
-        @Override
-        public void registerUnsuccessful(LoginRegisterResponse response) {
-            Toast toast =
-                    Toast.makeText(getContext(),response.getMessage(),Toast.LENGTH_LONG);
-            toast.show();
-        }
+        registerToast.cancel();
+        startActivity(mainIntent);
+    }
 
-        @Override
-        public void handleException(Exception ex) {
+    @Override
+    public void registerUnsuccessful(LoginRegisterResponse response) {
+        Toast.makeText(getActivity(), "Failed to register. " + response.getMessage(), Toast.LENGTH_LONG).show();
+    }
 
-        }
+    @Override
+    public void handleException(Exception exception) {
+        Log.e(LOG_TAG, exception.getMessage(), exception);
+        Toast.makeText(getActivity(), "Failed to register because of exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 
 }
