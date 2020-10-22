@@ -31,7 +31,18 @@ public class RegisterPresenter {
      * @param registerRequest the request.
      */
     public LoginRegisterResponse register(RegisterRequest registerRequest) throws IOException {
-        RegisterService registerService = new RegisterService();
+        RegisterService registerService = getRegisterService();
         return registerService.register(registerRequest);
+    }
+
+    /**
+     * Returns an instance of {@link RegisterService}. Allows mocking of the RegisterService class
+     * for testing purposes. All usages of RegisterService should get their RegisterService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    RegisterService getRegisterService() {
+        return new RegisterService();
     }
 }

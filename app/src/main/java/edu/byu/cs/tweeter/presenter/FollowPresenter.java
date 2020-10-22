@@ -28,7 +28,7 @@ public class FollowPresenter {
     }
 
     public Response follow(FollowUnfollowRequest request) {
-        FollowService followService = geFollowService();
+        FollowService followService = getFollowService();
         return followService.follow(request);
     }
 
@@ -39,7 +39,7 @@ public class FollowPresenter {
      *
      * @return the instance.
      */
-    FollowService geFollowService() {
+    FollowService getFollowService() {
         return new FollowService();
     }
 }

@@ -28,7 +28,18 @@ public class LogoutPresenter {
     }
 
     public Response logout(LogoutRequest request) throws IOException {
-        LogoutService logoutService = new LogoutService();
+        LogoutService logoutService = getLogoutService();
         return logoutService.logout(request);
+    }
+
+    /**
+     * Returns an instance of {@link LogoutService}. Allows mocking of the LogoutService class
+     * for testing purposes. All usages of LogoutService should get their LogoutService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    LogoutService getLogoutService() {
+        return new LogoutService();
     }
 }

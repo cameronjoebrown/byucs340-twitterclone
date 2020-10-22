@@ -21,7 +21,18 @@ public class PostStatusPresenter {
     }
 
     public PostStatusResponse postStatus(PostStatusRequest request) {
-        PostStatusService postStatusService = new PostStatusService();
+        PostStatusService postStatusService = getPostStatusService();
         return postStatusService.postStatus(request);
+    }
+
+    /**
+     * Returns an instance of {@link PostStatusService}. Allows mocking of the PostStatusService class
+     * for testing purposes. All usages of PostStatusService should get their PostStatusService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    PostStatusService getPostStatusService() {
+        return new PostStatusService();
     }
 }
