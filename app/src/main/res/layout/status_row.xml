@@ -50,7 +50,7 @@
 
     <TextView
         android:id="@+id/timeStamp"
-        android:layout_width="80dp"
+        android:layout_width="150dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@+id/userImage"

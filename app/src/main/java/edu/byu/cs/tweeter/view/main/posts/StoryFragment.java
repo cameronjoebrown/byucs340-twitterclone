@@ -2,6 +2,10 @@ package edu.byu.cs.tweeter.view.main.posts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +17,11 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -141,32 +148,35 @@ public class StoryFragment extends Fragment implements StoryPresenter.View,
             userImage.setImageDrawable(ImageUtils.drawableFromByteArray(status.getUser().getImageBytes()));
             userAlias.setText(status.getUser().getUsername());
             userName.setText(status.getUser().getName());
-            statusText.setText(status.getStatusText());
-            timeStamp.setText(status.getTimeStamp().toString());
 
-            // TODO: Make usernames clickable
-            /*
-            SpannableString ss = new SpannableString(status.getStatusText());
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                @Override
-                public void onClick(View textView) {
-                    Toast.makeText(getActivity(), "Exception: ", Toast.LENGTH_LONG).show();
-                }
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                    ds.setUnderlineText(false);
-                }
-            };
-            ss.setSpan(clickableSpan, 22, 27, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-            statusText.setText(status.getStatusText());
+            String formatDateTime = status.getTimeStamp().format(formatter);
+            timeStamp.setText(formatDateTime);
+
+            String text = status.getStatusText();
+
+            // Initialize a new SpannableString instance
+            SpannableStringBuilder ss = new SpannableStringBuilder(text);
+
+            // Initialize a new ClickableSpan to display red background
+            Pattern p = Pattern.compile("[#@][a-zA-Z0-9]+");
+            Matcher m = p.matcher(text); //get matcher, applying the pattern to caption string
+            while (m.find()) { // Find each match in turn
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View textView) {
+                        //Clicked word
+                        Toast.makeText(getContext(), "Can't find this user", Toast.LENGTH_LONG).show();
+                    }
+                };
+                ss.setSpan(clickableSpan, m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            // Display the spannable text to TextView
+            statusText.setText(ss);
+
+            // Specify the TextView movement method
             statusText.setMovementMethod(LinkMovementMethod.getInstance());
-            statusText.setHighlightColor(Color.TRANSPARENT);
-            Pattern pattern = Pattern.compile("\\B@\\w+");
-            Linkify.addLinks(statusText, pattern, "http://google.com");
-
-             */
 
         }
 

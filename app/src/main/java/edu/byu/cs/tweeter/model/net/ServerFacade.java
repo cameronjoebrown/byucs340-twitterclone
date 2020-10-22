@@ -73,8 +73,7 @@ public class ServerFacade {
     private final Status status12 = new Status("Link: http://google.com", user14, LocalDateTime.of(2020, 4, 11, 12, 10));
     private final Status status13 = new Status("Cool Link: http://www.google.com", user15, LocalDateTime.of(2020, 4, 11, 21, 26));
     private final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user16, LocalDateTime.of(2020, 5, 18, 11, 56));
-    private final Status status15 = new Status("This is a going to be a really long tweet because we want to simulate how well the textview will do" +
-                                                          " with moving text to another line. Anyways, that is all.", user16, LocalDateTime.of(2020, 10, 14, 12, 56));
+    private final Status status15 = new Status("This is fun", user16, LocalDateTime.of(2020, 10, 14, 12, 56));
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current
@@ -123,7 +122,6 @@ public class ServerFacade {
      * @return the result of the follow operation
      */
     public Response follow(FollowUnfollowRequest request) {
-        // TODO: Follow Functionality (Add Follow Relationship)
         return new Response(true);
     }
 
@@ -133,7 +131,6 @@ public class ServerFacade {
      * @return the result of the unfollow operation
      */
     public Response unfollow(FollowUnfollowRequest request) {
-        // TODO: Unfollow Functionality (remove Follow relationship)
         return new Response(true);
     }
 
