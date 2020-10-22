@@ -37,7 +37,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userImage"
-        android:textSize="22dp" />
+        android:autoLink="all"
+        android:textSize="22sp" />
 
     <View
         android:layout_width="match_parent"

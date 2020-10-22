@@ -112,7 +112,9 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             statusText = itemView.findViewById(R.id.statusText);
             timeStamp = itemView.findViewById(R.id.timeStamp);
 
-            itemView.setOnClickListener(view -> Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show());
+            itemView.setOnClickListener(view -> {
+
+            });
         }
 
         /**
@@ -136,7 +138,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         private final List<Status> statuses = new ArrayList<>();
 
-        private Status lastStatus;
+        private edu.byu.cs.tweeter.model.domain.Status lastStatus;
 
         private boolean hasMorePages;
         private boolean isLoading = false;

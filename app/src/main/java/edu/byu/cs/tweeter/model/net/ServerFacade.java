@@ -1,12 +1,10 @@
 package edu.byu.cs.tweeter.model.net;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import edu.byu.cs.tweeter.BuildConfig;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
@@ -61,22 +59,22 @@ public class ServerFacade {
     private final User user20 = new User("Jill", "Johnson", FEMALE_IMAGE_URL);
 
     // Hard coded Mock Feed Statuses
-    private final Status status1 = new Status("This is a tweet.", user1, generateRandomDate());
-    private final Status status2 = new Status("This is another tweet.", user4, generateRandomDate());
-    private final Status status3 = new Status("What's up @JustinJones", user1, generateRandomDate());
-    private final Status status4 = new Status("Here's a link: http://google.com", user5, generateRandomDate());
-    private final Status status5 = new Status("Hello Everybody", user2, generateRandomDate());
-    private final Status status6 = new Status("Hello @FrankFrandson", user2, generateRandomDate());
-    private final Status status7 = new Status("Hello Everybody", user2, generateRandomDate());
-    private final Status status8 = new Status("Link: http://google.com", user2, generateRandomDate());
-    private final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user3, generateRandomDate());
-    private final Status status10 = new Status("Go to this link: http://github.com", user19, generateRandomDate());
-    private final Status status11 = new Status("I love @IgorIsaacson", user13, generateRandomDate());
-    private final Status status12 = new Status("Link: http://google.com", user14, generateRandomDate());
-    private final Status status13 = new Status("Cool Link: http://www.google.com", user15, generateRandomDate());
-    private final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user16, generateRandomDate());
+    private final Status status1 = new Status("This is a tweet.", user1, LocalDateTime.of(2018, 4, 11, 12, 56));
+    private final Status status2 = new Status("This is another tweet.", user4, LocalDateTime.of(2018, 5, 11, 12, 56));
+    private final Status status3 = new Status("What's up @JustinJones", user1, LocalDateTime.of(2018, 6, 11, 12, 56));
+    private final Status status4 = new Status("Here's a link: http://google.com", user5, LocalDateTime.of(2019, 4, 11, 1, 56));
+    private final Status status5 = new Status("Hello Everybody", user2, LocalDateTime.of(2019, 8, 11, 12, 56));
+    private final Status status6 = new Status("Hello @FrankFrandson", user2, LocalDateTime.of(2019, 9, 11, 12, 56));
+    private final Status status7 = new Status("Hello Everybody", user2, LocalDateTime.of(2019, 10, 11, 12, 56));
+    private final Status status8 = new Status("Link: http://google.com", user2, LocalDateTime.of(2019, 11, 11, 12, 56));
+    private final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user3, LocalDateTime.of(2019, 12, 15, 12, 56));
+    private final Status status10 = new Status("Go to this link: http://github.com", user19, LocalDateTime.of(2020, 1, 15, 17, 56));
+    private final Status status11 = new Status("I love @IgorIsaacson", user13, LocalDateTime.of(2020, 3, 23, 12, 56));
+    private final Status status12 = new Status("Link: http://google.com", user14, LocalDateTime.of(2020, 4, 11, 12, 10));
+    private final Status status13 = new Status("Cool Link: http://www.google.com", user15, LocalDateTime.of(2020, 4, 11, 21, 26));
+    private final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user16, LocalDateTime.of(2020, 5, 18, 11, 56));
     private final Status status15 = new Status("This is a going to be a really long tweet because we want to simulate how well the textview will do" +
-                                                          " with moving text to another line. Anyways, that is all.", user16, generateRandomDate());
+                                                          " with moving text to another line. Anyways, that is all.", user16, LocalDateTime.of(2020, 10, 14, 12, 56));
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current
@@ -353,6 +351,7 @@ public class ServerFacade {
                     // We found the index of the last item returned last time. Increment to get
                     // to the first one we should return
                     storyIndex = i + 1;
+                    break;
                 }
             }
         }
@@ -373,6 +372,7 @@ public class ServerFacade {
         }
 
         List<Status> allStatuses = getDummyFeed();
+        Collections.sort(allStatuses);
         List<Status> responseStatuses = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
@@ -412,6 +412,7 @@ public class ServerFacade {
                     // We found the index of the last item returned last time. Increment to get
                     // to the first one we should return
                     feedIndex = i + 1;
+                    break;
                 }
             }
         }
@@ -442,20 +443,20 @@ public class ServerFacade {
      */
     List<Status> getDummyStory(User user) {
         // Creating tweets and assigning to the specified user
-        final Status status1 = new Status("Tweet.", user, generateRandomDate());
-        final Status status2 = new Status("Yello", user, generateRandomDate());
-        final Status status3 = new Status("What's up @JustinJones", user, generateRandomDate());
-        final Status status4 = new Status("a link: http://google.com", user, generateRandomDate());
-        final Status status5 = new Status("Hello", user, generateRandomDate());
-        final Status status6 = new Status("Hello @FrankFrandson", user, generateRandomDate());
-        final Status status7 = new Status("Hello Yall", user, generateRandomDate());
-        final Status status8 = new Status("Link: http://google.com", user, generateRandomDate());
-        final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user, generateRandomDate());
-        final Status status10 = new Status("Go to this link: http://github.com", user, generateRandomDate());
-        final Status status11 = new Status("I love @IgorIsaacson", user, generateRandomDate());
-        final Status status12 = new Status("Link: http://google.com", user, generateRandomDate());
-        final Status status13 = new Status("Cool Link: http://www.google.com", user, generateRandomDate());
-        final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user, generateRandomDate());
+        final Status status1 = new Status("Tweet.", user, LocalDateTime.of(2020, 10, 13, 15, 56));
+        final Status status2 = new Status("Yello", user, LocalDateTime.of(2020, 9, 13, 15, 56));
+        final Status status3 = new Status("What's up @JustinJones", user, LocalDateTime.of(2020, 8, 13, 15, 57));
+        final Status status4 = new Status("a link: http://google.com", user, LocalDateTime.of(2020, 7, 13, 16, 56));
+        final Status status5 = new Status("Hello", user, LocalDateTime.of(2020, 6, 6, 15, 56));
+        final Status status6 = new Status("Hello @FrankFrandson", user, LocalDateTime.of(2020, 5, 13, 15, 56));
+        final Status status7 = new Status("Hello Yall", user, LocalDateTime.of(2020, 4, 13, 17, 56));
+        final Status status8 = new Status("Link: http://google.com", user, LocalDateTime.of(2020, 3, 13, 15, 56));
+        final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user, LocalDateTime.of(2019, 12, 15, 15, 56));
+        final Status status10 = new Status("Go to this link: http://github.com", user, LocalDateTime.of(2019, 3, 13, 15, 56));
+        final Status status11 = new Status("I love @IgorIsaacson", user, LocalDateTime.of(2019, 3, 13, 13, 54));
+        final Status status12 = new Status("Link: http://google.com", user, LocalDateTime.of(2019, 3, 13, 11, 42));
+        final Status status13 = new Status("Cool Link: http://www.google.com", user, LocalDateTime.of(2018, 7, 15, 15, 56));
+        final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user, LocalDateTime.of(2018, 3, 13, 5, 56));
 
         return Arrays.asList(status1, status2, status3, status4, status5, status6, status7, status8,
                              status9, status10, status11, status12, status13, status14);
@@ -471,18 +472,6 @@ public class ServerFacade {
     List<Status> getDummyFeed() {
         return Arrays.asList(status1, status2, status3, status4, status5, status6, status7, status8,
                 status9, status10, status11, status12, status13, status14, status15);
-    }
-
-    private LocalDateTime generateRandomDate() {
-
-        long randomDays = 0;
-        randomDays = ThreadLocalRandom.current().nextLong(1, 1000);
-
-        long randomMinutes = ThreadLocalRandom.current().nextLong(1, 750);
-
-        LocalDate date = LocalDate.now().minusDays(randomDays);
-        LocalTime time = LocalTime.now().minusMinutes(randomMinutes);
-        return LocalDateTime.of(date, time);
     }
 
 }

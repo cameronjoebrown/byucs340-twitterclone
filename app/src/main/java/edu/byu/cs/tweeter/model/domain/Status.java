@@ -1,11 +1,12 @@
 package edu.byu.cs.tweeter.model.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * Represents a status
  */
-public class Status {
+public class Status implements Comparable<Status>, Serializable {
 
     private final String statusText;
     private final User user;
@@ -28,4 +29,10 @@ public class Status {
     public LocalDateTime getTimeStamp() {
         return timeStamp;
     }
+
+    @Override
+    public int compareTo(Status status) {
+        return status.getTimeStamp().compareTo(this.getTimeStamp());
+    }
+
 }

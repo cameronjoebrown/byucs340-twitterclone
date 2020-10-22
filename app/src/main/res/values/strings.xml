@@ -14,8 +14,8 @@
     <string name="sampleAlias">"@UserAlias"</string>
     <string name="sampleUserName">The User</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="followeeCount">Following: -42</string>
-    <string name="followerCount">Followers: -42</string>
+    <string name="followeeCount">Following:</string>
+    <string name="followerCount">Followers:</string>
 
     <!-- Login and Register Page Strings -->
     <string name="alias">\@Handle</string>
@@ -45,4 +45,5 @@
     <string name="unfollow">Unfollow</string>
 
     <string name="timeStamp">Time Stamp</string>
+    <string name="title_activity_viewUser">ViewUserActivity</string>
 </resources>

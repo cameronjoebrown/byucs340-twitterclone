@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.view.main.follower;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +23,18 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
+import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 import edu.byu.cs.tweeter.presenter.FollowerPresenter;
+import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowersTask;
+import edu.byu.cs.tweeter.view.asyncTasks.ViewUserTask;
+import edu.byu.cs.tweeter.view.main.ViewUserActivity;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
-public class FollowerFragment extends Fragment implements FollowerPresenter.View {
+public class FollowerFragment extends Fragment implements FollowerPresenter.View, ViewUserTask.Observer,
+    ViewUserPresenter.View {
 
     private static final String LOG_TAG = "FollowerFragment";
     private static final String USER_KEY = "UserKey";
@@ -38,9 +45,10 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
     private static final int PAGE_SIZE = 10;
 
-    private User user;
+    private User currentUser;
     private AuthToken authToken;
-    private FollowerPresenter presenter;
+    private FollowerPresenter followerPresenter;
+    private ViewUserPresenter viewUserPresenter;
 
     private FollowerFragment.FollowerRecyclerViewAdapter followerRecyclerViewAdapter;
 
@@ -69,10 +77,11 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         View view = inflater.inflate(R.layout.fragment_follower, container, false);
 
         //noinspection ConstantConditions
-        user = (User) getArguments().getSerializable(USER_KEY);
+        currentUser = (User) getArguments().getSerializable(USER_KEY);
         authToken = (AuthToken) getArguments().getSerializable(AUTH_TOKEN_KEY);
 
-        presenter = new FollowerPresenter(this);
+        followerPresenter = new FollowerPresenter(this);
+        viewUserPresenter = new ViewUserPresenter(this);
 
         RecyclerView followerRecyclerView = view.findViewById(R.id.followerRecyclerView);
 
@@ -87,11 +96,31 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         return view;
     }
 
+    @Override
+    public void userRetrieved(ViewUserResponse viewUserResponse) {
+        Intent intent = new Intent(getActivity(), ViewUserActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        System.out.println(viewUserResponse.getUser().getUsername());
+        intent.putExtra(ViewUserActivity.VIEWED_USER_KEY, viewUserResponse.getUser());
+        intent.putExtra(ViewUserActivity.LOGGED_IN_USER_KEY, currentUser);
+        intent.putExtra(ViewUserActivity.AUTH_TOKEN_KEY, authToken);
+        startActivity(intent);
+    }
+
+    @Override
+    public void handleException(Exception exception) {
+        Log.e(LOG_TAG, exception.getMessage(), exception);
+        Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+
+    }
+
     /**
      * The ViewHolder for the RecyclerView that displays the Follower data.
      */
-    private class FollowerHolder extends RecyclerView.ViewHolder {
+    private class FollowerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private User user;
         private final ImageView userImage;
         private final TextView userAlias;
         private final TextView userName;
@@ -108,7 +137,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             userAlias = itemView.findViewById(R.id.userAlias);
             userName = itemView.findViewById(R.id.userName);
 
-            itemView.setOnClickListener(view -> Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show());
+            itemView.setOnClickListener(this);
         }
 
         /**
@@ -117,9 +146,15 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
          * @param user the user.
          */
         void bindUser(User user) {
+            this.user = user;
             userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
             userAlias.setText(user.getUsername());
             userName.setText(user.getName());
+        }
+
+        @Override
+        public void onClick(View view) {
+            viewUser(user.getUsername());
         }
     }
 
@@ -245,8 +280,8 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             isLoading = true;
             addLoadingFooter();
 
-            GetFollowersTask getFollowerTask = new GetFollowersTask(presenter, this);
-            FollowerRequest request = new FollowerRequest(user, PAGE_SIZE, lastFollowee);
+            GetFollowersTask getFollowerTask = new GetFollowersTask(followerPresenter, this);
+            FollowerRequest request = new FollowerRequest(currentUser, PAGE_SIZE, lastFollowee);
             getFollowerTask.execute(request);
         }
 
@@ -340,4 +375,9 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         }
     }
 
+    private void viewUser(String alias) {
+        ViewUserRequest viewUserRequest = new ViewUserRequest(alias);
+        ViewUserTask viewUserTask = new ViewUserTask(viewUserPresenter, this);
+        viewUserTask.execute(viewUserRequest);
+    }
 }

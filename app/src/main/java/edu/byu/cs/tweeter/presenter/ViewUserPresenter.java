@@ -2,8 +2,12 @@ package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.service.FollowService;
+import edu.byu.cs.tweeter.model.service.UnfollowService;
 import edu.byu.cs.tweeter.model.service.ViewUserService;
+import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
+import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 
 /**
@@ -31,5 +35,15 @@ public class ViewUserPresenter {
     public ViewUserResponse viewUser(ViewUserRequest request) throws IOException {
         ViewUserService viewUserService = new ViewUserService();
         return viewUserService.viewUser(request);
+    }
+
+    public Response unfollow(FollowUnfollowRequest request) {
+        UnfollowService unfollowService = new UnfollowService();
+        return unfollowService.unfollow(request);
+    }
+
+    public Response follow(FollowUnfollowRequest request) {
+        FollowService followService = new FollowService();
+        return followService.follow(request);
     }
 }
