@@ -35,7 +35,19 @@ public class StoryPresenter {
      * @param request the story request
      */
     public FeedStoryResponse getStory(FeedStoryRequest request) throws IOException {
-        StoryService storyService = new StoryService();
+        StoryService storyService = getStoryService();
         return storyService.getStory(request);
     }
+
+    /**
+     * Returns an instance of {@link StoryService}. Allows mocking of the StoryService class
+     * for testing purposes. All usages of StoryService should get their StoryService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    StoryService getStoryService() {
+        return new StoryService();
+    }
+
 }

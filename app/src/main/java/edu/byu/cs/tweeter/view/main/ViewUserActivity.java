@@ -19,6 +19,8 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
+import edu.byu.cs.tweeter.presenter.FollowPresenter;
+import edu.byu.cs.tweeter.presenter.UnfollowPresenter;
 import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.view.ViewUserSectionsPagerAdapter;
 import edu.byu.cs.tweeter.view.asyncTasks.FollowTask;
@@ -26,7 +28,7 @@ import edu.byu.cs.tweeter.view.asyncTasks.UnfollowTask;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 public class ViewUserActivity extends AppCompatActivity implements FollowTask.Observer, UnfollowTask.Observer,
-            ViewUserPresenter.View {
+            ViewUserPresenter.View, FollowPresenter.View, UnfollowPresenter.View {
 
     private static final String LOG_TAG = "ViewUserActivity";
 
@@ -36,9 +38,9 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
 
     private User viewedUser;
     private User loggedInUser;
-    private AuthToken authToken;
 
-    private ViewUserPresenter presenter;
+    private FollowPresenter followPresenter;
+    private UnfollowPresenter unfollowPresenter;
     Button followButton;
 
     @Override
@@ -46,7 +48,9 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_user);
 
-        presenter = new ViewUserPresenter(this);
+        ViewUserPresenter viewUserPresenter = new ViewUserPresenter(this);
+        followPresenter = new FollowPresenter(this);
+        unfollowPresenter = new UnfollowPresenter(this);
 
         viewedUser = (User) getIntent().getSerializableExtra(VIEWED_USER_KEY);
         loggedInUser = (User) getIntent().getSerializableExtra(LOGGED_IN_USER_KEY);
@@ -54,7 +58,7 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
             throw new RuntimeException("User not passed to activity");
         }
 
-        authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
+        AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
 
         ViewUserSectionsPagerAdapter viewUserSectionsPagerAdapter =
                 new ViewUserSectionsPagerAdapter(this, getSupportFragmentManager(), viewedUser, authToken);
@@ -116,13 +120,13 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
 
     private void follow(User followee, User follower) {
         FollowUnfollowRequest request = new FollowUnfollowRequest(followee, follower);
-        FollowTask followTask = new FollowTask(presenter, this);
+        FollowTask followTask = new FollowTask(followPresenter, this);
         followTask.execute(request);
     }
 
     private void unfollow(User followee, User follower) {
         FollowUnfollowRequest request = new FollowUnfollowRequest(followee, follower);
-        UnfollowTask unfollowTask = new UnfollowTask(presenter, this);
+        UnfollowTask unfollowTask = new UnfollowTask(unfollowPresenter, this);
         unfollowTask.execute(request);
     }
 

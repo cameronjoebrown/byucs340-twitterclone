@@ -2,12 +2,8 @@ package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.model.service.FollowService;
-import edu.byu.cs.tweeter.model.service.UnfollowService;
 import edu.byu.cs.tweeter.model.service.ViewUserService;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
-import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 
 /**
@@ -33,17 +29,19 @@ public class ViewUserPresenter {
     }
 
     public ViewUserResponse viewUser(ViewUserRequest request) throws IOException {
-        ViewUserService viewUserService = new ViewUserService();
+        ViewUserService viewUserService = getViewUserService();
         return viewUserService.viewUser(request);
     }
 
-    public Response unfollow(FollowUnfollowRequest request) {
-        UnfollowService unfollowService = new UnfollowService();
-        return unfollowService.unfollow(request);
+    /**
+     * Returns an instance of {@link ViewUserService}. Allows mocking of the ViewUserService class
+     * for testing purposes. All usages of ViewUserService should get their ViewUserService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    ViewUserService getViewUserService() {
+        return new ViewUserService();
     }
 
-    public Response follow(FollowUnfollowRequest request) {
-        FollowService followService = new FollowService();
-        return followService.follow(request);
-    }
 }

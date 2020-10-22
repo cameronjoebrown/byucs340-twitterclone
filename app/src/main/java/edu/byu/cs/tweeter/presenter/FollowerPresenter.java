@@ -37,8 +37,19 @@ public class FollowerPresenter {
          * @return the followers.
          */
         public FollowerResponse getFollowers(FollowerRequest request) throws IOException {
-            FollowerService followerService = new FollowerService();
+            FollowerService followerService = getFollowerService();
             return followerService.getFollowers(request);
         }
+
+    /**
+     * Returns an instance of {@link FollowerService}. Allows mocking of the FollowerService class
+     * for testing purposes. All usages of FollowerService should get their FollowerService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    FollowerService getFollowerService() {
+        return new FollowerService();
+    }
 
 }

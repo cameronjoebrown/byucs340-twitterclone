@@ -4,10 +4,10 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
-import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
+import edu.byu.cs.tweeter.presenter.FollowPresenter;
 
 public class FollowTask extends AsyncTask<FollowUnfollowRequest, Void, Response> {
-    private final ViewUserPresenter presenter;
+    private final FollowPresenter presenter;
     private final Observer observer;
     private Exception exception;
 
@@ -22,11 +22,10 @@ public class FollowTask extends AsyncTask<FollowUnfollowRequest, Void, Response>
 
     /**
      * Creates an instance.
-     *
-     * @param presenter the presenter from whom this task should complete a follow operation
+     *  @param presenter the presenter from whom this task should complete a follow operation
      * @param observer the observer who wants to be notified when this task completes.
      */
-    public FollowTask(ViewUserPresenter presenter, Observer observer) {
+    public FollowTask(FollowPresenter presenter, Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }

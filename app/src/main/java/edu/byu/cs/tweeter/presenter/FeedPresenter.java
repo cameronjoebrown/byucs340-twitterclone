@@ -35,7 +35,19 @@ public class FeedPresenter {
      * @param request the feed request
      */
     public FeedStoryResponse getFeed(FeedStoryRequest request) throws IOException {
-        FeedService feedService = new FeedService();
+        FeedService feedService = getFeedService();
         return feedService.getFeed(request);
     }
+
+    /**
+     * Returns an instance of {@link FeedService}. Allows mocking of the FeedService class
+     * for testing purposes. All usages of FeedService should get their FeedService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    FeedService getFeedService() {
+        return new FeedService();
+    }
+
 }
