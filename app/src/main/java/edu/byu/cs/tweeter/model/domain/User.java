@@ -10,7 +10,7 @@ public class User implements Comparable<User>, Serializable {
 
     private final String firstName;
     private final String lastName;
-    private final String alias;
+    private final String username;
     private final String imageUrl;
     private byte [] imageBytes;
 
@@ -18,10 +18,10 @@ public class User implements Comparable<User>, Serializable {
         this(firstName, lastName, String.format("@%s%s", firstName, lastName), imageURL);
     }
 
-    public User(String firstName, String lastName, String alias, String imageURL) {
+    public User(String firstName, String lastName, String username, String imageURL) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.alias = alias;
+        this.username = username;
         this.imageUrl = imageURL;
     }
 
@@ -37,8 +37,8 @@ public class User implements Comparable<User>, Serializable {
         return String.format("%s %s", firstName, lastName);
     }
 
-    public String getAlias() {
-        return alias;
+    public String getUsername() {
+        return username;
     }
 
     public String getImageUrl() {
@@ -58,12 +58,12 @@ public class User implements Comparable<User>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return alias.equals(user.alias);
+        return username.equals(user.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(alias);
+        return Objects.hash(username);
     }
 
     @Override
@@ -71,13 +71,13 @@ public class User implements Comparable<User>, Serializable {
         return "User{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", alias='" + alias + '\'' +
+                ", alias='" + username + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 
     @Override
     public int compareTo(User user) {
-        return this.getAlias().compareTo(user.getAlias());
+        return this.getUsername().compareTo(user.getUsername());
     }
 }

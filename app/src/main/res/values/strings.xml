@@ -14,6 +14,36 @@
     <string name="sampleAlias">"@UserAlias"</string>
     <string name="sampleUserName">The User</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="followeeCount">Following: -42</string>
-    <string name="followerCount">Followers: -42</string>
+    <string name="followeeCount">Following:</string>
+    <string name="followerCount">Followers:</string>
+
+    <!-- Login and Register Page Strings -->
+    <string name="alias">\@Handle</string>
+    <string name="password">Password</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="email">Email</string>
+    <string name="usernameOrEmail">Email or \@Handle</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="goRegister">"Don't have an account? Swipe to register.</string>
+    <string name="goLogin">Already have an account? Swipe to login.</string>
+    <string name="imageURL">Profile Pic URL</string>
+    <string name="profile">Profile</string>
+    <string name="handleFormat">\@Handle must start with \@</string>
+
+    <!-- Menu Strings -->
+    <string name="logoutTitle">Sign Out</string>
+    <string name="searchTitle">Search</string>
+
+    <string name="createStatus">Create Status</string>
+    <string name="post">Post</string>
+    <string name="whatToShare">What do you want to share?</string>
+    <string name="emptyTweet">Your post cannot be empty. Add some text and try again.</string>
+
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+
+    <string name="timeStamp">Time Stamp</string>
+    <string name="title_activity_viewUser">ViewUserActivity</string>
 </resources>

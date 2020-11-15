@@ -1,12 +1,7 @@
 package edu.byu.cs.tweeter.view.main.following;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,19 +15,29 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
+import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
+import edu.byu.cs.tweeter.view.asyncTasks.ViewUserTask;
+import edu.byu.cs.tweeter.view.main.ViewUserActivity;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 /**
  * The fragment that displays on the 'Following' tab.
  */
-public class FollowingFragment extends Fragment implements FollowingPresenter.View {
+public class FollowingFragment extends Fragment implements FollowingPresenter.View,
+        ViewUserTask.Observer, ViewUserPresenter.View {
 
     private static final String LOG_TAG = "FollowingFragment";
     private static final String USER_KEY = "UserKey";
@@ -43,9 +48,10 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
     private static final int PAGE_SIZE = 10;
 
-    private User user;
+    private User currentUser;
     private AuthToken authToken;
-    private FollowingPresenter presenter;
+    private FollowingPresenter followingPresenter;
+    private ViewUserPresenter viewUserPresenter;
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
 
@@ -73,11 +79,11 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
-        //noinspection ConstantConditions
-        user = (User) getArguments().getSerializable(USER_KEY);
+        currentUser = (User) getArguments().getSerializable(USER_KEY);
         authToken = (AuthToken) getArguments().getSerializable(AUTH_TOKEN_KEY);
 
-        presenter = new FollowingPresenter(this);
+        followingPresenter = new FollowingPresenter(this);
+        viewUserPresenter = new ViewUserPresenter(this);
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
@@ -92,11 +98,31 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         return view;
     }
 
+    @Override
+    public void userRetrieved(ViewUserResponse viewUserResponse) {
+        Intent intent = new Intent(getActivity(), ViewUserActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        System.out.println(viewUserResponse.getUser().getUsername());
+        intent.putExtra(ViewUserActivity.VIEWED_USER_KEY, viewUserResponse.getUser());
+        intent.putExtra(ViewUserActivity.LOGGED_IN_USER_KEY, currentUser);
+        intent.putExtra(ViewUserActivity.AUTH_TOKEN_KEY, authToken);
+        startActivity(intent);
+    }
+
+    @Override
+    public void handleException(Exception exception) {
+        Log.e(LOG_TAG, exception.getMessage(), exception);
+        Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+
+    }
+
     /**
      * The ViewHolder for the RecyclerView that displays the Following data.
      */
-    private class FollowingHolder extends RecyclerView.ViewHolder {
+    private class FollowingHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private User user;
         private final ImageView userImage;
         private final TextView userAlias;
         private final TextView userName;
@@ -113,12 +139,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             userAlias = itemView.findViewById(R.id.userAlias);
             userName = itemView.findViewById(R.id.userName);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
-                }
-            });
+            itemView.setOnClickListener(this);
         }
 
         /**
@@ -127,10 +148,17 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
          * @param user the user.
          */
         void bindUser(User user) {
+            this.user = user;
             userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
-            userAlias.setText(user.getAlias());
+            userAlias.setText(user.getUsername());
             userName.setText(user.getName());
         }
+
+        @Override
+        public void onClick(View view) {
+            viewUser(user.getUsername());
+        }
+
     }
 
     /**
@@ -255,8 +283,8 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             isLoading = true;
             addLoadingFooter();
 
-            GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastFollowee);
+            GetFollowingTask getFollowingTask = new GetFollowingTask(followingPresenter, this);
+            FollowingRequest request = new FollowingRequest(currentUser, PAGE_SIZE, lastFollowee);
             getFollowingTask.execute(request);
         }
 
@@ -348,5 +376,10 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                 }
             }
         }
+    }
+    private void viewUser(String alias) {
+        ViewUserRequest viewUserRequest = new ViewUserRequest(alias);
+        ViewUserTask viewUserTask = new ViewUserTask(viewUserPresenter, this);
+        viewUserTask.execute(viewUserRequest);
     }
 }

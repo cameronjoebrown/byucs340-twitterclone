@@ -7,11 +7,11 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
-import edu.byu.cs.tweeter.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 import edu.byu.cs.tweeter.presenter.LoginPresenter;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
-public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
+public class LoginTask extends AsyncTask<LoginRequest, Void, LoginRegisterResponse> {
 
     private final LoginPresenter presenter;
     private final Observer observer;
@@ -22,8 +22,8 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
      * completes.
      */
     public interface Observer {
-        void loginSuccessful(LoginResponse loginResponse);
-        void loginUnsuccessful(LoginResponse loginResponse);
+        void loginSuccessful(LoginRegisterResponse response);
+        void loginUnsuccessful(LoginRegisterResponse response);
         void handleException(Exception ex);
     }
 
@@ -50,20 +50,20 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
      * @return the response.
      */
     @Override
-    protected LoginResponse doInBackground(LoginRequest... loginRequests) {
-        LoginResponse loginResponse = null;
+    protected LoginRegisterResponse doInBackground(LoginRequest... loginRequests) {
+        LoginRegisterResponse response = null;
 
         try {
-            loginResponse = presenter.login(loginRequests[0]);
+            response = presenter.login(loginRequests[0]);
 
-            if(loginResponse.isSuccess()) {
-                loadImage(loginResponse.getUser());
+            if(response.isSuccess()) {
+                loadImage(response.getUser());
             }
         } catch (IOException ex) {
             exception = ex;
         }
 
-        return loginResponse;
+        return response;
     }
 
     /**
@@ -84,16 +84,16 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
      * Notifies the observer (on the thread of the invoker of the
      * {@link #execute(LoginRequest...)} method) when the task completes.
      *
-     * @param loginResponse the response that was received by the task.
+     * @param response the response that was received by the task.
      */
     @Override
-    protected void onPostExecute(LoginResponse loginResponse) {
+    protected void onPostExecute(LoginRegisterResponse response) {
         if(exception != null) {
             observer.handleException(exception);
-        } else if(loginResponse.isSuccess()) {
-            observer.loginSuccessful(loginResponse);
+        } else if(response.isSuccess()) {
+            observer.loginSuccessful(response);
         } else {
-            observer.loginUnsuccessful(loginResponse);
+            observer.loginUnsuccessful(response);
         }
     }
 }

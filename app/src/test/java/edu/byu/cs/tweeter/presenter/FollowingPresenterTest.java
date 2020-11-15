@@ -56,8 +56,6 @@ public class FollowingPresenterTest {
     public void testGetFollowing_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
         Mockito.when(mockFollowingService.getFollowees(request)).thenThrow(new IOException());
 
-        Assertions.assertThrows(IOException.class, () -> {
-            presenter.getFollowing(request);
-        });
+        Assertions.assertThrows(IOException.class, () -> presenter.getFollowing(request));
     }
 }
