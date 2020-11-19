@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.service;
+package edu.byu.cs.tweeter.client.model.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.client.model.service.ViewUserService;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;

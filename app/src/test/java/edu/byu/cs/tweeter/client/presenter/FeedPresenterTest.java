@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
 
-import edu.byu.cs.tweeter.client.model.domain.Status;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.model.service.FeedService;
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 

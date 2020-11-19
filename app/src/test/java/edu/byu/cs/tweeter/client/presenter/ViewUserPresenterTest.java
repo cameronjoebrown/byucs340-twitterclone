@@ -7,8 +7,8 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.model.service.ViewUserService;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 

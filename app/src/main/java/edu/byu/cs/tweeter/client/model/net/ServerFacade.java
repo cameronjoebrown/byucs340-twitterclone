@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.byu.cs.tweeter.BuildConfig;
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
-import edu.byu.cs.tweeter.client.model.domain.Status;
-import edu.byu.cs.tweeter.client.model.domain.User;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;

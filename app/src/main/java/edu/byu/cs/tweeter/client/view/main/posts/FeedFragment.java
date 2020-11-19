@@ -27,12 +27,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
-import edu.byu.cs.tweeter.client.model.domain.Status;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.presenter.FeedPresenter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.GetFeedTask;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 
@@ -47,7 +47,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     private static final int PAGE_SIZE = 10;
 
     private User user;
-    private AuthToken authToken;
     private FeedPresenter presenter;
 
     private FeedRecyclerViewAdapter feedRecyclerViewAdapter;
@@ -76,8 +75,9 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        assert getArguments() != null;
         user = (User) getArguments().getSerializable(USER_KEY);
-        authToken = (AuthToken) getArguments().getSerializable(AUTH_TOKEN_KEY);
+        AuthToken authToken = (AuthToken) getArguments().getSerializable(AUTH_TOKEN_KEY);
 
         presenter = new FeedPresenter(this);
 
@@ -173,7 +173,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         private final List<Status> statuses = new ArrayList<>();
 
-        private edu.byu.cs.tweeter.client.model.domain.Status lastStatus;
+        private Status lastStatus;
 
         private boolean hasMorePages;
         private boolean isLoading = false;

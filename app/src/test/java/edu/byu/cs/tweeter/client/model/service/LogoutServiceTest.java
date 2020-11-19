@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.service;
+package edu.byu.cs.tweeter.client.model.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,9 +7,8 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.client.model.service.LogoutService;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 

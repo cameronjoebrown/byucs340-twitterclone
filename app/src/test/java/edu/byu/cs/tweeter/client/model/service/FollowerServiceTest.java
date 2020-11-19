@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.service;
+package edu.byu.cs.tweeter.client.model.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.client.model.service.FollowerService;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
@@ -48,7 +47,7 @@ public class FollowerServiceTest {
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
         Mockito.when(mockServerFacade.getFollowers(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new FollowerResponse("An exception occured");
+        failureResponse = new FollowerResponse("An exception occurred");
         Mockito.when(mockServerFacade.getFollowers(invalidRequest)).thenReturn(failureResponse);
 
         // Create a FollowerService instance and wrap it with a spy that will use the mock service

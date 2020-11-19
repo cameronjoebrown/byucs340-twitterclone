@@ -7,9 +7,8 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.model.service.LogoutService;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
@@ -21,7 +20,6 @@ public class LogoutPresenterTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        User currentUser = new User("FirstName", "LastName", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png");
 
         request = new LogoutRequest(new AuthToken());
         response = new Response(true);

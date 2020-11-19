@@ -3,10 +3,10 @@ package edu.byu.cs.tweeter.client.model.service;
 import java.io.IOException;
 import java.util.List;
 
-import edu.byu.cs.tweeter.client.model.domain.Status;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.User;
 
 public class Service {
 
