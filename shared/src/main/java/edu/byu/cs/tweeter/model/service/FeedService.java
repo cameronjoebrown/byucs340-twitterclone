@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.model.service;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 
@@ -19,5 +20,5 @@ public interface FeedService {
      * @param request contains the data required to fulfill the request.
      * @return the statuses.
      */
-    FeedStoryResponse getFeed(FeedStoryRequest request) throws IOException;
+    FeedStoryResponse getFeed(FeedStoryRequest request) throws IOException, TweeterRemoteException;
 }

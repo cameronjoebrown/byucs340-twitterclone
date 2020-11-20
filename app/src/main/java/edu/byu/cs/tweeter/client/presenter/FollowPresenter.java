@@ -1,7 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 
-import edu.byu.cs.tweeter.client.model.service.FollowService;
+import edu.byu.cs.tweeter.client.model.service.FollowServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
@@ -28,18 +28,18 @@ public class FollowPresenter {
     }
 
     public Response follow(FollowUnfollowRequest request) {
-        FollowService followService = getFollowService();
-        return followService.follow(request);
+        FollowServiceProxy followServiceProxy = getFollowService();
+        return followServiceProxy.follow(request);
     }
 
     /**
-     * Returns an instance of {@link FollowService}. Allows mocking of the FollowService class
+     * Returns an instance of {@link FollowServiceProxy}. Allows mocking of the FollowService class
      * for testing purposes. All usages of FollowService should get their FollowService
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.
      */
-    FollowService getFollowService() {
-        return new FollowService();
+    FollowServiceProxy getFollowService() {
+        return new FollowServiceProxy();
     }
 }

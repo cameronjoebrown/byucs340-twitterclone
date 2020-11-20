@@ -2,7 +2,7 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.service.LogoutService;
+import edu.byu.cs.tweeter.client.model.service.LogoutServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
@@ -28,18 +28,18 @@ public class LogoutPresenter {
     }
 
     public Response logout(LogoutRequest request) throws IOException {
-        LogoutService logoutService = getLogoutService();
-        return logoutService.logout(request);
+        LogoutServiceProxy logoutServiceProxy = getLogoutService();
+        return logoutServiceProxy.logout(request);
     }
 
     /**
-     * Returns an instance of {@link LogoutService}. Allows mocking of the LogoutService class
+     * Returns an instance of {@link LogoutServiceProxy}. Allows mocking of the LogoutService class
      * for testing purposes. All usages of LogoutService should get their LogoutService
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.
      */
-    LogoutService getLogoutService() {
-        return new LogoutService();
+    LogoutServiceProxy getLogoutService() {
+        return new LogoutServiceProxy();
     }
 }

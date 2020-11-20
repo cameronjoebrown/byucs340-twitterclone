@@ -17,5 +17,5 @@ public interface RegisterService {
      * @param request contains the data required to fulfill the request.
      * @return the user who registered and their auth token
      */
-    LoginRegisterResponse registerUser(RegisterRequest request) throws IOException, TweeterRemoteException;
+    LoginRegisterResponse register(RegisterRequest request) throws IOException, TweeterRemoteException;
 }

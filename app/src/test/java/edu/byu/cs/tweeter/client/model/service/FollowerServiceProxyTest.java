@@ -10,25 +10,26 @@ import java.util.Arrays;
 
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 
 
-public class FollowerServiceTest {
+public class FollowerServiceProxyTest {
     private FollowerRequest validRequest;
     private FollowerRequest invalidRequest;
 
     private FollowerResponse successResponse;
     private FollowerResponse failureResponse;
 
-    private FollowerService followerServiceSpy;
+    private FollowerServiceProxy followerServiceProxySpy;
 
     /**
      * Create a FollowerService spy that uses a mock ServerFacade to return known responses to
      * requests.
      */
     @BeforeEach
-    public void setup() {
+    public void setup() throws IOException, TweeterRemoteException {
         User currentUser = new User("FirstName", "LastName", null);
 
         User resultUser1 = new User("FirstName1", "LastName1",
@@ -45,38 +46,38 @@ public class FollowerServiceTest {
         // Setup a mock ServerFacade that will return known responses
         successResponse = new FollowerResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
-        Mockito.when(mockServerFacade.getFollowers(validRequest)).thenReturn(successResponse);
+        Mockito.when(mockServerFacade.getFollowers(validRequest, "/getfollowers")).thenReturn(successResponse);
 
         failureResponse = new FollowerResponse("An exception occurred");
-        Mockito.when(mockServerFacade.getFollowers(invalidRequest)).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.getFollowers(invalidRequest, "")).thenReturn(failureResponse);
 
         // Create a FollowerService instance and wrap it with a spy that will use the mock service
-        followerServiceSpy = Mockito.spy(new FollowerService());
-        Mockito.when(followerServiceSpy.getServerFacade()).thenReturn(mockServerFacade);
+        followerServiceProxySpy = Mockito.spy(new FollowerServiceProxy());
+        Mockito.when(followerServiceProxySpy.getServerFacade()).thenReturn(mockServerFacade);
     }
 
     /**
-     * Verify that for successful requests the {@link FollowerService#getFollowers(FollowerRequest)}
+     * Verify that for successful requests the {@link FollowerServiceProxy#getFollowers(FollowerRequest)}
      * method returns the same result as the {@link ServerFacade}.
      * .
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetFollowers_validRequest_correctResponse() throws IOException {
-        FollowerResponse response = followerServiceSpy.getFollowers(validRequest);
+    public void testGetFollowers_validRequest_correctResponse() throws IOException, TweeterRemoteException {
+        FollowerResponse response = followerServiceProxySpy.getFollowers(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
 
     /**
-     * Verify that the {@link FollowerService#getFollowers(FollowerRequest)} method loads the
+     * Verify that the {@link FollowerServiceProxy#getFollowers(FollowerRequest)} method loads the
      * profile image of each user included in the result.
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetFollowers_validRequest_loadsProfileImages() throws IOException {
-        FollowerResponse response = followerServiceSpy.getFollowers(validRequest);
+    public void testGetFollowers_validRequest_loadsProfileImages() throws IOException, TweeterRemoteException {
+        FollowerResponse response = followerServiceProxySpy.getFollowers(validRequest);
 
         for(User user : response.getFollowers()) {
             Assertions.assertNotNull(user.getImageBytes());
@@ -84,14 +85,14 @@ public class FollowerServiceTest {
     }
 
     /**
-     * Verify that for failed requests the {@link FollowerService#getFollowers(FollowerRequest)}
+     * Verify that for failed requests the {@link FollowerServiceProxy#getFollowers(FollowerRequest)}
      * method returns the same result as the {@link ServerFacade}.
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetFollowers_invalidRequest_returnsNoFollowers() throws IOException {
-        FollowerResponse response = followerServiceSpy.getFollowers(invalidRequest);
+    public void testGetFollowers_invalidRequest_returnsNoFollowers() throws IOException, TweeterRemoteException {
+        FollowerResponse response = followerServiceProxySpy.getFollowers(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
     }
 }

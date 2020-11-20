@@ -2,7 +2,8 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.service.LoginService;
+import edu.byu.cs.tweeter.client.model.service.LoginServiceProxy;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 
@@ -34,19 +35,19 @@ public class LoginPresenter {
      *
      * @param loginRequest the request.
      */
-    public LoginRegisterResponse login(LoginRequest loginRequest) throws IOException {
-        LoginService loginService = getLoginService();
-        return loginService.login(loginRequest);
+    public LoginRegisterResponse login(LoginRequest loginRequest) throws IOException, TweeterRemoteException {
+        LoginServiceProxy loginServiceProxy = getLoginService();
+        return loginServiceProxy.login(loginRequest);
     }
 
     /**
-     * Returns an instance of {@link LoginService}. Allows mocking of the LoginService class
+     * Returns an instance of {@link LoginServiceProxy}. Allows mocking of the LoginService class
      * for testing purposes. All usages of LoginService should get their LoginService
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.
      */
-    LoginService getLoginService() {
-        return new LoginService();
+    LoginServiceProxy getLoginService() {
+        return new LoginServiceProxy();
     }
 }

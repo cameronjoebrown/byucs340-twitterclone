@@ -13,24 +13,25 @@ import java.util.Arrays;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 
-public class StoryServiceTest {
+public class StoryServiceProxyTest {
     private FeedStoryRequest validRequest;
     private FeedStoryRequest invalidRequest;
 
     private FeedStoryResponse successResponse;
     private FeedStoryResponse failureResponse;
 
-    private StoryService storyServiceSpy;
+    private StoryServiceProxy storyServiceProxySpy;
 
     /**
      * Create a FeedService spy that uses a mock ServerFacade to return known responses to
      * requests.
      */
     @BeforeEach
-    public void setup() {
+    public void setup() throws IOException, TweeterRemoteException {
         // Setup test user to
         User currentUser = new User("FirstName", "LastName", "@CoolUser",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
@@ -52,38 +53,38 @@ public class StoryServiceTest {
         // Setup a mock ServerFacade that will return known responses
         successResponse = new FeedStoryResponse(Arrays.asList(resultStatus1, resultStatus2, resultStatus3), false);
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
-        Mockito.when(mockServerFacade.getStory(validRequest)).thenReturn(successResponse);
+        Mockito.when(mockServerFacade.getStory(validRequest, "/getstory")).thenReturn(successResponse);
 
         failureResponse = new FeedStoryResponse("An exception occured");
-        Mockito.when(mockServerFacade.getStory(invalidRequest)).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.getStory(invalidRequest, "")).thenReturn(failureResponse);
 
         // Create a FeedStoryService instance and wrap it with a spy that will use the mock service
-        storyServiceSpy = Mockito.spy(new StoryService());
-        Mockito.when(storyServiceSpy.getServerFacade()).thenReturn(mockServerFacade);
+        storyServiceProxySpy = Mockito.spy(new StoryServiceProxy());
+        Mockito.when(storyServiceProxySpy.getServerFacade()).thenReturn(mockServerFacade);
     }
 
     /**
-     * Verify that for successful requests the {@link StoryService#getStory(FeedStoryRequest)}
+     * Verify that for successful requests the {@link StoryServiceProxy#getStory(FeedStoryRequest)}
      * method returns the same result as the {@link ServerFacade}.
      * .
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetStory_validRequest_correctResponse() throws IOException {
-        FeedStoryResponse response = storyServiceSpy.getStory(validRequest);
+    public void testGetStory_validRequest_correctResponse() throws IOException, TweeterRemoteException {
+        FeedStoryResponse response = storyServiceProxySpy.getStory(validRequest);
         Assertions.assertEquals(successResponse, response);
     }
 
     /**
-     * Verify that the {@link StoryService#getStory(FeedStoryRequest)} method loads the
+     * Verify that the {@link StoryServiceProxy#getStory(FeedStoryRequest)} method loads the
      * profile image of each user included in the result.
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetStory_validRequest_loadsProfileImages() throws IOException {
-        FeedStoryResponse response = storyServiceSpy.getStory(validRequest);
+    public void testGetStory_validRequest_loadsProfileImages() throws IOException, TweeterRemoteException {
+        FeedStoryResponse response = storyServiceProxySpy.getStory(validRequest);
 
         for(Status status : response.getStatuses()) {
             Assertions.assertNotNull(status.getUser().getImageBytes());
@@ -91,14 +92,14 @@ public class StoryServiceTest {
     }
 
     /**
-     * Verify that for failed requests the {@link StoryService#getStory(FeedStoryRequest)}
+     * Verify that for failed requests the {@link StoryServiceProxy#getStory(FeedStoryRequest)}
      * method returns the same result as the {@link ServerFacade}.
      *
      * @throws IOException if an IO error occurs.
      */
     @Test
-    public void testGetStory_invalidRequest_returnsNoStory() throws IOException {
-        FeedStoryResponse response = storyServiceSpy.getStory(invalidRequest);
+    public void testGetStory_invalidRequest_returnsNoStory() throws IOException, TweeterRemoteException {
+        FeedStoryResponse response = storyServiceProxySpy.getStory(invalidRequest);
         Assertions.assertEquals(failureResponse, response);
         Assertions.assertNotNull(response.getMessage());
     }

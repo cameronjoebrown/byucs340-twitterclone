@@ -1,6 +1,9 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import edu.byu.cs.tweeter.client.model.service.UnfollowService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.client.model.service.UnfollowServiceProxy;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
@@ -26,20 +29,20 @@ public class UnfollowPresenter {
         this.view = view;
     }
 
-    public Response unfollow(FollowUnfollowRequest request) {
-        UnfollowService unfollowService = getUnfollowService();
-        return unfollowService.unfollow(request);
+    public Response unfollow(FollowUnfollowRequest request) throws IOException, TweeterRemoteException {
+        UnfollowServiceProxy unfollowServiceProxy = getUnfollowService();
+        return unfollowServiceProxy.unfollow(request);
     }
 
     /**
-     * Returns an instance of {@link UnfollowService}. Allows mocking of the UnfollowService class
+     * Returns an instance of {@link UnfollowServiceProxy}. Allows mocking of the UnfollowService class
      * for testing purposes. All usages of UnfollowService should get their UnfollowService
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.
      */
-    UnfollowService getUnfollowService() {
-        return new UnfollowService();
+    UnfollowServiceProxy getUnfollowService() {
+        return new UnfollowServiceProxy();
     }
 
 }

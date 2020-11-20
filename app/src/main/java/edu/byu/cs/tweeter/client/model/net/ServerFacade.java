@@ -2,12 +2,9 @@ package edu.byu.cs.tweeter.client.model.net;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import edu.byu.cs.tweeter.BuildConfig;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
@@ -90,7 +87,9 @@ public class ServerFacade {
      * @param request contains all information needed to perform a login.
      * @return the login response.
      */
-    public LoginRegisterResponse login(LoginRequest request, String urlPath) throws IOException, TweeterRemoteException {
+    public LoginRegisterResponse login(LoginRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
         LoginRegisterResponse response = clientCommunicator.doPost(urlPath, request, null, LoginRegisterResponse.class);
 
         if(response.isSuccess()) {
@@ -98,12 +97,6 @@ public class ServerFacade {
         } else {
             throw new RuntimeException(response.getMessage());
         }
-        /*
-        String username = request.getUsername();
-        User user = new User("Test", "User", username,
-                MALE_IMAGE_URL);
-        return new LoginRegisterResponse(user, new AuthToken());
-         */
     }
 
     /**
@@ -114,7 +107,9 @@ public class ServerFacade {
      * @param request contains all information needed to perform a login.
      * @return the login response.
      */
-    public LoginRegisterResponse register(RegisterRequest request, String urlPath) throws IOException, TweeterRemoteException {
+    public LoginRegisterResponse register(RegisterRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
         LoginRegisterResponse response = clientCommunicator.doPost(urlPath, request, null, LoginRegisterResponse.class);
 
         if(response.isSuccess()) {
@@ -122,15 +117,6 @@ public class ServerFacade {
         } else {
             throw new RuntimeException(response.getMessage());
         }
-
-        /* String username = request.getUsername();
-        String firstName = request.getFirstName();
-        String lastName = request.getLastName();
-        User user = new User(firstName, lastName, username,
-                MALE_IMAGE_URL);
-        return new LoginRegisterResponse(user, new AuthToken());
-
-         */
     }
 
     /**
@@ -138,7 +124,9 @@ public class ServerFacade {
      * @param request contains all info needed to perform a logout
      * @return the result of the logout operation
      */
-    public Response logout(LogoutRequest request, String urlPath) throws IOException, TweeterRemoteException {
+    public Response logout(LogoutRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
         Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
 
         if(response.isSuccess()) {
@@ -153,7 +141,9 @@ public class ServerFacade {
      * @param request contains all info needed to perform a follow operation
      * @return the result of the follow operation
      */
-    public Response follow(FollowUnfollowRequest request, String urlPath) throws IOException, TweeterRemoteException {
+    public Response follow(FollowUnfollowRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
         Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
 
         if(response.isSuccess()) {
@@ -168,7 +158,9 @@ public class ServerFacade {
      * @param request contains all info needed to perform an unfollow operation
      * @return the result of the unfollow operation
      */
-    public Response unfollow(FollowUnfollowRequest request, String urlPath) throws IOException, TweeterRemoteException {
+    public Response unfollow(FollowUnfollowRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
         Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
 
         if(response.isSuccess()) {
@@ -178,7 +170,18 @@ public class ServerFacade {
         }
     }
 
-    public ViewUserResponse viewUser(ViewUserRequest request) {
+    public ViewUserResponse viewUser(ViewUserRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
+        ViewUserResponse response = clientCommunicator.doPost(urlPath, request, null, ViewUserResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+
+        /*
         User user = null;
         for(User u : getDummyFollows()) {
             if(u.getUsername().equals(request.getUsername())) {
@@ -190,11 +193,21 @@ public class ServerFacade {
             return new ViewUserResponse("User does not exist");
         }
         return new ViewUserResponse(user, true);
+
+         */
     }
 
-    public PostStatusResponse postStatus(PostStatusRequest request) {
-        // TODO: Add status to Story. How do we allow it to be added in next refresh?
-        return new PostStatusResponse(new Status(request.getStatusText(), request.getUser(), request.getTimeStamp()));
+    public PostStatusResponse postStatus(PostStatusRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
+        PostStatusResponse response = clientCommunicator.doPost(urlPath, request, null, PostStatusResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+        // return new PostStatusResponse(new Status(request.getStatusText(), request.getUser(), request.getTimeStamp()));
     }
 
 
@@ -208,7 +221,8 @@ public class ServerFacade {
      *                other information required to satisfy the request.
      * @return the following response.
      */
-    public FollowingResponse getFollowees(FollowingRequest request, String urlPath) throws IOException, TweeterRemoteException {
+    public FollowingResponse getFollowees(FollowingRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
 
         FollowingResponse response = clientCommunicator.doPost(urlPath, request, null, FollowingResponse.class);
 
@@ -217,56 +231,6 @@ public class ServerFacade {
         } else {
             throw new RuntimeException(response.getMessage());
         }
-
-        /*
-        List<User> allFollowees = getDummyFollows();
-        List<User> responseFollowees = new ArrayList<>(request.getLimit());
-
-        boolean hasMorePages = false;
-
-        if(request.getLimit() > 0) {
-            int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
-
-            for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
-                responseFollowees.add(allFollowees.get(followeesIndex));
-            }
-
-            hasMorePages = followeesIndex < allFollowees.size();
-        }
-
-        return new FollowingResponse(responseFollowees, hasMorePages);
-
-        */
-    }
-
-    /**
-     * Determines the index for the first followee in the specified 'allFollowees' list that should
-     * be returned in the current request. This will be the index of the next followee after the
-     * specified 'lastFollowee'.
-     *
-     * @param lastFollowee the last followee that was returned in the previous request or null if
-     *                     there was no previous request.
-     * @param allFollowees the generated list of followees from which we are returning paged results.
-     * @return the index of the first followee to be returned.
-     */
-    private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {
-
-        int followeesIndex = 0;
-
-        if(lastFollowee != null) {
-            // This is a paged request for something after the first page. Find the first item
-            // we should return
-            for (int i = 0; i < allFollowees.size(); i++) {
-                if(lastFollowee.equals(allFollowees.get(i))) {
-                    // We found the index of the last item returned last time. Increment to get
-                    // to the first one we should return
-                    followeesIndex = i + 1;
-                    break;
-                }
-            }
-        }
-
-        return followeesIndex;
     }
 
     /**
@@ -279,7 +243,9 @@ public class ServerFacade {
      *                other information required to satisfy the request.
      * @return the follower response.
      */
-    public FollowerResponse getFollowers(FollowerRequest request, String urlPath) throws IOException, TweeterRemoteException {
+    public FollowerResponse getFollowers(FollowerRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
         FollowerResponse response = clientCommunicator.doPost(urlPath, request, null, FollowerResponse.class);
 
         if(response.isSuccess()) {
@@ -350,7 +316,18 @@ public class ServerFacade {
     }
 
 
-    public FeedStoryResponse getStory(FeedStoryRequest request) {
+    public FeedStoryResponse getStory(FeedStoryRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
+        FeedStoryResponse response = clientCommunicator.doPost(urlPath, request, null, FeedStoryResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+
+        /*
         // Used in place of assert statements because Android does not support them
         if(BuildConfig.DEBUG) {
             if(request.getLimit() < 0) {
@@ -378,6 +355,8 @@ public class ServerFacade {
         }
 
         return new FeedStoryResponse(responseStatuses, hasMorePages);
+
+         */
     }
 
     /**
@@ -410,7 +389,18 @@ public class ServerFacade {
         return storyIndex;
     }
 
-    public FeedStoryResponse getFeed(FeedStoryRequest request) {
+    public FeedStoryResponse getFeed(FeedStoryRequest request, String urlPath)
+            throws IOException, TweeterRemoteException {
+
+        FeedStoryResponse response = clientCommunicator.doPost(urlPath, request, null, FeedStoryResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+
+        /*
         // Used in place of assert statements because Android does not support them
         if(BuildConfig.DEBUG) {
             if(request.getLimit() < 0) {
@@ -439,6 +429,8 @@ public class ServerFacade {
         }
 
         return new FeedStoryResponse(responseStatuses, hasMorePages);
+
+         */
     }
 
     /**

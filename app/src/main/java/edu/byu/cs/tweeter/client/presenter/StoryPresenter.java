@@ -2,7 +2,7 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.service.StoryService;
+import edu.byu.cs.tweeter.client.model.service.StoryServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 
@@ -35,19 +35,19 @@ public class StoryPresenter {
      * @param request the story request
      */
     public FeedStoryResponse getStory(FeedStoryRequest request) throws IOException {
-        StoryService storyService = getStoryService();
-        return storyService.getStory(request);
+        StoryServiceProxy storyServiceProxy = getStoryService();
+        return storyServiceProxy.getStory(request);
     }
 
     /**
-     * Returns an instance of {@link StoryService}. Allows mocking of the StoryService class
+     * Returns an instance of {@link StoryServiceProxy}. Allows mocking of the StoryService class
      * for testing purposes. All usages of StoryService should get their StoryService
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.
      */
-    StoryService getStoryService() {
-        return new StoryService();
+    StoryServiceProxy getStoryService() {
+        return new StoryServiceProxy();
     }
 
 }

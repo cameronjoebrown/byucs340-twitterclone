@@ -2,7 +2,7 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.service.ViewUserService;
+import edu.byu.cs.tweeter.client.model.service.ViewUserServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 
@@ -29,19 +29,19 @@ public class ViewUserPresenter {
     }
 
     public ViewUserResponse viewUser(ViewUserRequest request) throws IOException {
-        ViewUserService viewUserService = getViewUserService();
-        return viewUserService.viewUser(request);
+        ViewUserServiceProxy viewUserServiceProxy = getViewUserService();
+        return viewUserServiceProxy.viewUser(request);
     }
 
     /**
-     * Returns an instance of {@link ViewUserService}. Allows mocking of the ViewUserService class
+     * Returns an instance of {@link ViewUserServiceProxy}. Allows mocking of the ViewUserService class
      * for testing purposes. All usages of ViewUserService should get their ViewUserService
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.
      */
-    ViewUserService getViewUserService() {
-        return new ViewUserService();
+    ViewUserServiceProxy getViewUserService() {
+        return new ViewUserServiceProxy();
     }
 
 }

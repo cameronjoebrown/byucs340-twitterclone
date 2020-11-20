@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.service.ViewUserService;
+import edu.byu.cs.tweeter.client.model.service.ViewUserServiceProxy;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
@@ -15,7 +15,7 @@ import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 public class ViewUserPresenterTest {
     private ViewUserRequest request;
     private ViewUserResponse response;
-    private ViewUserService mockViewUserService;
+    private ViewUserServiceProxy mockViewUserServiceProxy;
     private ViewUserPresenter presenter;
 
     @BeforeEach
@@ -27,17 +27,17 @@ public class ViewUserPresenterTest {
         response = new ViewUserResponse(viewedUser, true);
 
         // Create a mock ViewUserService
-        mockViewUserService = Mockito.mock(ViewUserService.class);
-        Mockito.when(mockViewUserService.viewUser(request)).thenReturn(response);
+        mockViewUserServiceProxy = Mockito.mock(ViewUserServiceProxy.class);
+        Mockito.when(mockViewUserServiceProxy.viewUser(request)).thenReturn(response);
 
         // Wrap a ViewUserPresenter in a spy that will use the mock service.
         presenter = Mockito.spy(new ViewUserPresenter(new ViewUserPresenter.View() {}));
-        Mockito.when(presenter.getViewUserService()).thenReturn(mockViewUserService);
+        Mockito.when(presenter.getViewUserService()).thenReturn(mockViewUserServiceProxy);
     }
 
     @Test
     public void testViewUser_returnsServiceResult() throws IOException {
-        Mockito.when(mockViewUserService.viewUser(request)).thenReturn(response);
+        Mockito.when(mockViewUserServiceProxy.viewUser(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do
         // anything else, so there's nothing else to test).
@@ -46,7 +46,7 @@ public class ViewUserPresenterTest {
 
     @Test
     public void testViewUser_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
-        Mockito.when(mockViewUserService.viewUser(request)).thenThrow(new IOException());
+        Mockito.when(mockViewUserServiceProxy.viewUser(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> presenter.viewUser(request));
     }

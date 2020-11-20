@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import edu.byu.cs.tweeter.client.model.service.PostStatusService;
+import edu.byu.cs.tweeter.client.model.service.PostStatusServiceProxy;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
@@ -18,7 +18,7 @@ import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 public class PostStatusPresenterTest {
     private PostStatusRequest request;
     private PostStatusResponse response;
-    private PostStatusService mockPostStatusService;
+    private PostStatusServiceProxy mockPostStatusServiceProxy;
     private PostStatusPresenter presenter;
 
     @BeforeEach
@@ -31,17 +31,17 @@ public class PostStatusPresenterTest {
         response = new PostStatusResponse(status1);
 
         // Create a mock FollowingService
-        mockPostStatusService = Mockito.mock(PostStatusService.class);
-        Mockito.when(mockPostStatusService.postStatus(request)).thenReturn(response);
+        mockPostStatusServiceProxy = Mockito.mock(PostStatusServiceProxy.class);
+        Mockito.when(mockPostStatusServiceProxy.postStatus(request)).thenReturn(response);
 
         // Wrap a FollowingPresenter in a spy that will use the mock service.
         presenter = Mockito.spy(new PostStatusPresenter(new PostStatusPresenter.View() {}));
-        Mockito.when(presenter.getPostStatusService()).thenReturn(mockPostStatusService);
+        Mockito.when(presenter.getPostStatusService()).thenReturn(mockPostStatusServiceProxy);
     }
 
     @Test
     public void testPostStatus_returnsServiceResult() {
-        Mockito.when(mockPostStatusService.postStatus(request)).thenReturn(response);
+        Mockito.when(mockPostStatusServiceProxy.postStatus(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do
         // anything else, so there's nothing else to test).

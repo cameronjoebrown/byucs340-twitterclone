@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.model.service;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 
@@ -16,6 +17,6 @@ public interface PostStatusService {
      * @param request contains the data required to fulfill the request.
      * @return the status that was created.
      */
-    PostStatusResponse createStatus(PostStatusRequest request) throws IOException;
+    PostStatusResponse postStatus(PostStatusRequest request) throws IOException, TweeterRemoteException;
 
 }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import edu.byu.cs.tweeter.client.model.service.UnfollowService;
+import edu.byu.cs.tweeter.client.model.service.UnfollowServiceProxy;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
@@ -13,7 +13,7 @@ import edu.byu.cs.tweeter.model.service.response.Response;
 public class UnfollowPresenterTest {
     private FollowUnfollowRequest request;
     private Response response;
-    private UnfollowService mockFollowService;
+    private UnfollowServiceProxy mockFollowService;
     private UnfollowPresenter presenter;
 
     @BeforeEach
@@ -28,7 +28,7 @@ public class UnfollowPresenterTest {
         response = new Response(true);
 
         // Create a mock UnfollowService
-        mockFollowService = Mockito.mock(UnfollowService.class);
+        mockFollowService = Mockito.mock(UnfollowServiceProxy.class);
         Mockito.when(mockFollowService.unfollow(request)).thenReturn(response);
 
         // Wrap a UnfollowPresenter in a spy that will use the mock service.

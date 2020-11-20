@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.client.model.service;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.FollowingService;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
@@ -23,8 +24,10 @@ public class FollowingServiceProxy extends Service implements FollowingService {
      * @param request contains the data required to fulfill the request.
      * @return the followees.
      */
-    public FollowingResponse getFollowees(FollowingRequest request) throws IOException {
-        FollowingResponse response = getServerFacade().getFollowees(request);
+
+    @Override
+    public FollowingResponse getFollowees(FollowingRequest request) throws IOException, TweeterRemoteException {
+        FollowingResponse response = getServerFacade().getFollowees(request, URL_PATH);
 
         if(response.isSuccess()) {
             loadImages(response.getFollowees());

@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.client.model.service.RegisterService;
+import edu.byu.cs.tweeter.client.model.service.RegisterServiceProxy;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
@@ -16,7 +16,7 @@ import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 public class RegisterPresenterTest {
     private RegisterRequest request;
     private LoginRegisterResponse response;
-    private RegisterService mockRegisterService;
+    private RegisterServiceProxy mockRegisterServiceProxy;
     private RegisterPresenter presenter;
 
     @BeforeEach
@@ -27,17 +27,17 @@ public class RegisterPresenterTest {
         response = new LoginRegisterResponse(currentUser, new AuthToken());
 
         // Create a mock FollowingService
-        mockRegisterService = Mockito.mock(RegisterService.class);
-        Mockito.when(mockRegisterService.register(request)).thenReturn(response);
+        mockRegisterServiceProxy = Mockito.mock(RegisterServiceProxy.class);
+        Mockito.when(mockRegisterServiceProxy.register(request)).thenReturn(response);
 
         // Wrap a FollowingPresenter in a spy that will use the mock service.
         presenter = Mockito.spy(new RegisterPresenter(new RegisterPresenter.View() {}));
-        Mockito.when(presenter.getRegisterService()).thenReturn(mockRegisterService);
+        Mockito.when(presenter.getRegisterService()).thenReturn(mockRegisterServiceProxy);
     }
 
     @Test
     public void testRegister_returnsServiceResult() throws IOException {
-        Mockito.when(mockRegisterService.register(request)).thenReturn(response);
+        Mockito.when(mockRegisterServiceProxy.register(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do
         // anything else, so there's nothing else to test).
@@ -46,7 +46,7 @@ public class RegisterPresenterTest {
 
     @Test
     public void testRegister_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
-        Mockito.when(mockRegisterService.register(request)).thenThrow(new IOException());
+        Mockito.when(mockRegisterServiceProxy.register(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> presenter.register(request));
     }

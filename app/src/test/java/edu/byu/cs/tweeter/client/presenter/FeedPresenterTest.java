@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
 
-import edu.byu.cs.tweeter.client.model.service.FeedService;
+import edu.byu.cs.tweeter.client.model.service.FeedServiceProxy;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
@@ -19,7 +19,7 @@ import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 public class FeedPresenterTest {
     private FeedStoryRequest request;
     private FeedStoryResponse response;
-    private FeedService mockFeedService;
+    private FeedServiceProxy mockFeedServiceProxy;
     private FeedPresenter presenter;
 
     @BeforeEach
@@ -46,17 +46,17 @@ public class FeedPresenterTest {
         response = new FeedStoryResponse(Arrays.asList(resultStatus1, resultStatus2, resultStatus3), false);
 
         // Create a mock FollowingService
-        mockFeedService = Mockito.mock(FeedService.class);
-        Mockito.when(mockFeedService.getFeed(request)).thenReturn(response);
+        mockFeedServiceProxy = Mockito.mock(FeedServiceProxy.class);
+        Mockito.when(mockFeedServiceProxy.getFeed(request)).thenReturn(response);
 
         // Wrap a FollowingPresenter in a spy that will use the mock service.
         presenter = Mockito.spy(new FeedPresenter(new FeedPresenter.View() {}));
-        Mockito.when(presenter.getFeedService()).thenReturn(mockFeedService);
+        Mockito.when(presenter.getFeedService()).thenReturn(mockFeedServiceProxy);
     }
 
     @Test
     public void testGetFeed_returnsServiceResult() throws IOException {
-        Mockito.when(mockFeedService.getFeed(request)).thenReturn(response);
+        Mockito.when(mockFeedServiceProxy.getFeed(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do
         // anything else, so there's nothing else to test).
@@ -65,7 +65,7 @@ public class FeedPresenterTest {
 
     @Test
     public void testGetFeed_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
-        Mockito.when(mockFeedService.getFeed(request)).thenThrow(new IOException());
+        Mockito.when(mockFeedServiceProxy.getFeed(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> presenter.getFeed(request));
     }

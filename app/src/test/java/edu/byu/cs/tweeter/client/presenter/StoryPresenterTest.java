@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
 
-import edu.byu.cs.tweeter.client.model.service.StoryService;
+import edu.byu.cs.tweeter.client.model.service.StoryServiceProxy;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
@@ -20,7 +20,7 @@ public class StoryPresenterTest {
 
     private FeedStoryRequest request;
     private FeedStoryResponse response;
-    private StoryService mockStoryService;
+    private StoryServiceProxy mockStoryServiceProxy;
     private StoryPresenter presenter;
 
     @BeforeEach
@@ -42,17 +42,17 @@ public class StoryPresenterTest {
         response = new FeedStoryResponse(Arrays.asList(resultStatus1, resultStatus2, resultStatus3), false);
 
         // Create a mock FollowingService
-        mockStoryService = Mockito.mock(StoryService.class);
-        Mockito.when(mockStoryService.getStory(request)).thenReturn(response);
+        mockStoryServiceProxy = Mockito.mock(StoryServiceProxy.class);
+        Mockito.when(mockStoryServiceProxy.getStory(request)).thenReturn(response);
 
         // Wrap a FollowingPresenter in a spy that will use the mock service.
         presenter = Mockito.spy(new StoryPresenter(new StoryPresenter.View() {}));
-        Mockito.when(presenter.getStoryService()).thenReturn(mockStoryService);
+        Mockito.when(presenter.getStoryService()).thenReturn(mockStoryServiceProxy);
     }
 
     @Test
     public void testGetStory_returnsServiceResult() throws IOException {
-        Mockito.when(mockStoryService.getStory(request)).thenReturn(response);
+        Mockito.when(mockStoryServiceProxy.getStory(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do
         // anything else, so there's nothing else to test).
@@ -61,7 +61,7 @@ public class StoryPresenterTest {
 
     @Test
     public void testGetStory_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
-        Mockito.when(mockStoryService.getStory(request)).thenThrow(new IOException());
+        Mockito.when(mockStoryServiceProxy.getStory(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> presenter.getStory(request));
     }
