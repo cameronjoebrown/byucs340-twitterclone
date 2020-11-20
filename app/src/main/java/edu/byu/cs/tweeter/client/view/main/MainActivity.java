@@ -21,13 +21,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.presenter.LogoutPresenter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.LogoutTask;
 import edu.byu.cs.tweeter.client.view.main.login.LoginRegisterActivity;
 import edu.byu.cs.tweeter.client.view.main.posts.PostStatusFragment;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 

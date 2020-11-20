@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.model.net;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,9 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.byu.cs.tweeter.BuildConfig;
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
@@ -32,6 +33,12 @@ import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
  * this class.
  */
 public class ServerFacade {
+
+    // TODO: Set this to the invoke URL of your API. Find it by going to your API in AWS, clicking
+    //  on stages in the right-side menu, and clicking on the stage you deployed your API to.
+    private static final String SERVER_URL = "https://60w68eax7h.execute-api.us-east-1.amazonaws.com/dev";
+
+    private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
 
     // This is the hard coded followee data returned by the 'getFollowees()' and 'getFollowers()' method
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
@@ -83,11 +90,20 @@ public class ServerFacade {
      * @param request contains all information needed to perform a login.
      * @return the login response.
      */
-    public LoginRegisterResponse login(LoginRequest request) {
+    public LoginRegisterResponse login(LoginRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        LoginRegisterResponse response = clientCommunicator.doPost(urlPath, request, null, LoginRegisterResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+        /*
         String username = request.getUsername();
         User user = new User("Test", "User", username,
                 MALE_IMAGE_URL);
         return new LoginRegisterResponse(user, new AuthToken());
+         */
     }
 
     /**
@@ -98,13 +114,23 @@ public class ServerFacade {
      * @param request contains all information needed to perform a login.
      * @return the login response.
      */
-    public LoginRegisterResponse register(RegisterRequest request) {
-        String username = request.getUsername();
+    public LoginRegisterResponse register(RegisterRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        LoginRegisterResponse response = clientCommunicator.doPost(urlPath, request, null, LoginRegisterResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+
+        /* String username = request.getUsername();
         String firstName = request.getFirstName();
         String lastName = request.getLastName();
         User user = new User(firstName, lastName, username,
                 MALE_IMAGE_URL);
         return new LoginRegisterResponse(user, new AuthToken());
+
+         */
     }
 
     /**
@@ -112,8 +138,14 @@ public class ServerFacade {
      * @param request contains all info needed to perform a logout
      * @return the result of the logout operation
      */
-    public Response logout(LogoutRequest request) {
-        return new Response(true);
+    public Response logout(LogoutRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
     }
 
     /**
@@ -121,8 +153,14 @@ public class ServerFacade {
      * @param request contains all info needed to perform a follow operation
      * @return the result of the follow operation
      */
-    public Response follow(FollowUnfollowRequest request) {
-        return new Response(true);
+    public Response follow(FollowUnfollowRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
     }
 
     /**
@@ -130,8 +168,14 @@ public class ServerFacade {
      * @param request contains all info needed to perform an unfollow operation
      * @return the result of the unfollow operation
      */
-    public Response unfollow(FollowUnfollowRequest request) {
-        return new Response(true);
+    public Response unfollow(FollowUnfollowRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
     }
 
     public ViewUserResponse viewUser(ViewUserRequest request) {
@@ -164,19 +208,17 @@ public class ServerFacade {
      *                other information required to satisfy the request.
      * @return the following response.
      */
-    public FollowingResponse getFollowees(FollowingRequest request) {
+    public FollowingResponse getFollowees(FollowingRequest request, String urlPath) throws IOException, TweeterRemoteException {
 
-        // Used in place of assert statements because Android does not support them
-        if(BuildConfig.DEBUG) {
-            if(request.getLimit() < 0) {
-                throw new AssertionError();
-            }
+        FollowingResponse response = clientCommunicator.doPost(urlPath, request, null, FollowingResponse.class);
 
-            if(request.getFollower() == null) {
-                throw new AssertionError();
-            }
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
         }
 
+        /*
         List<User> allFollowees = getDummyFollows();
         List<User> responseFollowees = new ArrayList<>(request.getLimit());
 
@@ -193,6 +235,8 @@ public class ServerFacade {
         }
 
         return new FollowingResponse(responseFollowees, hasMorePages);
+
+        */
     }
 
     /**
@@ -235,8 +279,16 @@ public class ServerFacade {
      *                other information required to satisfy the request.
      * @return the follower response.
      */
-    public FollowerResponse getFollowers(FollowerRequest request) {
+    public FollowerResponse getFollowers(FollowerRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        FollowerResponse response = clientCommunicator.doPost(urlPath, request, null, FollowerResponse.class);
 
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+
+        /*
         // Used in place of assert statements because Android does not support them
         if(BuildConfig.DEBUG) {
             if(request.getLimit() < 0) {
@@ -264,6 +316,8 @@ public class ServerFacade {
         }
 
         return new FollowerResponse(responseFollowers, hasMorePages);
+
+         */
     }
 
     /**

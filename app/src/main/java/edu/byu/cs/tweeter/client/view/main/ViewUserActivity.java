@@ -15,8 +15,6 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.presenter.FollowPresenter;
 import edu.byu.cs.tweeter.client.presenter.UnfollowPresenter;
 import edu.byu.cs.tweeter.client.presenter.ViewUserPresenter;
@@ -24,6 +22,8 @@ import edu.byu.cs.tweeter.client.view.ViewUserSectionsPagerAdapter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.FollowTask;
 import edu.byu.cs.tweeter.client.view.asyncTasks.UnfollowTask;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 

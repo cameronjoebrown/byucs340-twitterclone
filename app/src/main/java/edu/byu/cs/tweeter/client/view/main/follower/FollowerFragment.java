@@ -20,14 +20,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.client.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.GetFollowersTask;
 import edu.byu.cs.tweeter.client.view.asyncTasks.ViewUserTask;
 import edu.byu.cs.tweeter.client.view.main.ViewUserActivity;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
@@ -165,7 +165,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         private final List<User> users = new ArrayList<>();
 
-        private edu.byu.cs.tweeter.client.model.domain.User lastFollowee;
+        private User lastFollowee;
 
         private boolean hasMorePages;
         private boolean isLoading = false;

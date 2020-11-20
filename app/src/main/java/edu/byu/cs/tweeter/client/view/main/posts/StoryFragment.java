@@ -28,15 +28,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.client.model.domain.AuthToken;
-import edu.byu.cs.tweeter.client.model.domain.Status;
-import edu.byu.cs.tweeter.client.model.domain.User;
 import edu.byu.cs.tweeter.client.presenter.StoryPresenter;
 import edu.byu.cs.tweeter.client.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.GetStoryTask;
 import edu.byu.cs.tweeter.client.view.asyncTasks.ViewUserTask;
 import edu.byu.cs.tweeter.client.view.main.ViewUserActivity;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
@@ -205,7 +205,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View,
 
         private final List<Status> statuses = new ArrayList<>();
 
-        private edu.byu.cs.tweeter.client.model.domain.Status lastStatus;
+        private edu.byu.cs.tweeter.model.domain.Status lastStatus;
 
         private boolean hasMorePages;
         private boolean isLoading = false;
