@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.client.presenter;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.service.ViewUserServiceProxy;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 
@@ -28,7 +29,7 @@ public class ViewUserPresenter {
         this.view = view;
     }
 
-    public ViewUserResponse viewUser(ViewUserRequest request) throws IOException {
+    public ViewUserResponse viewUser(ViewUserRequest request) throws IOException, TweeterRemoteException {
         ViewUserServiceProxy viewUserServiceProxy = getViewUserService();
         return viewUserServiceProxy.viewUser(request);
     }

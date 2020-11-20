@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.client.presenter;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.service.StoryServiceProxy;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 
@@ -34,7 +35,7 @@ public class StoryPresenter {
      *
      * @param request the story request
      */
-    public FeedStoryResponse getStory(FeedStoryRequest request) throws IOException {
+    public FeedStoryResponse getStory(FeedStoryRequest request) throws IOException, TweeterRemoteException {
         StoryServiceProxy storyServiceProxy = getStoryService();
         return storyServiceProxy.getStory(request);
     }

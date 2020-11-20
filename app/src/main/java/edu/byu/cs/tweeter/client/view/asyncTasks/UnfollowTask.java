@@ -2,7 +2,10 @@ package edu.byu.cs.tweeter.client.view.asyncTasks;
 
 import android.os.AsyncTask;
 
+import java.io.IOException;
+
 import edu.byu.cs.tweeter.client.presenter.UnfollowPresenter;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
@@ -43,8 +46,13 @@ public class UnfollowTask extends AsyncTask<FollowUnfollowRequest, Void, Respons
      */
     @Override
     protected Response doInBackground(FollowUnfollowRequest... unfollowRequests) {
-
-        return presenter.unfollow(unfollowRequests[0]);
+        Response response = null;
+        try {
+            return presenter.unfollow(unfollowRequests[0]);
+        } catch (IOException | TweeterRemoteException e) {
+            exception = e;
+        }
+        return response;
     }
 
     /**

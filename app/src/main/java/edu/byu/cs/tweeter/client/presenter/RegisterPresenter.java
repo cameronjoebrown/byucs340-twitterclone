@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.client.presenter;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.service.RegisterServiceProxy;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 
@@ -30,7 +31,7 @@ public class RegisterPresenter {
      *
      * @param registerRequest the request.
      */
-    public LoginRegisterResponse register(RegisterRequest registerRequest) throws IOException {
+    public LoginRegisterResponse register(RegisterRequest registerRequest) throws IOException, TweeterRemoteException {
         RegisterServiceProxy registerServiceProxy = getRegisterService();
         return registerServiceProxy.register(registerRequest);
     }

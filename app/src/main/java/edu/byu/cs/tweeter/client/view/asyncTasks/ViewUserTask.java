@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.presenter.ViewUserPresenter;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 
@@ -51,7 +52,7 @@ public class ViewUserTask extends AsyncTask<ViewUserRequest, Void, ViewUserRespo
 
         try {
             response = presenter.viewUser(viewUserRequests[0]);
-        } catch (IOException ex) {
+        } catch (IOException | TweeterRemoteException ex) {
             exception = ex;
         }
 

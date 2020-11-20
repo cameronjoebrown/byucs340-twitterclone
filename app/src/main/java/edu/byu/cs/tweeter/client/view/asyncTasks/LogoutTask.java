@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.presenter.LogoutPresenter;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
@@ -52,7 +53,7 @@ public class LogoutTask extends AsyncTask<LogoutRequest, Void, Response> {
         try {
             response = presenter.logout(logoutRequests[0]);
 
-        } catch (IOException ex) {
+        } catch (IOException | TweeterRemoteException ex) {
             exception = ex;
         }
 

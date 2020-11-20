@@ -1,6 +1,9 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import java.io.IOException;
+
 import edu.byu.cs.tweeter.client.model.service.PostStatusServiceProxy;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 
@@ -20,7 +23,7 @@ public class PostStatusPresenter {
         this.view = view;
     }
 
-    public PostStatusResponse postStatus(PostStatusRequest request) {
+    public PostStatusResponse postStatus(PostStatusRequest request) throws IOException, TweeterRemoteException {
         PostStatusServiceProxy postStatusServiceProxy = getPostStatusService();
         return postStatusServiceProxy.postStatus(request);
     }
