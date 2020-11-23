@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
-import edu.byu.cs.tweeter.server.service.RegisterServiceImpl;
+import edu.byu.cs.tweeter.server.service.LoginServiceImpl;
 
 /**
  * An AWS lambda function that logs a user in and returns the user object and an auth code for
@@ -15,7 +15,7 @@ public class LoginHandler implements RequestHandler<LoginRequest, LoginRegisterR
 
     @Override
     public LoginRegisterResponse handleRequest(LoginRequest loginRequest, Context context) {
-        RegisterServiceImpl loginService = new RegisterServiceImpl();
+        LoginServiceImpl loginService = new LoginServiceImpl();
         return loginService.login(loginRequest);
     }
 }
