@@ -17,6 +17,6 @@ public class RegisterDAO {
         String lastName = request.getLastName();
         User user = new User(firstName, lastName, username,
                 MALE_IMAGE_URL);
-        return new LoginRegisterResponse(user, new AuthToken());
+        return new LoginRegisterResponse(user, new AuthToken("cooladfsdfdsfa"));
     }
 }

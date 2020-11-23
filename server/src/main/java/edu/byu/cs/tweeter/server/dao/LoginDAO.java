@@ -15,6 +15,6 @@ public class LoginDAO {
           String username = request.getUsername();
           User user = new User("Test", "User", username,
                   MALE_IMAGE_URL);
-          return new LoginRegisterResponse(user, new AuthToken());
+          return new LoginRegisterResponse(user, new AuthToken("token123123123"));
       }
 }
