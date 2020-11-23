@@ -9,8 +9,13 @@ import java.util.Objects;
  */
 public class Follow {
 
-    private final User follower;
-    private final User followee;
+    private User follower;
+    private User followee;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called by other code.
+     */
+    private Follow() {}
 
     public Follow(@NotNull User follower, @NotNull User followee) {
         this.follower = follower;
@@ -23,6 +28,14 @@ public class Follow {
 
     public User getFollowee() {
         return followee;
+    }
+
+    public void setFollower(User follower) {
+        this.follower = follower;
+    }
+
+    public void setFollowee(User followee) {
+        this.followee = followee;
     }
 
     @Override

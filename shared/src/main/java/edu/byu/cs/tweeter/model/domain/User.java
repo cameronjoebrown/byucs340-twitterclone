@@ -8,11 +8,16 @@ import java.util.Objects;
  */
 public class User implements Comparable<User>, Serializable {
 
-    private final String firstName;
-    private final String lastName;
-    private final String username;
-    private final String imageUrl;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String imageUrl;
     private byte [] imageBytes;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called by other code.
+     */
+    private User() {}
 
     public User(String firstName, String lastName, String imageURL) {
         this(firstName, lastName, String.format("@%s%s", firstName, lastName), imageURL);
@@ -51,6 +56,22 @@ public class User implements Comparable<User>, Serializable {
 
     public void setImageBytes(byte[] imageBytes) {
         this.imageBytes = imageBytes;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override

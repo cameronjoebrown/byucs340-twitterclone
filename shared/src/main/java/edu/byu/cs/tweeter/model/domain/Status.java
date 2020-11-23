@@ -8,9 +8,14 @@ import java.time.LocalDateTime;
  */
 public class Status implements Comparable<Status>, Serializable {
 
-    private final String statusText;
-    private final User user;
-    private final LocalDateTime timeStamp;
+    private String statusText;
+    private User user;
+    private LocalDateTime timeStamp;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called by other code.
+     */
+    private Status() {}
 
     public Status(String statusText, User user, LocalDateTime timeStamp) {
         this.statusText = statusText;
@@ -28,6 +33,18 @@ public class Status implements Comparable<Status>, Serializable {
 
     public LocalDateTime getTimeStamp() {
         return timeStamp;
+    }
+
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     @Override
