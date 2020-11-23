@@ -13,7 +13,7 @@ import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
  */
 public class ViewUserServiceProxy extends Service implements ViewUserService {
 
-    private static final String URL_PATH = "/viewuser";
+    private static final String URL_PATH = "/getuser";
 
     /**
      * Returns the user specified in the request
