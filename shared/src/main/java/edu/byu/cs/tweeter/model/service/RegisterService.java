@@ -7,7 +7,7 @@ import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 
 /**
- * Defines the interface for the 'login' service.
+ * Defines the interface for the 'register' service.
  */
 public interface RegisterService {
 

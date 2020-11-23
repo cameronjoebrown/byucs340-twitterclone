@@ -59,4 +59,15 @@ public class PostStatusRequest {
         return timeStamp;
     }
 
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 }

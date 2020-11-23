@@ -62,4 +62,16 @@ public class FeedStoryRequest {
     public Status getLastStatus() {
         return lastStatus;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public void setLastStatus(Status lastStatus) {
+        this.lastStatus = lastStatus;
+    }
 }

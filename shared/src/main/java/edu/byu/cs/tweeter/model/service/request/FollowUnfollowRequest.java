@@ -44,4 +44,12 @@ public class FollowUnfollowRequest {
     public User getFollower() {
         return follower;
     }
+
+    public void setFollowee(User followee) {
+        this.followee = followee;
+    }
+
+    public void setFollower(User follower) {
+        this.follower = follower;
+    }
 }

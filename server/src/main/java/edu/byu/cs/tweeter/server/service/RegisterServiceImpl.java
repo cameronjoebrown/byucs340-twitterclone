@@ -13,8 +13,8 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     /**
-     * Returns an instance of {@link RegisterDAO}. Allows mocking of the FollowingDAO class
-     * for testing purposes. All usages of FollowingDAO should get their FollowingDAO
+     * Returns an instance of {@link RegisterDAO}. Allows mocking of the DAO class
+     * for testing purposes. All usages of DAO should get their DAO
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.

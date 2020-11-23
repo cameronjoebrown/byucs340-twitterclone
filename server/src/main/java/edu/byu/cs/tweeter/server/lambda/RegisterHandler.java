@@ -15,6 +15,8 @@ public class RegisterHandler implements RequestHandler<RegisterRequest, LoginReg
     @Override
     public LoginRegisterResponse handleRequest(RegisterRequest request, Context context) {
         RegisterServiceImpl service = new RegisterServiceImpl();
+        System.out.println(request.getFirstName());
+        System.out.println(request.getUsername());
         return service.register(request);
     }
 }
