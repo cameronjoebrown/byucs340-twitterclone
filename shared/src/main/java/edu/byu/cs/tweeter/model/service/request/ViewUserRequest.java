@@ -7,7 +7,12 @@ package edu.byu.cs.tweeter.model.service.request;
  */
 public class ViewUserRequest {
 
-    private final String username;
+    private String username;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private ViewUserRequest() {}
 
     /**
      * Creates an instance.

@@ -9,9 +9,14 @@ import edu.byu.cs.tweeter.model.domain.User;
  */
 public class PostStatusRequest {
 
-    private final String statusText;
-    private final User user;
-    private final LocalDateTime timeStamp;
+    private String statusText;
+    private User user;
+    private LocalDateTime timeStamp;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private PostStatusRequest() {}
 
     /**
      * Creates an instance.

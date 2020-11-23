@@ -8,9 +8,14 @@ import edu.byu.cs.tweeter.model.domain.User;
  * followers for a specified followee.
  */
 public class FollowerRequest {
-    private final User followee;
-    private final int limit;
-    private final User lastFollower;
+    private User followee;
+    private int limit;
+    private User lastFollower;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private FollowerRequest() {}
 
     /**
      * Creates an instance.

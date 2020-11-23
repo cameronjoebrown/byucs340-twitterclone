@@ -7,7 +7,12 @@ public class LogoutRequest {
     /**
      * the authToken of the user to be logged out
      */
-    private final AuthToken authToken;
+    private AuthToken authToken;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private LogoutRequest() {}
 
     /**
      * Creates an instance.

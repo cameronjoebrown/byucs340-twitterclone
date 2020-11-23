@@ -9,9 +9,14 @@ import edu.byu.cs.tweeter.model.domain.User;
  */
 public class FeedStoryRequest {
 
-    private final User user;
-    private final int limit;
-    private final Status lastStatus;
+    private User user;
+    private int limit;
+    private Status lastStatus;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private FeedStoryRequest() {}
 
     /**
      * Creates an instance.

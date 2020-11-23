@@ -8,8 +8,13 @@ import edu.byu.cs.tweeter.model.domain.User;
  */
 public class FollowUnfollowRequest {
 
-    private final User followee;
-    private final User follower;
+    private User followee;
+    private User follower;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private FollowUnfollowRequest() {}
 
     /**
      * Creates an instance.

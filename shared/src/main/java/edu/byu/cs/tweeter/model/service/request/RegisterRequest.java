@@ -5,11 +5,16 @@ package edu.byu.cs.tweeter.model.service.request;
  * the server register a user.
  */
 public class RegisterRequest {
-    private final String username;
-    private final String password;
-    private final String firstName;
-    private final String lastName;
-    private final String profilePicURL;
+    private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String profilePicURL;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private RegisterRequest() {}
 
     public RegisterRequest(String username, String password, String firstName,
                            String lastName, String profilePicURL) {
