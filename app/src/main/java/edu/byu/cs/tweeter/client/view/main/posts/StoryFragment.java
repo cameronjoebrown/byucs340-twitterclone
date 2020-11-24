@@ -17,7 +17,6 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -149,10 +148,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View,
             userAlias.setText(status.getUser().getUsername());
             userName.setText(status.getUser().getName());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-            String formatDateTime = status.getTimeStamp().format(formatter);
-            timeStamp.setText(formatDateTime);
+            timeStamp.setText(status.getTimeStamp());
 
             String text = status.getStatusText();
 

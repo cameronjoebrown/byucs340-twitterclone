@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.model.service.request;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -11,7 +12,7 @@ public class PostStatusRequest {
 
     private String statusText;
     private User user;
-    private LocalDateTime timeStamp;
+    private String timeStamp;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
@@ -28,7 +29,8 @@ public class PostStatusRequest {
     public PostStatusRequest(String statusText, User user, LocalDateTime timeStamp) {
         this.statusText = statusText;
         this.user = user;
-        this.timeStamp = timeStamp;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.timeStamp = timeStamp.format(formatter);
     }
 
 
@@ -55,7 +57,7 @@ public class PostStatusRequest {
      *
      * @return the time stamp of the status
      */
-    public LocalDateTime getTimeStamp() {
+    public String getTimeStamp() {
         return timeStamp;
     }
 
@@ -67,7 +69,13 @@ public class PostStatusRequest {
         this.user = user;
     }
 
+    public LocalDateTime getLocalDateTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return LocalDateTime.parse(this.timeStamp, formatter);
+    }
+
     public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.timeStamp = timeStamp.format(formatter);
     }
 }

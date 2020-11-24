@@ -10,6 +10,11 @@ public class FeedStoryResponse extends PagedResponse {
     private List<Status> statuses;
 
     /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private FeedStoryResponse() {}
+
+    /**
      * Creates a response indicating that the corresponding request was unsuccessful. Sets the
      * success and more pages indicators to false.
      *
@@ -37,5 +42,9 @@ public class FeedStoryResponse extends PagedResponse {
      */
     public List<Status> getStatuses() {
         return statuses;
+    }
+
+    public void setStatuses(List<Status> statuses) {
+        this.statuses = statuses;
     }
 }

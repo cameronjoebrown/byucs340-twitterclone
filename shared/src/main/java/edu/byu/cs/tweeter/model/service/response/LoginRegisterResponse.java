@@ -13,6 +13,11 @@ public class LoginRegisterResponse extends Response {
     private AuthToken authToken;
 
     /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private LoginRegisterResponse() {}
+
+    /**
      * Creates a response indicating that the corresponding request was unsuccessful.
      *
      * @param message a message describing why the request was unsuccessful.

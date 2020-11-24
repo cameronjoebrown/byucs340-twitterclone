@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.model.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a status
@@ -10,7 +11,7 @@ public class Status implements Comparable<Status>, Serializable {
 
     private String statusText;
     private User user;
-    private LocalDateTime timeStamp;
+    private String timeStamp;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called by other code.
@@ -20,7 +21,9 @@ public class Status implements Comparable<Status>, Serializable {
     public Status(String statusText, User user, LocalDateTime timeStamp) {
         this.statusText = statusText;
         this.user = user;
-        this.timeStamp = timeStamp;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.timeStamp = timeStamp.format(formatter);
     }
 
     public String getStatusText() {
@@ -31,7 +34,7 @@ public class Status implements Comparable<Status>, Serializable {
         return user;
     }
 
-    public LocalDateTime getTimeStamp() {
+    public String getTimeStamp() {
         return timeStamp;
     }
 
@@ -44,7 +47,8 @@ public class Status implements Comparable<Status>, Serializable {
     }
 
     public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.timeStamp = timeStamp.format(formatter);
     }
 
     @Override

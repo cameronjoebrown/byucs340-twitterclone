@@ -8,6 +8,10 @@ public class ViewUserResponse extends Response {
     private User user;
     private Boolean isFollowing;
 
+    private ViewUserResponse() {
+        super();
+    }
+
     /**
      * Creates a response indicating that the corresponding request was unsuccessful.
      *
@@ -46,5 +50,13 @@ public class ViewUserResponse extends Response {
      */
     public Boolean getFollowing() {
         return isFollowing;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setFollowing(Boolean following) {
+        isFollowing = following;
     }
 }

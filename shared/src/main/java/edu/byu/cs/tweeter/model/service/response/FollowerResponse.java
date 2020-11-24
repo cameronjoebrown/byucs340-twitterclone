@@ -14,6 +14,11 @@ public class FollowerResponse extends PagedResponse {
     private List<User> followers;
 
     /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private FollowerResponse() {}
+
+    /**
      * Creates a response indicating that the corresponding request was unsuccessful. Sets the
      * success and more pages indicators to false.
      *

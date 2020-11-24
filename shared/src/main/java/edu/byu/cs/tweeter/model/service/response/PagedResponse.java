@@ -5,7 +5,12 @@ package edu.byu.cs.tweeter.model.service.response;
  */
 public class PagedResponse extends Response {
 
-    private final boolean hasMorePages;
+    private boolean hasMorePages;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    protected PagedResponse() {}
 
     PagedResponse(boolean success, boolean hasMorePages) {
         super(success);
