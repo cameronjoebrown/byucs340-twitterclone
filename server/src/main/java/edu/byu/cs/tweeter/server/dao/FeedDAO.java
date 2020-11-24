@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,21 +28,21 @@ public class FeedDAO {
     private final User user19 = new User("Justin", "Jones", MALE_IMAGE_URL);
 
     // Hard coded Mock Feed Statuses
-    private final Status status1 = new Status("This is a tweet.", user1, LocalDateTime.of(2018, 4, 11, 12, 56));
-    private final Status status2 = new Status("This is another tweet.", user4, LocalDateTime.of(2018, 5, 11, 12, 56));
-    private final Status status3 = new Status("What's up @JustinJones", user1, LocalDateTime.of(2018, 6, 11, 12, 56));
-    private final Status status4 = new Status("Here's a link: http://google.com", user5, LocalDateTime.of(2019, 4, 11, 1, 56));
-    private final Status status5 = new Status("Hello Everybody", user2, LocalDateTime.of(2019, 8, 11, 12, 56));
-    private final Status status6 = new Status("Hello @FrankFrandson", user2, LocalDateTime.of(2019, 9, 11, 12, 56));
-    private final Status status7 = new Status("Hello Everybody", user2, LocalDateTime.of(2019, 10, 11, 12, 56));
-    private final Status status8 = new Status("Link: http://google.com", user2, LocalDateTime.of(2019, 11, 11, 12, 56));
-    private final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user3, LocalDateTime.of(2019, 12, 15, 12, 56));
-    private final Status status10 = new Status("Go to this link: http://github.com", user19, LocalDateTime.of(2020, 1, 15, 17, 56));
-    private final Status status11 = new Status("I love @IgorIsaacson", user13, LocalDateTime.of(2020, 3, 23, 12, 56));
-    private final Status status12 = new Status("Link: http://google.com", user14, LocalDateTime.of(2020, 4, 11, 12, 10));
-    private final Status status13 = new Status("Cool Link: http://www.google.com", user15, LocalDateTime.of(2020, 4, 11, 21, 26));
-    private final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user16, LocalDateTime.of(2020, 5, 18, 11, 56));
-    private final Status status15 = new Status("This is fun", user16, LocalDateTime.of(2020, 10, 14, 12, 56));
+    private final Status status1 = new Status("This is a tweet.", user1, "2018-04-11 12:56");
+    private final Status status2 = new Status("This is another tweet.", user4, "2018-05-11 12:56");
+    private final Status status3 = new Status("What's up @JustinJones", user1, "2018-06-11 12:56");
+    private final Status status4 = new Status("Here's a link: http://google.com", user5, "2019-04-11 01:56");
+    private final Status status5 = new Status("Hello Everybody", user2, "2019-08-11 12:56");
+    private final Status status6 = new Status("Hello @FrankFrandson", user2, "2019-09-11 12:56");
+    private final Status status7 = new Status("Hello Everybody", user2, "2019-10-11 12:56");
+    private final Status status8 = new Status("Link: http://google.com", user2, "2019-11-11 12:56");
+    private final Status status9 = new Status("Person: @HelenHopwell Link: http://google.com", user3, "2019-12-15 12:56");
+    private final Status status10 = new Status("Go to this link: http://github.com", user19, "2020-01-15 17:56");
+    private final Status status11 = new Status("I love @IgorIsaacson", user13, "2020-03-23 12:56");
+    private final Status status12 = new Status("Link: http://google.com", user14, "2020-04-11 12:10");
+    private final Status status13 = new Status("Cool Link: http://www.google.com", user15, "2020-04-11 21:26");
+    private final Status status14 = new Status("Person: @GiovannaGiles Link: http://google.com", user16, "2020-05-18 11:56");
+    private final Status status15 = new Status("This is fun", user16, "2020-10-14 12:56");
 
     public FeedStoryResponse getFeed(FeedStoryRequest request) {
 
@@ -77,7 +76,7 @@ public class FeedDAO {
      * @param allStatuses the generated list of statuses from which we are returning paged results.
      * @return the index of the first status to be returned.
      */
-    private int getFeedStartingIndex(Status lastStatus, List<Status> allStatuses) {
+    private int getFeedStartingIndex(String lastStatus, List<Status> allStatuses) {
 
         int feedIndex = 0;
 
@@ -85,7 +84,7 @@ public class FeedDAO {
             // This is a paged request for something after the first page. Find the first item
             // we should return
             for (int i = 0; i < allStatuses.size(); i++) {
-                if(lastStatus.equals(allStatuses.get(i))) {
+                if(lastStatus.equals(allStatuses.get(i).getTimeStamp())) {
                     // We found the index of the last item returned last time. Increment to get
                     // to the first one we should return
                     feedIndex = i + 1;

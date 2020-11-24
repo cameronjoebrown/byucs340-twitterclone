@@ -13,8 +13,8 @@ public class LoginDAO {
 
     public LoginRegisterResponse login(LoginRequest request) {
           String username = request.getUsername();
-          User user = new User("Test", "User", username,
-                  MALE_IMAGE_URL);
+        User user = new User("Test", "User",
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
           return new LoginRegisterResponse(user, new AuthToken("token123123123"));
       }
 }

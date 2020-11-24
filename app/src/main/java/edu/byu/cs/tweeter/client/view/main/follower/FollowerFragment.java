@@ -280,8 +280,12 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             isLoading = true;
             addLoadingFooter();
 
+            String last = null;
+            if(lastFollowee != null) {
+                last = lastFollowee.getUsername();
+            }
             GetFollowersTask getFollowerTask = new GetFollowersTask(followerPresenter, this);
-            FollowerRequest request = new FollowerRequest(currentUser, PAGE_SIZE, lastFollowee);
+            FollowerRequest request = new FollowerRequest(currentUser.getUsername(), PAGE_SIZE, last);
             getFollowerTask.execute(request);
         }
 

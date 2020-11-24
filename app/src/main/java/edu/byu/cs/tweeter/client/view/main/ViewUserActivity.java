@@ -119,13 +119,13 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
     }
 
     private void follow(User followee, User follower) {
-        FollowUnfollowRequest request = new FollowUnfollowRequest(followee, follower);
+        FollowUnfollowRequest request = new FollowUnfollowRequest(followee.getUsername(), follower.getUsername());
         FollowTask followTask = new FollowTask(followPresenter, this);
         followTask.execute(request);
     }
 
     private void unfollow(User followee, User follower) {
-        FollowUnfollowRequest request = new FollowUnfollowRequest(followee, follower);
+        FollowUnfollowRequest request = new FollowUnfollowRequest(followee.getUsername(), follower.getUsername());
         UnfollowTask unfollowTask = new UnfollowTask(unfollowPresenter, this);
         unfollowTask.execute(request);
     }

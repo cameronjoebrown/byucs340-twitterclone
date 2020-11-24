@@ -1,17 +1,13 @@
 package edu.byu.cs.tweeter.model.service.request;
-
-import edu.byu.cs.tweeter.model.domain.Status;
-import edu.byu.cs.tweeter.model.domain.User;
-
 /**
  * Contains all the information needed to make a request to have the server return the next page of
  * statuses for a specified user.
  */
 public class FeedStoryRequest {
 
-    private User user;
+    private String username;
     private int limit;
-    private Status lastStatus;
+    private String lastStatus;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
@@ -21,15 +17,15 @@ public class FeedStoryRequest {
     /**
      * Creates an instance.
      *
-     * @param user the user whose feed/story is requested
+     * @param username the user whose feed/story is requested
      * @param limit the maximum number of statuses to return
      * @param lastStatus the last status that was returned in the previous request (null if
      *                   there was no previous request or if no statuses were returned in the
      *                   previous request).
      *
      */
-    public FeedStoryRequest(User user, int limit, Status lastStatus) {
-        this.user = user;
+    public FeedStoryRequest(String username, int limit, String lastStatus) {
+        this.username = username;
         this.limit = limit;
         this.lastStatus = lastStatus;
     }
@@ -39,8 +35,8 @@ public class FeedStoryRequest {
      *
      * @return the user
      */
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -59,19 +55,19 @@ public class FeedStoryRequest {
      *
      * @return the last status.
      */
-    public Status getLastStatus() {
+    public String getLastStatus() {
         return lastStatus;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setLimit(int limit) {
         this.limit = limit;
     }
 
-    public void setLastStatus(Status lastStatus) {
+    public void setLastStatus(String lastStatus) {
         this.lastStatus = lastStatus;
     }
 }

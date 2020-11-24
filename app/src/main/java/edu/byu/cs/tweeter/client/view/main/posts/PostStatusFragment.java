@@ -17,6 +17,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import androidx.fragment.app.DialogFragment;
 import edu.byu.cs.tweeter.R;
@@ -61,13 +62,14 @@ public class PostStatusFragment extends DialogFragment implements PostStatusTask
         postButton.setOnClickListener(v -> {
             String text = editText.getText().toString();
             LocalDateTime timeStamp = LocalDateTime.now();
-            postStatus(text, timeStamp);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            postStatus(text, timeStamp.format(formatter));
         });
         return view;
     }
 
-    private void postStatus(String text, LocalDateTime timeStamp) {
-        PostStatusRequest request = new PostStatusRequest(text, ((MainActivity)getActivity()).getCurrentUser(), timeStamp);
+    private void postStatus(String text, String timeStamp) {
+        PostStatusRequest request = new PostStatusRequest(text, ((MainActivity)getActivity()).getCurrentUser().getUsername(), timeStamp);
         PostStatusTask task = new PostStatusTask(presenter, this);
         task.execute(request);
     }

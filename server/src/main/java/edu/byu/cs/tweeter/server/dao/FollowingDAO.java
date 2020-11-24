@@ -95,7 +95,7 @@ public class FollowingDAO {
      * @param allFollowees the generated list of followees from which we are returning paged results.
      * @return the index of the first followee to be returned.
      */
-    private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {
+    private int getFolloweesStartingIndex(String lastFollowee, List<User> allFollowees) {
 
         int followeesIndex = 0;
 
@@ -103,7 +103,7 @@ public class FollowingDAO {
             // This is a paged request for something after the first page. Find the first item
             // we should return
             for (int i = 0; i < allFollowees.size(); i++) {
-                if(lastFollowee.equals(allFollowees.get(i))) {
+                if(lastFollowee.equals(allFollowees.get(i).getUsername())) {
                     // We found the index of the last item returned last time. Increment to get
                     // to the first one we should return
                     followeesIndex = i + 1;

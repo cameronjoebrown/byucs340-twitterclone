@@ -3,15 +3,13 @@ package edu.byu.cs.tweeter.model.service.request;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import edu.byu.cs.tweeter.model.domain.User;
-
 /**
  * Contains all the information needed to make a request to post a status.
  */
 public class PostStatusRequest {
 
     private String statusText;
-    private User user;
+    private String username;
     private String timeStamp;
 
     /**
@@ -23,14 +21,13 @@ public class PostStatusRequest {
      * Creates an instance.
      *
      * @param statusText the text of the status to be created
-     * @param user the user whose status it is
+     * @param username the user whose status it is
      * @param timeStamp the time that the status was created
      */
-    public PostStatusRequest(String statusText, User user, LocalDateTime timeStamp) {
+    public PostStatusRequest(String statusText, String username, String timeStamp) {
         this.statusText = statusText;
-        this.user = user;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        this.timeStamp = timeStamp.format(formatter);
+        this.username = username;
+        this.timeStamp = timeStamp;
     }
 
 
@@ -48,8 +45,8 @@ public class PostStatusRequest {
      *
      * @return the user of the status
      */
-    public User getUser() {
-        return user;
+    public String getUser() {
+        return username;
     }
 
     /**
@@ -65,8 +62,8 @@ public class PostStatusRequest {
         this.statusText = statusText;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(String username) {
+        this.username = username;
     }
 
     public LocalDateTime getLocalDateTime() {
@@ -74,8 +71,7 @@ public class PostStatusRequest {
         return LocalDateTime.parse(this.timeStamp, formatter);
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        this.timeStamp = timeStamp.format(formatter);
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -283,8 +284,12 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             isLoading = true;
             addLoadingFooter();
 
+            String last = null;
+            if(lastStatus != null) {
+                last = lastStatus.getTimeStamp();
+            }
             GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
-            FeedStoryRequest request = new FeedStoryRequest(user, PAGE_SIZE, lastStatus);
+            FeedStoryRequest request = new FeedStoryRequest(user.getUsername(), PAGE_SIZE, last);
             getFeedTask.execute(request);
         }
 
@@ -324,7 +329,8 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
          */
         private void addLoadingFooter() {
             LocalDateTime date = LocalDateTime.now();
-            addItem(new Status("Dummy Status", user, date));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            addItem(new Status("Dummy Status", user, date.format(formatter)));
         }
 
         /**

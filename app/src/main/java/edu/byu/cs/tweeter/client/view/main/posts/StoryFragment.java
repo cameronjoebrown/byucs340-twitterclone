@@ -17,6 +17,7 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -315,9 +316,12 @@ public class StoryFragment extends Fragment implements StoryPresenter.View,
         void loadMoreItems() {
             isLoading = true;
             addLoadingFooter();
-
+            String last = null;
+            if(lastStatus != null) {
+                last = lastStatus.getTimeStamp();
+            }
             GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
-            FeedStoryRequest request = new FeedStoryRequest(currentUser, PAGE_SIZE, lastStatus);
+            FeedStoryRequest request = new FeedStoryRequest(currentUser.getUsername(), PAGE_SIZE, last);
             getStoryTask.execute(request);
         }
 
@@ -356,7 +360,8 @@ public class StoryFragment extends Fragment implements StoryPresenter.View,
          */
         private void addLoadingFooter() {
             LocalDateTime localDateTime = LocalDateTime.now();
-            addItem(new Status("This is a dummy status", currentUser, localDateTime));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            addItem(new Status("This is a dummy status", currentUser, localDateTime.format(formatter)));
         }
 
         /**

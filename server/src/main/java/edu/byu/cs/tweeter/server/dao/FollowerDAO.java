@@ -46,7 +46,7 @@ public class FollowerDAO {
      * @param followee the User whose count of how many following is desired.
      * @return said count.
      */
-    public Integer getFolloweeCount(User followee) {
+    public Integer getFollowerCount(User followee) {
         // TODO: uses the dummy data.  Replace with a real implementation.
         assert followee != null;
         return getDummyFollowers().size();
@@ -95,7 +95,7 @@ public class FollowerDAO {
      * @param allFollowers the generated list of followers from which we are returning paged results.
      * @return the index of the first follower to be returned.
      */
-    private int getFollowersStartingIndex(User lastFollower, List<User> allFollowers) {
+    private int getFollowersStartingIndex(String lastFollower, List<User> allFollowers) {
 
         int followersIndex = 0;
 
@@ -103,7 +103,7 @@ public class FollowerDAO {
             // This is a paged request for something after the first page. Find the first item
             // we should return
             for (int i = 0; i < allFollowers.size(); i++) {
-                if(lastFollower.equals(allFollowers.get(i))) {
+                if(lastFollower.equals(allFollowers.get(i).getUsername())) {
                     // We found the index of the last item returned last time. Increment to get
                     // to the first one we should return
                     followersIndex = i + 1;

@@ -1,17 +1,14 @@
 package edu.byu.cs.tweeter.model.service.request;
 
-
-import edu.byu.cs.tweeter.model.domain.User;
-
 /**
  * Contains all the information needed to make a request to have the server return the next page of
  * followees for a specified follower.
  */
 public class FollowingRequest {
 
-    private User follower;
+    private String follower;
     private int limit;
-    private User lastFollowee;
+    private String lastFollowee;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
@@ -21,13 +18,13 @@ public class FollowingRequest {
     /**
      * Creates an instance.
      *
-     * @param follower the {@link User} whose followees are to be returned.
+     * @param follower the user whose followees are to be returned.
      * @param limit the maximum number of followees to return.
      * @param lastFollowee the last followee that was returned in the previous request (null if
      *                     there was no previous request or if no followees were returned in the
      *                     previous request).
      */
-    public FollowingRequest(User follower, int limit, User lastFollowee) {
+    public FollowingRequest(String follower, int limit, String lastFollowee) {
         this.follower = follower;
         this.limit = limit;
         this.lastFollowee = lastFollowee;
@@ -38,7 +35,7 @@ public class FollowingRequest {
      *
      * @return the follower.
      */
-    public User getFollower() {
+    public String getFollower() {
         return follower;
     }
 
@@ -57,11 +54,11 @@ public class FollowingRequest {
      *
      * @return the last followee.
      */
-    public User getLastFollowee() {
+    public String getLastFollowee() {
         return lastFollowee;
     }
 
-    public void setFollower(User follower) {
+    public void setFollower(String follower) {
         this.follower = follower;
     }
 
@@ -69,7 +66,7 @@ public class FollowingRequest {
         this.limit = limit;
     }
 
-    public void setLastFollowee(User lastFollowee) {
+    public void setLastFollowee(String lastFollowee) {
         this.lastFollowee = lastFollowee;
     }
 }

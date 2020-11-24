@@ -1,15 +1,13 @@
 package edu.byu.cs.tweeter.model.service.request;
 
 
-import edu.byu.cs.tweeter.model.domain.User;
-
 /**
  * Contains all the information needed to make a follow/unfollow request.
  */
 public class FollowUnfollowRequest {
 
-    private User followee;
-    private User follower;
+    private String followee;
+    private String follower;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
@@ -19,10 +17,10 @@ public class FollowUnfollowRequest {
     /**
      * Creates an instance.
      *
-     * @param followee the {@link User} who is to be followed or unfollowed
-     * @param follower the {@link User} who is following or unfollowing the followee
+     * @param followee the user who is to be followed or unfollowed
+     * @param follower the user who is following or unfollowing the followee
      */
-    public FollowUnfollowRequest(User followee, User follower) {
+    public FollowUnfollowRequest(String followee, String follower) {
         this.followee = followee;
         this.follower = follower;
     }
@@ -32,7 +30,7 @@ public class FollowUnfollowRequest {
      *
      * @return the followee.
      */
-    public User getFollowee() {
+    public String getFollowee() {
         return followee;
     }
 
@@ -41,15 +39,15 @@ public class FollowUnfollowRequest {
      *
      * @return the follower.
      */
-    public User getFollower() {
+    public String getFollower() {
         return follower;
     }
 
-    public void setFollowee(User followee) {
+    public void setFollowee(String followee) {
         this.followee = followee;
     }
 
-    public void setFollower(User follower) {
+    public void setFollower(String follower) {
         this.follower = follower;
     }
 }
