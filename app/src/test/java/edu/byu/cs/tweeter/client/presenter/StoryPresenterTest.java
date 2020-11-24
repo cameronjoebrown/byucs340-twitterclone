@@ -6,13 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.Arrays;
 
 import edu.byu.cs.tweeter.client.model.service.StoryServiceProxy;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 
@@ -24,12 +23,12 @@ public class StoryPresenterTest {
     private StoryPresenter presenter;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws IOException, TweeterRemoteException {
         User currentUser = new User("FirstName", "LastName", null);
 
-        LocalDateTime date1 = LocalDateTime.of(2020, Month.APRIL, 28, 20, 30);
-        LocalDateTime date2 = LocalDateTime.of(2020, Month.JUNE, 28, 20, 30);
-        LocalDateTime date3 = LocalDateTime.of(2020, Month.APRIL, 28, 5, 30);
+        String date1 = "2020-04-28 20:30";
+        String date2 = "2020-06-28 20:30";
+        String date3 = "2020-04-28 5:30";
 
         Status resultStatus1 = new Status("Tweet1", currentUser,
                 date1);
@@ -38,7 +37,7 @@ public class StoryPresenterTest {
         Status resultStatus3 = new Status("This is tweet 3", currentUser,
                 date3);
 
-        request = new FeedStoryRequest(currentUser, 3, null);
+        request = new FeedStoryRequest(currentUser.getUsername(), 3, null);
         response = new FeedStoryResponse(Arrays.asList(resultStatus1, resultStatus2, resultStatus3), false);
 
         // Create a mock FollowingService
@@ -51,7 +50,7 @@ public class StoryPresenterTest {
     }
 
     @Test
-    public void testGetStory_returnsServiceResult() throws IOException {
+    public void testGetStory_returnsServiceResult() throws IOException, TweeterRemoteException {
         Mockito.when(mockStoryServiceProxy.getStory(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do
@@ -60,7 +59,7 @@ public class StoryPresenterTest {
     }
 
     @Test
-    public void testGetStory_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
+    public void testGetStory_serviceThrowsIOException_presenterThrowsIOException() throws IOException, TweeterRemoteException {
         Mockito.when(mockStoryServiceProxy.getStory(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> presenter.getStory(request));

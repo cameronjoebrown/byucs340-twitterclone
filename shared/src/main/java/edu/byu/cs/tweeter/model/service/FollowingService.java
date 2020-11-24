@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 
 /**
  * Defines the interface for the 'following' service.
@@ -21,4 +23,6 @@ public interface FollowingService {
      */
     FollowingResponse getFollowees(FollowingRequest request)
             throws IOException, TweeterRemoteException;
+
+    NumFollowsResponse getNumFollowees(NumFollowsRequest request) throws IOException, TweeterRemoteException;
 }

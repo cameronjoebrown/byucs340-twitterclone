@@ -24,7 +24,7 @@ import edu.byu.cs.tweeter.client.view.asyncTasks.UnfollowTask;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class ViewUserActivity extends AppCompatActivity implements FollowTask.Observer, UnfollowTask.Observer,
@@ -119,13 +119,13 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
     }
 
     private void follow(User followee, User follower) {
-        FollowUnfollowRequest request = new FollowUnfollowRequest(followee.getUsername(), follower.getUsername());
+        NumFollowsRequest request = new NumFollowsRequest(followee.getUsername(), follower.getUsername());
         FollowTask followTask = new FollowTask(followPresenter, this);
         followTask.execute(request);
     }
 
     private void unfollow(User followee, User follower) {
-        FollowUnfollowRequest request = new FollowUnfollowRequest(followee.getUsername(), follower.getUsername());
+        NumFollowsRequest request = new NumFollowsRequest(followee.getUsername(), follower.getUsername());
         UnfollowTask unfollowTask = new UnfollowTask(unfollowPresenter, this);
         unfollowTask.execute(request);
     }

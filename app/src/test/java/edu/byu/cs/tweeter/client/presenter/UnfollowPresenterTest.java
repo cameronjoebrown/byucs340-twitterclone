@@ -5,26 +5,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+
 import edu.byu.cs.tweeter.client.model.service.UnfollowServiceProxy;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class UnfollowPresenterTest {
-    private FollowUnfollowRequest request;
+    private NumFollowsRequest request;
     private Response response;
     private UnfollowServiceProxy mockFollowService;
     private UnfollowPresenter presenter;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws IOException, TweeterRemoteException {
         User currentUser = new User("FirstName", "LastName", null);
 
         User followedUser = new User("Rob", "Lowe", "@roblowe",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
 
-        request = new FollowUnfollowRequest(followedUser, currentUser);
+        request = new NumFollowsRequest(followedUser.getUsername(), currentUser.getUsername());
         response = new Response(true);
 
         // Create a mock UnfollowService
@@ -37,7 +40,7 @@ public class UnfollowPresenterTest {
     }
 
     @Test
-    public void testUnfollow_returnsServiceResult() {
+    public void testUnfollow_returnsServiceResult() throws IOException, TweeterRemoteException {
         Mockito.when(mockFollowService.unfollow(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do

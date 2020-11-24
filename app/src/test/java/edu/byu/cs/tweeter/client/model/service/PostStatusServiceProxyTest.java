@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Month;
 
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -36,19 +34,19 @@ public class PostStatusServiceProxyTest {
         User user1 = new User("Bob", "Joe", "@bobjoe",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
-        LocalDateTime date1 = LocalDateTime.of(2020, Month.APRIL, 28, 20, 30);
+        String date1 = "2020-04-28 20:30";
 
-        validRequest = new PostStatusRequest("This is a tweet", user1, date1);
+        validRequest = new PostStatusRequest("This is a tweet", user1.getUsername(), date1);
         invalidRequest = new PostStatusRequest(null,null, null);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new PostStatusResponse(new Status(validRequest.getStatusText(),
-                validRequest.getUser(), validRequest.getTimeStamp()));
+                user1, validRequest.getTimeStamp()));
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
         Mockito.when(mockServerFacade.postStatus(validRequest, "/poststatus")).thenReturn(successResponse);
 
         failureResponse = new PostStatusResponse("An exception occured");
-        Mockito.when(mockServerFacade.postStatus(invalidRequest, "")).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.postStatus(invalidRequest, "/poststatus")).thenReturn(failureResponse);
 
         // Create a PostStatusService instance and wrap it with a spy that will use the mock service
         postStatusServiceProxySpy = Mockito.spy(new PostStatusServiceProxy());

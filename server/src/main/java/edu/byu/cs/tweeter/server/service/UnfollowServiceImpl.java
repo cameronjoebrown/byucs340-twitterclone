@@ -1,7 +1,7 @@
 package edu.byu.cs.tweeter.server.service;
 
 import edu.byu.cs.tweeter.model.service.UnfollowService;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.server.dao.UnfollowDAO;
 
@@ -10,7 +10,7 @@ import edu.byu.cs.tweeter.server.dao.UnfollowDAO;
  */
 public class UnfollowServiceImpl implements UnfollowService {
     @Override
-    public Response unfollow(FollowUnfollowRequest request) {
+    public Response unfollow(NumFollowsRequest request) {
         return getUnfollowDAO().unfollow(request);
     }
 

@@ -29,7 +29,7 @@ public class LogoutServiceProxyTest {
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
         // Setup request objects to use in the tests
-        validRequest = new LogoutRequest(new AuthToken());
+        validRequest = new LogoutRequest(new AuthToken("dd"));
         invalidRequest = new LogoutRequest(null);
 
         // Setup a mock ServerFacade that will return known responses
@@ -38,7 +38,7 @@ public class LogoutServiceProxyTest {
         Mockito.when((mockServerFacade.logout(validRequest, "/logout"))).thenReturn(successResponse);
 
         failureResponse = new Response(false, "error occurred");
-        Mockito.when(mockServerFacade.logout(invalidRequest, "")).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.logout(invalidRequest, "/logout")).thenReturn(failureResponse);
 
         // Create a LogoutService instance and wrap it with a spy that will use the mock service
         logoutServiceProxySpy = Mockito.spy(new LogoutServiceProxy());

@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
@@ -16,6 +16,7 @@ import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
@@ -94,7 +95,7 @@ public class ServerFacade {
      * @param request contains all info needed to perform a follow operation
      * @return the result of the follow operation
      */
-    public Response follow(FollowUnfollowRequest request, String urlPath)
+    public Response follow(NumFollowsRequest request, String urlPath)
             throws IOException, TweeterRemoteException {
 
         Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
@@ -111,7 +112,7 @@ public class ServerFacade {
      * @param request contains all info needed to perform an unfollow operation
      * @return the result of the unfollow operation
      */
-    public Response unfollow(FollowUnfollowRequest request, String urlPath)
+    public Response unfollow(NumFollowsRequest request, String urlPath)
             throws IOException, TweeterRemoteException {
 
         Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
@@ -210,6 +211,26 @@ public class ServerFacade {
             throws IOException, TweeterRemoteException {
 
         FeedStoryResponse response = clientCommunicator.doPost(urlPath, request, null, FeedStoryResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+    }
+
+    public NumFollowsResponse getNumFollowees(NumFollowsRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        NumFollowsResponse response = clientCommunicator.doPost(urlPath, request, null, NumFollowsResponse.class);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+    }
+
+    public NumFollowsResponse getNumFollowers(NumFollowsRequest request, String urlPath) throws IOException, TweeterRemoteException {
+         NumFollowsResponse response = clientCommunicator.doPost(urlPath, request, null, NumFollowsResponse.class);
 
         if(response.isSuccess()) {
             return response;

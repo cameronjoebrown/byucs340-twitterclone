@@ -2,7 +2,9 @@ package edu.byu.cs.tweeter.server.service;
 
 import edu.byu.cs.tweeter.model.service.FollowingService;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 import edu.byu.cs.tweeter.server.dao.FollowingDAO;
 
 /**
@@ -22,6 +24,11 @@ public class FollowingServiceImpl implements FollowingService {
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) {
         return getFollowingDAO().getFollowees(request);
+    }
+
+    @Override
+    public NumFollowsResponse getNumFollowees(NumFollowsRequest request) {
+        return getFollowingDAO().getFolloweeCount(request.getFollower());
     }
 
     /**

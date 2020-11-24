@@ -40,7 +40,7 @@ public class FollowingServiceProxyTest {
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png");
 
         // Setup request objects to use in the tests
-        validRequest = new FollowingRequest(currentUser, 3, null);
+        validRequest = new FollowingRequest(currentUser.getUsername(), 3, null);
         invalidRequest = new FollowingRequest(null, 0, null);
 
         // Setup a mock ServerFacade that will return known responses
@@ -49,7 +49,7 @@ public class FollowingServiceProxyTest {
         Mockito.when(mockServerFacade.getFollowees(validRequest, "/getfollowing")).thenReturn(successResponse);
 
         failureResponse = new FollowingResponse("An exception occurred");
-        Mockito.when(mockServerFacade.getFollowees(invalidRequest, "")).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.getFollowees(invalidRequest, "/getfollowing")).thenReturn(failureResponse);
 
         // Create a FollowingService instance and wrap it with a spy that will use the mock service
         followingServiceProxySpy = Mockito.spy(new FollowingServiceProxy());

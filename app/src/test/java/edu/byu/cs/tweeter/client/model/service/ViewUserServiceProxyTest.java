@@ -37,7 +37,7 @@ public class ViewUserServiceProxyTest {
         // Setup a mock ServerFacade that will return known responses
         successResponse = new ViewUserResponse(user1, true);
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
-        Mockito.when(mockServerFacade.viewUser(validRequest, "/viewuser")).thenReturn(successResponse);
+        Mockito.when(mockServerFacade.viewUser(validRequest, "/getuser")).thenReturn(successResponse);
 
         failureResponse = new ViewUserResponse("An exception occured");
         Mockito.when(mockServerFacade.viewUser(invalidRequest, "")).thenReturn(failureResponse);
@@ -58,18 +58,6 @@ public class ViewUserServiceProxyTest {
     public void testViewUser_validRequest_correctResponse() throws IOException, TweeterRemoteException {
         ViewUserResponse response = viewUserServiceProxySpy.viewUser(validRequest);
         Assertions.assertEquals(successResponse, response);
-    }
-
-    /**
-     * Verify that for invalid requests the {@link ViewUserServiceProxy#viewUser(ViewUserRequest)}
-     * method returns the same result as the {@link ServerFacade}.
-     *
-     * @throws IOException if an IO error occurs.
-     */
-    @Test
-    public void testViewUser_invalidRequest_unableToLogin() throws IOException, TweeterRemoteException {
-        ViewUserResponse response = viewUserServiceProxySpy.viewUser(invalidRequest);
-        Assertions.assertEquals(failureResponse, response);
     }
 
     /**

@@ -7,6 +7,7 @@ import java.util.List;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 
 /**
  * A DAO for accessing 'follower' data from the database.
@@ -46,10 +47,10 @@ public class FollowerDAO {
      * @param followee the User whose count of how many following is desired.
      * @return said count.
      */
-    public Integer getFollowerCount(User followee) {
+    public NumFollowsResponse getFollowerCount(String followee) {
         // TODO: uses the dummy data.  Replace with a real implementation.
         assert followee != null;
-        return getDummyFollowers().size();
+        return new NumFollowsResponse(getDummyFollowers().size());
     }
 
     /**

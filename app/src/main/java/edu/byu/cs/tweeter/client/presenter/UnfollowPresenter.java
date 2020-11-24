@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.service.UnfollowServiceProxy;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 /**
@@ -29,7 +29,7 @@ public class UnfollowPresenter {
         this.view = view;
     }
 
-    public Response unfollow(FollowUnfollowRequest request) throws IOException, TweeterRemoteException {
+    public Response unfollow(NumFollowsRequest request) throws IOException, TweeterRemoteException {
         UnfollowServiceProxy unfollowServiceProxy = getUnfollowService();
         return unfollowServiceProxy.unfollow(request);
     }

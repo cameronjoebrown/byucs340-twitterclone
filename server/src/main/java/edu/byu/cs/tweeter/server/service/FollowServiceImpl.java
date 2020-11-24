@@ -1,7 +1,7 @@
 package edu.byu.cs.tweeter.server.service;
 
 import edu.byu.cs.tweeter.model.service.FollowService;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
@@ -10,7 +10,7 @@ import edu.byu.cs.tweeter.server.dao.FollowDAO;
  */
 public class FollowServiceImpl implements FollowService {
     @Override
-    public Response follow(FollowUnfollowRequest request) {
+    public Response follow(NumFollowsRequest request) {
         return getFollowDAO().follow(request);
     }
 

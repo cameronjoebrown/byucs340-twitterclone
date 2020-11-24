@@ -37,12 +37,12 @@ public class RegisterServiceProxyTest {
         invalidRequest = new RegisterRequest(null, null, null, null, null);
 
         // Setup a mock ServerFacade that will return known responses
-        successResponse = new LoginRegisterResponse(user1, new AuthToken());
+        successResponse = new LoginRegisterResponse(user1, new AuthToken("cooladfsdfdsfa"));
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
         Mockito.when(mockServerFacade.register(validRequest, "/register")).thenReturn(successResponse);
 
         failureResponse = new LoginRegisterResponse("An exception occured");
-        Mockito.when(mockServerFacade.register(invalidRequest, "")).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.register(invalidRequest, "/register")).thenReturn(failureResponse);
 
         // Create a RegisterService instance and wrap it with a spy that will use the mock service
         registerServiceProxySpy = Mockito.spy(new RegisterServiceProxy());

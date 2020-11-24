@@ -45,7 +45,7 @@ public class PostStatusRequest {
      *
      * @return the user of the status
      */
-    public String getUser() {
+    public String getUsername() {
         return username;
     }
 
@@ -62,7 +62,7 @@ public class PostStatusRequest {
         this.statusText = statusText;
     }
 
-    public void setUser(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 

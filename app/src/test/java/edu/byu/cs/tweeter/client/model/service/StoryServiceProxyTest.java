@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.Arrays;
 
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
@@ -36,10 +34,9 @@ public class StoryServiceProxyTest {
         User currentUser = new User("FirstName", "LastName", "@CoolUser",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
-        LocalDateTime date1 = LocalDateTime.of(2020, Month.APRIL, 28, 20, 30);
-        LocalDateTime date2 = LocalDateTime.of(2020, Month.JUNE, 28, 20, 30);
-        LocalDateTime date3 = LocalDateTime.of(2020, Month.APRIL, 28, 5, 30);
-
+        String date1 = "2020-04-28 20:30";
+        String date2 = "2020-06-28 20:30";
+        String date3 = "2020-04-28 5:30";
 
         Status resultStatus1 = new Status("I am the coolest in the world", currentUser, date1);
         Status resultStatus2 = new Status("Hanging out with @coolbob", currentUser, date3);
@@ -47,7 +44,7 @@ public class StoryServiceProxyTest {
                                             currentUser, date2);
 
         // Setup request objects to use in the tests
-        validRequest = new FeedStoryRequest(currentUser, 3, null);
+        validRequest = new FeedStoryRequest(currentUser.getUsername(), 3, null);
         invalidRequest = new FeedStoryRequest(null, 0, null);
 
         // Setup a mock ServerFacade that will return known responses
@@ -56,7 +53,7 @@ public class StoryServiceProxyTest {
         Mockito.when(mockServerFacade.getStory(validRequest, "/getstory")).thenReturn(successResponse);
 
         failureResponse = new FeedStoryResponse("An exception occured");
-        Mockito.when(mockServerFacade.getStory(invalidRequest, "")).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.getStory(invalidRequest, "/getstory")).thenReturn(failureResponse);
 
         // Create a FeedStoryService instance and wrap it with a spy that will use the mock service
         storyServiceProxySpy = Mockito.spy(new StoryServiceProxy());

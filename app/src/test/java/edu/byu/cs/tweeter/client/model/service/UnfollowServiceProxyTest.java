@@ -10,12 +10,12 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class UnfollowServiceProxyTest {
-    private FollowUnfollowRequest validRequest;
-    private FollowUnfollowRequest invalidRequest;
+    private NumFollowsRequest validRequest;
+    private NumFollowsRequest invalidRequest;
 
     private Response successResponse;
     private Response failureResponse;
@@ -34,8 +34,8 @@ public class UnfollowServiceProxyTest {
         User user2 = new User("Rob", "Lowe", "@roblowe",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
-        validRequest = new FollowUnfollowRequest(user1, user2);
-        invalidRequest = new FollowUnfollowRequest(null, null);
+        validRequest = new NumFollowsRequest(user1.getUsername(), user2.getUsername());
+        invalidRequest = new NumFollowsRequest(null, null);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new Response(true);
@@ -43,7 +43,7 @@ public class UnfollowServiceProxyTest {
         Mockito.when(mockServerFacade.unfollow(validRequest, "/unfollow")).thenReturn(successResponse);
 
         failureResponse = new Response(false, "An exception occured");
-        Mockito.when(mockServerFacade.unfollow(invalidRequest, "")).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.unfollow(invalidRequest, "/unfollow")).thenReturn(failureResponse);
 
         // Create a UnfollowService instance and wrap it with a spy that will use the mock service
         unfollowServiceProxySpy = Mockito.spy(new UnfollowServiceProxy());
@@ -52,7 +52,7 @@ public class UnfollowServiceProxyTest {
     }
 
     /**
-     * Verify that for successful requests the {@link UnfollowServiceProxy#unfollow(FollowUnfollowRequest)}
+     * Verify that for successful requests the {@link UnfollowServiceProxy#unfollow(NumFollowsRequest)}
      * method returns the same result as the {@link ServerFacade}.
      * .
      */
@@ -63,7 +63,7 @@ public class UnfollowServiceProxyTest {
     }
 
     /**
-     * Verify that for invalid requests the {@link UnfollowServiceProxy#unfollow(FollowUnfollowRequest)}
+     * Verify that for invalid requests the {@link UnfollowServiceProxy#unfollow(NumFollowsRequest)}
      * method returns the same result as the {@link ServerFacade}.
      *
      */

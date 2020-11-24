@@ -3,7 +3,7 @@ package edu.byu.cs.tweeter.model.service;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 /**
@@ -17,5 +17,5 @@ public interface UnfollowService {
      * @param request contains the data required to fulfill the request.
      * @return message of whether or not the user was unfollowed
      */
-    Response unfollow(FollowUnfollowRequest request) throws IOException, TweeterRemoteException;
+    Response unfollow(NumFollowsRequest request) throws IOException, TweeterRemoteException;
 }

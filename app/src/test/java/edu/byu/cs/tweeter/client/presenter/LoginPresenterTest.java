@@ -10,6 +10,7 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.client.model.service.LoginServiceProxy;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 
@@ -20,11 +21,11 @@ public class LoginPresenterTest {
     private LoginPresenter presenter;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws IOException, TweeterRemoteException {
         User currentUser = new User("FirstName", "LastName", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png");
 
         request = new LoginRequest(currentUser.getUsername(), "password");
-        response = new LoginRegisterResponse(currentUser, new AuthToken());
+        response = new LoginRegisterResponse(currentUser, new AuthToken("token123123123"));
 
         // Create a mock FollowingService
         mockLoginServiceProxy = Mockito.mock(LoginServiceProxy.class);
@@ -36,7 +37,7 @@ public class LoginPresenterTest {
     }
 
     @Test
-    public void testRegister_returnsServiceResult() throws IOException {
+    public void testRegister_returnsServiceResult() throws IOException, TweeterRemoteException {
         Mockito.when(mockLoginServiceProxy.login(request)).thenReturn(response);
 
         // Assert that the presenter returns the same response as the service (it doesn't do
@@ -45,7 +46,7 @@ public class LoginPresenterTest {
     }
 
     @Test
-    public void testRegister_serviceThrowsIOException_presenterThrowsIOException() throws IOException {
+    public void testRegister_serviceThrowsIOException_presenterThrowsIOException() throws IOException, TweeterRemoteException {
         Mockito.when(mockLoginServiceProxy.login(request)).thenThrow(new IOException());
 
         Assertions.assertThrows(IOException.class, () -> presenter.login(request));
