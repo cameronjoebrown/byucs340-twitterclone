@@ -16,7 +16,7 @@ import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 public class FollowingServiceProxy extends Service implements FollowingService {
 
     static final String FOLLOWING_URL_PATH = "/getfollowing";
-    static final String NUMFOLLOWERS_URL_PATH = "/getfollowing";
+    static final String NUMFOLLOWEES_URL_PATH = "/numfollowees";
 
 
     /**
@@ -42,7 +42,7 @@ public class FollowingServiceProxy extends Service implements FollowingService {
 
     @Override
     public NumFollowsResponse getNumFollowees(NumFollowsRequest request) throws IOException, TweeterRemoteException {
-        return getServerFacade().getNumFollowees(request, NUMFOLLOWERS_URL_PATH);
+        return getServerFacade().getNumFollowees(request, NUMFOLLOWEES_URL_PATH);
     }
 
 }

@@ -16,7 +16,7 @@ import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 public class FollowerServiceProxy extends Service implements FollowerService {
 
     private static final String URL_PATH = "/getfollower";
-    private static final String NUMFOLLOWERS_URL_PATH = "/getfollower";
+    private static final String NUMFOLLOWERS_URL_PATH = "/numfollowers";
 
     /**
      * Returns the followers of the user specified. Uses information in

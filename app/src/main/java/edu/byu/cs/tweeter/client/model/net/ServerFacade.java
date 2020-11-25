@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
@@ -95,7 +96,7 @@ public class ServerFacade {
      * @param request contains all info needed to perform a follow operation
      * @return the result of the follow operation
      */
-    public Response follow(NumFollowsRequest request, String urlPath)
+    public Response follow(FollowUnfollowRequest request, String urlPath)
             throws IOException, TweeterRemoteException {
 
         Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);
@@ -112,7 +113,7 @@ public class ServerFacade {
      * @param request contains all info needed to perform an unfollow operation
      * @return the result of the unfollow operation
      */
-    public Response unfollow(NumFollowsRequest request, String urlPath)
+    public Response unfollow(FollowUnfollowRequest request, String urlPath)
             throws IOException, TweeterRemoteException {
 
         Response response = clientCommunicator.doPost(urlPath, request, null, Response.class);

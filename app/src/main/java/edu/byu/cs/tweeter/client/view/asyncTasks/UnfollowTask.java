@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.presenter.UnfollowPresenter;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
-public class UnfollowTask extends AsyncTask<NumFollowsRequest, Void, Response> {
+public class UnfollowTask extends AsyncTask<FollowUnfollowRequest, Void, Response> {
     private final UnfollowPresenter presenter;
     private final Observer observer;
     private Exception exception;
@@ -39,13 +39,13 @@ public class UnfollowTask extends AsyncTask<NumFollowsRequest, Void, Response> {
 
     /**
      * The method that is invoked on the background thread to follow a user. This method is
-     * invoked indirectly by calling {@link #execute(NumFollowsRequest...)}.
+     * invoked indirectly by calling {@link #execute(FollowUnfollowRequest...)}.
      *
      * @param unfollowRequests the request object (there will only be one).
      * @return the response.
      */
     @Override
-    protected Response doInBackground(NumFollowsRequest... unfollowRequests) {
+    protected Response doInBackground(FollowUnfollowRequest... unfollowRequests) {
         Response response = null;
         try {
             return presenter.unfollow(unfollowRequests[0]);

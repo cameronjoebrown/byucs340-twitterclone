@@ -10,11 +10,11 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.client.model.service.UnfollowServiceProxy;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class UnfollowPresenterTest {
-    private NumFollowsRequest request;
+    private FollowUnfollowRequest request;
     private Response response;
     private UnfollowServiceProxy mockFollowService;
     private UnfollowPresenter presenter;
@@ -27,7 +27,7 @@ public class UnfollowPresenterTest {
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
 
-        request = new NumFollowsRequest(followedUser.getUsername(), currentUser.getUsername());
+        request = new FollowUnfollowRequest(followedUser.getUsername(), currentUser.getUsername());
         response = new Response(true);
 
         // Create a mock UnfollowService

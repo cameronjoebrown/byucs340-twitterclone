@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.service.FollowServiceProxy;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 /**
@@ -30,7 +30,7 @@ public class FollowPresenter {
         this.view = view;
     }
 
-    public Response follow(NumFollowsRequest request) throws IOException, TweeterRemoteException {
+    public Response follow(FollowUnfollowRequest request) throws IOException, TweeterRemoteException {
         FollowServiceProxy followServiceProxy = getFollowService();
         return followServiceProxy.follow(request);
     }

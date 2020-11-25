@@ -18,7 +18,7 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Override
     public NumFollowsResponse getNumFollowers(NumFollowsRequest request) {
-        return getFollowerDAO().getFollowerCount(request.getFollowee());
+        return getFollowerDAO().getFollowerCount(request.getUsername());
     }
 
     /**

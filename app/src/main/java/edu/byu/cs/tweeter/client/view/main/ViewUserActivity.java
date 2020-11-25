@@ -16,19 +16,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.client.presenter.FollowPresenter;
+import edu.byu.cs.tweeter.client.presenter.FollowerPresenter;
+import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.client.presenter.UnfollowPresenter;
 import edu.byu.cs.tweeter.client.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.client.view.ViewUserSectionsPagerAdapter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.FollowTask;
+import edu.byu.cs.tweeter.client.view.asyncTasks.NumFolloweesTask;
+import edu.byu.cs.tweeter.client.view.asyncTasks.NumFollowersTask;
 import edu.byu.cs.tweeter.client.view.asyncTasks.UnfollowTask;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class ViewUserActivity extends AppCompatActivity implements FollowTask.Observer, UnfollowTask.Observer,
-            ViewUserPresenter.View, FollowPresenter.View, UnfollowPresenter.View {
+            ViewUserPresenter.View, FollowPresenter.View, UnfollowPresenter.View, FollowingPresenter.View, NumFolloweesTask.Observer, FollowerPresenter.View, NumFollowersTask.Observer {
 
     private static final String LOG_TAG = "ViewUserActivity";
 
@@ -41,7 +47,12 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
 
     private FollowPresenter followPresenter;
     private UnfollowPresenter unfollowPresenter;
+    private FollowerPresenter followerPresenter;
+    private FollowingPresenter followingPresenter;
     Button followButton;
+
+    TextView followeeCount;
+    TextView followerCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,8 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
         ViewUserPresenter viewUserPresenter = new ViewUserPresenter(this);
         followPresenter = new FollowPresenter(this);
         unfollowPresenter = new UnfollowPresenter(this);
+        followerPresenter = new FollowerPresenter(this);
+        followingPresenter = new FollowingPresenter(this);
 
         viewedUser = (User) getIntent().getSerializableExtra(VIEWED_USER_KEY);
         loggedInUser = (User) getIntent().getSerializableExtra(LOGGED_IN_USER_KEY);
@@ -59,6 +72,9 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
         }
 
         AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
+
+        getFolloweeCount(viewedUser);
+        getFollowerCount(viewedUser);
 
         ViewUserSectionsPagerAdapter viewUserSectionsPagerAdapter =
                 new ViewUserSectionsPagerAdapter(this, getSupportFragmentManager(), viewedUser, authToken);
@@ -97,11 +113,8 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
         ImageView userImageView = findViewById(R.id.userImage);
         userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(viewedUser.getImageBytes()));
 
-        TextView followeeCount = findViewById(R.id.followeeCount);
-        followeeCount.setText("Following: " + "20");
-
-        TextView followerCount = findViewById(R.id.followerCount);
-        followerCount.setText("Followers: " + "20");
+        followeeCount = findViewById(R.id.followeeCount);
+        followerCount = findViewById(R.id.followerCount);
     }
 
 
@@ -119,13 +132,13 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
     }
 
     private void follow(User followee, User follower) {
-        NumFollowsRequest request = new NumFollowsRequest(followee.getUsername(), follower.getUsername());
+        FollowUnfollowRequest request = new FollowUnfollowRequest(followee.getUsername(), follower.getUsername());
         FollowTask followTask = new FollowTask(followPresenter, this);
         followTask.execute(request);
     }
 
     private void unfollow(User followee, User follower) {
-        NumFollowsRequest request = new NumFollowsRequest(followee.getUsername(), follower.getUsername());
+        FollowUnfollowRequest request = new FollowUnfollowRequest(followee.getUsername(), follower.getUsername());
         UnfollowTask unfollowTask = new UnfollowTask(unfollowPresenter, this);
         unfollowTask.execute(request);
     }
@@ -149,5 +162,29 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
     public void handleException(Exception exception) {
         Log.e(LOG_TAG, exception.getMessage(), exception);
         Toast.makeText(this, "Exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void followerCountSuccessful(NumFollowsResponse response) {
+        System.out.println("Yoafdosjifajdsfnkadsfasd " + response.getFollowCount());
+        followerCount.setText("Followers: " + response.getFollowCount());
+    }
+
+
+    @Override
+    public void followeesCountSuccessful(NumFollowsResponse response) {
+        followeeCount.setText("Following: " + response.getFollowCount());
+    }
+
+    public void getFolloweeCount(User user) {
+        NumFollowsRequest request = new NumFollowsRequest(user.getUsername());
+        NumFolloweesTask task = new NumFolloweesTask(followingPresenter, this);
+        task.execute(request);
+    }
+
+    public void getFollowerCount(User user) {
+        NumFollowsRequest request = new NumFollowsRequest(user.getUsername());
+        NumFollowersTask task = new NumFollowersTask(followerPresenter, this);
+        task.execute(request);
     }
 }
