@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.main.posts.PostStatusFragment">
+    tools:context=".client.view.main.posts.PostStatusFragment">
 
     <TextView
         android:id="@+id/createBit"

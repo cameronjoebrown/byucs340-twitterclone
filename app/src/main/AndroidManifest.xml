@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.main.login.LoginRegisterActivity">
+        <activity android:name=".client.view.main.login.LoginRegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,15 +19,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.main.MainActivity"
+            android:name=".client.view.main.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
-            android:name=".view.main.ViewUserActivity"
+            android:name=".client.view.main.ViewUserActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".view.main.MainActivity" >
+            android:parentActivityName=".client.view.main.MainActivity" >
         </activity>
     </application>
 
