@@ -45,3 +45,7 @@ dependencies {
     implementation('com.joanzapata.iconify:android-iconify-fontawesome:2.2.2',
             { exclude group: 'com.android.support' })
 }
+
+configurations {
+    compile.exclude group: "junit", module: "junit"
+}
