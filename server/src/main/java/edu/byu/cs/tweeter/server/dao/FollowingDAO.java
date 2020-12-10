@@ -86,31 +86,34 @@ public class FollowingDAO {
         HashMap<String, Object> valueMap = new HashMap<>();
         valueMap.put(":follower_handle", request.getFollower());
 
-        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#fol = :follower_handle").withNameMap(nameMap)
-                .withValueMap(valueMap);
+        if (request.getLastFollowee() != null) {
+            QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#fol = :follower_handle")
+                    .withNameMap(nameMap)
+                    .withValueMap(valueMap)
+                    .withMaxResultSize(10);
 
-        ItemCollection<QueryOutcome> items;
-        Iterator<Item> iterator;
-        Item item;
+            ItemCollection<QueryOutcome> items;
+            Iterator<Item> iterator;
+            Item item;
 
-        try {
-            System.out.println("Followees: ");
-            items = table.query(querySpec);
+            try {
+                System.out.println("Followees: ");
+                items = table.query(querySpec);
 
-            iterator = items.iterator();
-            while (iterator.hasNext()) {
-                item = iterator.next();
-                //User newUser = new User(item.getString("followee_handle"))
-                System.out.println(item.getNumber("follower_handle") + ": " + item.getString("followee_handle"));
+                iterator = items.iterator();
+                while (iterator.hasNext()) {
+                    item = iterator.next();
+                    // User newUser = new User(item.getString("followee_handle"))
+                    System.out.println(item.getNumber("follower_handle") + ": " + item.getString("followee_handle"));
+                }
+
+            } catch (Exception e) {
+                System.err.println("Unable to get followees");
+                System.err.println(e.getMessage());
             }
-
-        }
-        catch (Exception e) {
-            System.err.println("Unable to get followees");
-            System.err.println(e.getMessage());
         }
 
-        return null;
+            return null;
         /*
         // TODO: Generates dummy data. Replace with a real implementation.
         assert request.getLimit() > 0;
@@ -180,3 +183,4 @@ public class FollowingDAO {
                 user19, user20);
     }
 }
+

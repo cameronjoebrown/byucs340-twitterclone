@@ -8,6 +8,7 @@ import edu.byu.cs.tweeter.model.service.response.Response;
  */
 public class LogoutDAO {
     public Response logout(LogoutRequest request) {
-        return new Response(true);
+        AuthTokenDAO authTokenDAO = new AuthTokenDAO();
+        return authTokenDAO.deleteAuthToken(request.getAuthToken());
     }
 }
