@@ -84,6 +84,7 @@ public class FollowerDAO {
         }
 
         return new FollowerResponse(responseFollowers, hasMorePages);
+
     }
 
     /**

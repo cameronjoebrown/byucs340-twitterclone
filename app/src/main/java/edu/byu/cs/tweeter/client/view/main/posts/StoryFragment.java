@@ -162,9 +162,10 @@ public class StoryFragment extends Fragment implements StoryPresenter.View,
             while (m.find()) { // Find each match in turn
                 ClickableSpan clickableSpan = new ClickableSpan() {
                     @Override
-                    public void onClick(View textView) {
+                    public void onClick(@NotNull View textView) {
                         //Clicked word
-                        Toast.makeText(getContext(), "Can't find this user", Toast.LENGTH_LONG).show();
+
+                        Toast.makeText(getContext(), m.toString(), Toast.LENGTH_LONG).show();
                     }
                 };
                 ss.setSpan(clickableSpan, m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

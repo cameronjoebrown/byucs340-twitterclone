@@ -6,11 +6,11 @@ import android.util.Log;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.presenter.RegisterPresenter;
-import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.model.util.ByteArrayUtils;
 
 public class RegisterTask extends AsyncTask<RegisterRequest, Void, LoginRegisterResponse> {
 

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.util;
+package edu.byu.cs.tweeter.model.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

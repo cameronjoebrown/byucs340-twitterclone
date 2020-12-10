@@ -1,7 +1,18 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import java.util.ArrayList;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.ItemCollection;
+import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
@@ -62,6 +73,45 @@ public class FollowingDAO {
      * @return the followees.
      */
     public FollowingResponse getFollowees(FollowingRequest request) {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.US_WEST_2).build();
+
+        DynamoDB dynamoDB = new DynamoDB(client);
+
+        Table table = dynamoDB.getTable("follows");
+
+        HashMap<String, String> nameMap = new HashMap<>();
+        nameMap.put("#fol", "follower_handle");
+
+        HashMap<String, Object> valueMap = new HashMap<>();
+        valueMap.put(":follower_handle", request.getFollower());
+
+        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#fol = :follower_handle").withNameMap(nameMap)
+                .withValueMap(valueMap);
+
+        ItemCollection<QueryOutcome> items;
+        Iterator<Item> iterator;
+        Item item;
+
+        try {
+            System.out.println("Followees: ");
+            items = table.query(querySpec);
+
+            iterator = items.iterator();
+            while (iterator.hasNext()) {
+                item = iterator.next();
+                //User newUser = new User(item.getString("followee_handle"))
+                System.out.println(item.getNumber("follower_handle") + ": " + item.getString("followee_handle"));
+            }
+
+        }
+        catch (Exception e) {
+            System.err.println("Unable to get followees");
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+        /*
         // TODO: Generates dummy data. Replace with a real implementation.
         assert request.getLimit() > 0;
         assert request.getFollower() != null;
@@ -84,6 +134,8 @@ public class FollowingDAO {
         }
 
         return new FollowingResponse(responseFollowees, hasMorePages);
+
+         */
     }
 
     /**
