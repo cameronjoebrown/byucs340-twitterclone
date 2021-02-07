@@ -3,9 +3,12 @@ package edu.byu.cs.tweeter.server.dao;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.BatchWriteItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
+import com.amazonaws.services.dynamodbv2.model.WriteRequest;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -15,6 +18,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -66,7 +71,6 @@ public class RegisterDAO {
         String securePassword = PasswordHasher.getSecurePassword(request.getPassword(), salt);
         System.out.println("Secured Password: " + securePassword);
 
-
         try {
             System.out.println("Adding a new item...");
 
@@ -75,7 +79,9 @@ public class RegisterDAO {
                     .withString("lastName", request.getLastName())
                     .withString("imageUrl", imageUrl)
                     .withString("password", securePassword)
-                    .withString("salt", salt));
+                    .withString("salt", salt)
+                    .withNumber("followerCount", 0)
+                    .withNumber("followeeCount", 0));
 
             User user = new User(request.getFirstName(), request.getLastName(),
                     request.getUsername(), imageUrl);
@@ -89,6 +95,53 @@ public class RegisterDAO {
             System.err.println("Unable to create user: " + request.getUsername());
             System.err.println(e.getMessage());
             return new LoginRegisterResponse(e.getMessage());
+        }
+    }
+
+    /**
+     * This method allows multiple users to be added at once. This will mostly be used
+     * for testing purposes.
+     *
+     * @param users the list of users to be added
+     */
+    public void addUsers(List<User> users) {
+        TableWriteItems items = new TableWriteItems("users");
+
+        for (User user : users) {
+            Item item = new Item()
+                    .withPrimaryKey("username", user.getUsername())
+                    .withString("firstName", user.getFirstName())
+                    .withString("lastName", user.getLastName())
+                    .withString("imageUrl", user.getImageUrl())
+                    .withNumber("followerCount", 0)
+                    .withNumber("followeeCount", 0);
+            items.addItemToPut(item);
+
+            // Add in batches of 25
+            if (items.getItemsToPut() != null && items.getItemsToPut().size() == 25) {
+                writeBatch(items);
+                items = new TableWriteItems("users");
+            }
+        }
+
+        //
+        if (items.getItemsToPut() != null && items.getItemsToPut().size() > 0) {
+            writeBatch(items);
+        }
+    }
+
+    private void writeBatch(TableWriteItems items) {
+        // Open connection to DynamoDB and save user to users table
+        AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.US_WEST_2).build();
+
+        DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
+
+        BatchWriteItemOutcome outcome = dynamoDB.batchWriteItem(items);
+
+        while (outcome.getUnprocessedItems().size() > 0) {
+            Map<String, List<WriteRequest>> unprocessedItems = outcome.getUnprocessedItems();
+            outcome = dynamoDB.batchWriteItemUnprocessed(unprocessedItems);
         }
     }
 }

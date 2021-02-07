@@ -59,8 +59,6 @@ public class AuthTokenDAO {
         DeleteItemSpec deleteItemSpec = new DeleteItemSpec()
                 .withPrimaryKey("authToken", authToken.getAuthToken());
 
-        // Conditional delete (we expect this to fail)
-
         try {
             System.out.println("Attempting a conditional delete...");
             table.deleteItem(deleteItemSpec);

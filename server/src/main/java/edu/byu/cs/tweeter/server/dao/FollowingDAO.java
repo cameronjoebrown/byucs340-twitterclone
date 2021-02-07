@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 
@@ -24,6 +26,7 @@ import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
  * A DAO for accessing 'following' data from the database.
  */
 public class FollowingDAO {
+
     // This is the hard coded followee data returned by the 'getFollowees()' method
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
@@ -62,6 +65,7 @@ public class FollowingDAO {
         return new NumFollowsResponse(getDummyFollowees().size());
     }
 
+
     /**
      * Gets the users from the database that the user specified in the request is following. Uses
      * information in the request object to limit the number of followees returned and to return the
@@ -81,94 +85,39 @@ public class FollowingDAO {
         Table table = dynamoDB.getTable("follows");
 
         HashMap<String, String> nameMap = new HashMap<>();
-        nameMap.put("#fol", "follower_handle");
+        nameMap.put("#follower_handle", "follower_handle");
 
         HashMap<String, Object> valueMap = new HashMap<>();
         valueMap.put(":follower_handle", request.getFollower());
 
-        if (request.getLastFollowee() != null) {
-            QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#fol = :follower_handle")
-                    .withNameMap(nameMap)
-                    .withValueMap(valueMap)
-                    .withMaxResultSize(10);
+        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#follower_handle = :follower_handle")
+                .withNameMap(nameMap)
+                .withValueMap(valueMap)
+                .withMaxResultSize(10)
+                .withScanIndexForward(true);
 
-            ItemCollection<QueryOutcome> items;
-            Iterator<Item> iterator;
-            Item item;
 
-            try {
-                System.out.println("Followees: ");
-                items = table.query(querySpec);
-
-                iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    item = iterator.next();
-                    // User newUser = new User(item.getString("followee_handle"))
-                    System.out.println(item.getNumber("follower_handle") + ": " + item.getString("followee_handle"));
-                }
-
-            } catch (Exception e) {
-                System.err.println("Unable to get followees");
-                System.err.println(e.getMessage());
-            }
+        if (request.getLastFollowee() != null && !request.getLastFollowee().equals("")) {
+            querySpec.withExclusiveStartKey("follower_handle", request.getFollower(),
+                    "followee_handle", request.getLastFollowee());
         }
+        ItemCollection<QueryOutcome> items = table.query(querySpec);
+        Iterator<Item> iterator = items.iterator();
+        Item item;
+        List<User> responseFollowees = new ArrayList<>();
 
-            return null;
-        /*
-        // TODO: Generates dummy data. Replace with a real implementation.
-        assert request.getLimit() > 0;
-        assert request.getFollower() != null;
+        while (iterator.hasNext()) {
+            item = iterator.next();
 
-        List<User> allFollowees = getDummyFollowees();
-        List<User> responseFollowees = new ArrayList<>(request.getLimit());
-
-        boolean hasMorePages = false;
-
-        if(request.getLimit() > 0) {
-            if (allFollowees != null) {
-                int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
-
-                for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
-                    responseFollowees.add(allFollowees.get(followeesIndex));
-                }
-
-                hasMorePages = followeesIndex < allFollowees.size();
-            }
+            ViewUserDAO viewUserDAO = new ViewUserDAO();
+            ViewUserRequest viewUserRequest = new ViewUserRequest(item.getString("followee_handle"));
+            User followee = viewUserDAO.viewUser(viewUserRequest).getUser();
+            responseFollowees.add(followee);
         }
-
+        // Check for more pages
+        QueryOutcome outcome = items.getLastLowLevelResult();
+        boolean hasMorePages = outcome.getQueryResult().getLastEvaluatedKey() != null;
         return new FollowingResponse(responseFollowees, hasMorePages);
-
-         */
-    }
-
-    /**
-     * Determines the index for the first followee in the specified 'allFollowees' list that should
-     * be returned in the current request. This will be the index of the next followee after the
-     * specified 'lastFollowee'.
-     *
-     * @param lastFollowee the last followee that was returned in the previous request or null if
-     *                     there was no previous request.
-     * @param allFollowees the generated list of followees from which we are returning paged results.
-     * @return the index of the first followee to be returned.
-     */
-    private int getFolloweesStartingIndex(String lastFollowee, List<User> allFollowees) {
-
-        int followeesIndex = 0;
-
-        if(lastFollowee != null) {
-            // This is a paged request for something after the first page. Find the first item
-            // we should return
-            for (int i = 0; i < allFollowees.size(); i++) {
-                if(lastFollowee.equals(allFollowees.get(i).getUsername())) {
-                    // We found the index of the last item returned last time. Increment to get
-                    // to the first one we should return
-                    followeesIndex = i + 1;
-                    break;
-                }
-            }
-        }
-
-        return followeesIndex;
     }
 
     /**
@@ -182,5 +131,6 @@ public class FollowingDAO {
                 user8, user9, user10, user11, user12, user13, user14, user15, user16, user17, user18,
                 user19, user20);
     }
+
 }
 

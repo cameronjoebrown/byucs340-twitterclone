@@ -1,11 +1,30 @@
 package edu.byu.cs.tweeter.server.dao;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.BatchWriteItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Index;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.ItemCollection;
+import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.model.WriteRequest;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
+import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 
@@ -64,56 +83,49 @@ public class FollowerDAO {
      * @return the follower response.
      */
     public FollowerResponse getFollowers(FollowerRequest request) {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.US_WEST_2).build();
 
-        assert request.getLimit() > 0;
-        assert request.getFollowee() != null;
+        DynamoDB dynamoDB = new DynamoDB(client);
 
-        List<User> allFollowers = getDummyFollowers();
-        List<User> responseFollowers = new ArrayList<>(request.getLimit());
+        Table table = dynamoDB.getTable("follows");
+        Index index = table.getIndex("follows_index");
 
-        boolean hasMorePages = false;
+        HashMap<String, String> nameMap = new HashMap<>();
+        nameMap.put("#followee_handle", "followee_handle");
 
-        if(request.getLimit() > 0) {
-            int followersIndex = getFollowersStartingIndex(request.getLastFollower(), allFollowers);
+        HashMap<String, Object> valueMap = new HashMap<>();
+        valueMap.put(":followee_handle", request.getFollowee());
 
-            for(int limitCounter = 0; followersIndex < allFollowers.size() && limitCounter < request.getLimit(); followersIndex++, limitCounter++) {
-                responseFollowers.add(allFollowers.get(followersIndex));
-            }
+        QuerySpec querySpec = new QuerySpec().withKeyConditionExpression("#followee_handle = :followee_handle")
+                .withNameMap(nameMap)
+                .withValueMap(valueMap)
+                .withMaxResultSize(10)
+                .withScanIndexForward(true);
 
-            hasMorePages = followersIndex < allFollowers.size();
+
+        if (request.getLastFollower() != null && !request.getLastFollower().equals("")) {
+            querySpec.withExclusiveStartKey("followee_handle", request.getFollowee(),
+                    "follower_handle", request.getLastFollower());
         }
+        ItemCollection<QueryOutcome> items = index.query(querySpec);
+        Iterator<Item> iterator = items.iterator();
+        Item item;
+        List<User> responseFollowers = new ArrayList<>();
 
+        while (iterator.hasNext()) {
+            item = iterator.next();
+
+            ViewUserDAO viewUserDAO = new ViewUserDAO();
+            ViewUserRequest viewUserRequest = new ViewUserRequest(item.getString("follower_handle"));
+            User follower = viewUserDAO.viewUser(viewUserRequest).getUser();
+            responseFollowers.add(follower);
+        }
+        // Check for more pages
+        QueryOutcome outcome = items.getLastLowLevelResult();
+        boolean hasMorePages = outcome.getQueryResult().getLastEvaluatedKey() != null;
         return new FollowerResponse(responseFollowers, hasMorePages);
 
-    }
-
-    /**
-     * Determines the index for the first follower in the specified 'allFollowers' list that should
-     * be returned in the current request. This will be the index of the next follower after the
-     * specified 'lastFollower'.
-     *
-     * @param lastFollower the last follower that was returned in the previous request or null if
-     *                     there was no previous request.
-     * @param allFollowers the generated list of followers from which we are returning paged results.
-     * @return the index of the first follower to be returned.
-     */
-    private int getFollowersStartingIndex(String lastFollower, List<User> allFollowers) {
-
-        int followersIndex = 0;
-
-        if(lastFollower != null) {
-            // This is a paged request for something after the first page. Find the first item
-            // we should return
-            for (int i = 0; i < allFollowers.size(); i++) {
-                if(lastFollower.equals(allFollowers.get(i).getUsername())) {
-                    // We found the index of the last item returned last time. Increment to get
-                    // to the first one we should return
-                    followersIndex = i + 1;
-                }
-            }
-        }
-
-        return followersIndex;
     }
 
     /**
@@ -126,6 +138,48 @@ public class FollowerDAO {
         return Arrays.asList(user1, user2, user3, user4, user5, user6, user7,
                 user8, user9, user10, user11, user12, user13, user14, user15, user16, user17, user18,
                 user19, user20);
+    }
+
+    /**
+     * This method allows multiple follows to be added at once. This will mostly be used
+     * for testing purposes.
+     *
+     * @param follows the list of follows to be added
+     */
+    public void addFollows(List<Follow> follows) {
+        TableWriteItems items = new TableWriteItems("follows");
+
+        for (Follow follow : follows) {
+            Item item = new Item()
+                    .withPrimaryKey("follower_handle", follow.getFollower(),"followee_handle", follow.getFollowee());
+            items.addItemToPut(item);
+
+            // Add in batches of 25
+            if (items.getItemsToPut() != null && items.getItemsToPut().size() == 25) {
+                writeBatch(items);
+                items = new TableWriteItems("follows");
+            }
+        }
+
+        //
+        if (items.getItemsToPut() != null && items.getItemsToPut().size() > 0) {
+            writeBatch(items);
+        }
+    }
+
+    private void writeBatch(TableWriteItems items) {
+        // Open connection to DynamoDB and save user to users table
+        AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.US_WEST_2).build();
+
+        DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
+
+        BatchWriteItemOutcome outcome = dynamoDB.batchWriteItem(items);
+
+        while (outcome.getUnprocessedItems().size() > 0) {
+            Map<String, List<WriteRequest>> unprocessedItems = outcome.getUnprocessedItems();
+            outcome = dynamoDB.batchWriteItemUnprocessed(unprocessedItems);
+        }
     }
 
 }

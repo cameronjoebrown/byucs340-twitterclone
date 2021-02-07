@@ -9,32 +9,32 @@ import java.util.Objects;
  */
 public class Follow {
 
-    private User follower;
-    private User followee;
+    private String follower;
+    private String followee;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called by other code.
      */
     private Follow() {}
 
-    public Follow(@NotNull User follower, @NotNull User followee) {
+    public Follow(@NotNull String follower, @NotNull String followee) {
         this.follower = follower;
         this.followee = followee;
     }
 
-    public User getFollower() {
+    public String getFollower() {
         return follower;
     }
 
-    public User getFollowee() {
+    public String getFollowee() {
         return followee;
     }
 
-    public void setFollower(User follower) {
+    public void setFollower(String follower) {
         this.follower = follower;
     }
 
-    public void setFollowee(User followee) {
+    public void setFollowee(String followee) {
         this.followee = followee;
     }
 
@@ -56,8 +56,8 @@ public class Follow {
     @Override
     public String toString() {
         return "Follow{" +
-                "follower=" + follower.getUsername() +
-                ", followee=" + followee.getUsername() +
+                "follower=" + follower +
+                ", followee=" + followee +
                 '}';
     }
 }
