@@ -145,15 +145,14 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             // Initialize a new SpannableString instance
             SpannableStringBuilder ss = new SpannableStringBuilder(text);
 
-            // Initialize a new ClickableSpan to display red background
+            // Initialize a new ClickableSpan to create @username links
             Pattern p = Pattern.compile("[#@][a-zA-Z0-9]+");
-            Matcher m = p.matcher(text); //get matcher, applying the pattern to caption string
+            Matcher m = p.matcher(text); //get matcher, applying the pattern to tweets
             while (m.find()) { // Find each match in turn
                 ClickableSpan clickableSpan = new ClickableSpan() {
                     @Override
                     public void onClick(View textView) {
-                        //Clicked word
-                        Toast.makeText(getContext(), "Can't find this user", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Can't find user", Toast.LENGTH_LONG).show();
                     }
                 };
                 ss.setSpan(clickableSpan, m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
