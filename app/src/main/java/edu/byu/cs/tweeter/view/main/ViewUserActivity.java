@@ -18,17 +18,23 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.presenter.FollowPresenter;
+import edu.byu.cs.tweeter.presenter.FollowerPresenter;
+import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.presenter.UnfollowPresenter;
 import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.view.ViewUserSectionsPagerAdapter;
 import edu.byu.cs.tweeter.view.asyncTasks.FollowTask;
+import edu.byu.cs.tweeter.view.asyncTasks.NumFolloweesTask;
+import edu.byu.cs.tweeter.view.asyncTasks.NumFollowersTask;
 import edu.byu.cs.tweeter.view.asyncTasks.UnfollowTask;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 public class ViewUserActivity extends AppCompatActivity implements FollowTask.Observer, UnfollowTask.Observer,
-            ViewUserPresenter.View, FollowPresenter.View, UnfollowPresenter.View {
+            ViewUserPresenter.View, FollowPresenter.View, UnfollowPresenter.View, FollowingPresenter.View, NumFolloweesTask.Observer, FollowerPresenter.View, NumFollowersTask.Observer {
 
     private static final String LOG_TAG = "ViewUserActivity";
 
@@ -41,7 +47,14 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
 
     private FollowPresenter followPresenter;
     private UnfollowPresenter unfollowPresenter;
+    private FollowerPresenter followerPresenter;
+    private FollowingPresenter followingPresenter;
     Button followButton;
+
+    int followeeCount;
+    int followerCount;
+    TextView followeeCountView;
+    TextView followerCountView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +64,8 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
         ViewUserPresenter viewUserPresenter = new ViewUserPresenter(this);
         followPresenter = new FollowPresenter(this);
         unfollowPresenter = new UnfollowPresenter(this);
+        followerPresenter = new FollowerPresenter(this);
+        followingPresenter = new FollowingPresenter(this);
 
         viewedUser = (User) getIntent().getSerializableExtra(VIEWED_USER_KEY);
         loggedInUser = (User) getIntent().getSerializableExtra(LOGGED_IN_USER_KEY);
@@ -59,6 +74,9 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
         }
 
         AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
+
+        getFolloweeCount(viewedUser);
+        getFollowerCount(viewedUser);
 
         ViewUserSectionsPagerAdapter viewUserSectionsPagerAdapter =
                 new ViewUserSectionsPagerAdapter(this, getSupportFragmentManager(), viewedUser, authToken);
@@ -97,11 +115,8 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
         ImageView userImageView = findViewById(R.id.userImage);
         userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(viewedUser.getImageBytes()));
 
-        TextView followeeCount = findViewById(R.id.followeeCount);
-        followeeCount.setText("Following: " + "20");
-
-        TextView followerCount = findViewById(R.id.followerCount);
-        followerCount.setText("Followers: " + "20");
+        followeeCountView = findViewById(R.id.followeeCount);
+        followerCountView = findViewById(R.id.followerCount);
     }
 
 
@@ -133,14 +148,20 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
 
     @Override
     public void followSuccessful(Response response) {
-        // TODO: Change follower count
+        // TODO: Change the logic on getting follower count
+        // getFollowerCount(viewedUser);
+        followerCount += 1;
+        followerCountView.setText("Followers: " + followerCount);
         followButton.setBackgroundColor(Color.BLUE);
         followButton.setText(getResources().getString(R.string.unfollow));
     }
 
     @Override
     public void unfollowSuccessful(Response response) {
-        // TODO: Change follower count
+        // TODO: Change the logic on getting follower count
+        // getFollowerCount(viewedUser);
+        followerCount -= 1;
+        followerCountView.setText("Followers: " + followerCount);
         followButton.setBackgroundColor(Color.WHITE);
         followButton.setText(getResources().getString(R.string.follow));
     }
@@ -149,5 +170,30 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
     public void handleException(Exception exception) {
         Log.e(LOG_TAG, exception.getMessage(), exception);
         Toast.makeText(this, "Exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void followerCountSuccessful(NumFollowsResponse response) {
+        followerCount = response.getFollowCount();
+        followerCountView.setText("Followers: " + followerCount);
+    }
+
+
+    @Override
+    public void followeesCountSuccessful(NumFollowsResponse response) {
+        followeeCount = response.getFollowCount();
+        followeeCountView.setText("Following: " + followeeCount);
+    }
+
+    public void getFolloweeCount(User user) {
+        NumFollowsRequest request = new NumFollowsRequest(user.getUsername());
+        NumFolloweesTask task = new NumFolloweesTask(followingPresenter, this);
+        task.execute(request);
+    }
+
+    public void getFollowerCount(User user) {
+        NumFollowsRequest request = new NumFollowsRequest(user.getUsername());
+        NumFollowersTask task = new NumFollowersTask(followerPresenter, this);
+        task.execute(request);
     }
 }

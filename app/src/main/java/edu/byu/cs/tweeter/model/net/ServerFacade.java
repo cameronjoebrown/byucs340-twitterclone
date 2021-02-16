@@ -16,6 +16,7 @@ import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
@@ -23,6 +24,7 @@ import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
@@ -153,6 +155,13 @@ public class ServerFacade {
         return new PostStatusResponse(new Status(request.getStatusText(), request.getUser(), request.getTimeStamp()));
     }
 
+    public NumFollowsResponse getNumFollowers(NumFollowsRequest request) {
+        return new NumFollowsResponse(20);
+    }
+
+    public NumFollowsResponse getNumFollowees(NumFollowsRequest request) {
+        return new NumFollowsResponse(20);
+    }
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in

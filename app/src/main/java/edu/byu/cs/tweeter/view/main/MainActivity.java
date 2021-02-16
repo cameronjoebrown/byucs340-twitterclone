@@ -24,9 +24,15 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 import edu.byu.cs.tweeter.model.service.response.Response;
+import edu.byu.cs.tweeter.presenter.FollowerPresenter;
+import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.presenter.LogoutPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LogoutTask;
+import edu.byu.cs.tweeter.view.asyncTasks.NumFolloweesTask;
+import edu.byu.cs.tweeter.view.asyncTasks.NumFollowersTask;
 import edu.byu.cs.tweeter.view.main.login.LoginRegisterActivity;
 import edu.byu.cs.tweeter.view.main.posts.PostStatusFragment;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
@@ -34,7 +40,8 @@ import edu.byu.cs.tweeter.view.util.ImageUtils;
 /**
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
-public class MainActivity extends AppCompatActivity implements LogoutPresenter.View, LogoutTask.Observer {
+public class MainActivity extends AppCompatActivity implements LogoutPresenter.View, LogoutTask.Observer,
+        FollowingPresenter.View, NumFolloweesTask.Observer, FollowerPresenter.View, NumFollowersTask.Observer {
 
     private static final String LOG_TAG = "MainActivity";
 
@@ -45,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
     private AuthToken authToken;
 
     private LogoutPresenter logoutPresenter;
+    private FollowerPresenter followerPresenter;
+    private FollowingPresenter followingPresenter;
+
+    TextView followeeCount;
+    TextView followerCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +65,12 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
         Iconify.with(new FontAwesomeModule());
 
         logoutPresenter = new LogoutPresenter(this);
+        followerPresenter = new FollowerPresenter(this);
+        followingPresenter = new FollowingPresenter(this);
 
         currentUser = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
+        getFolloweeCount(currentUser);
+        getFollowerCount(currentUser);
 
         if(currentUser == null) {
             throw new RuntimeException("User not passed to activity");
@@ -98,11 +114,20 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
         ImageView userImageView = findViewById(R.id.userImage);
         userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(currentUser.getImageBytes()));
 
-        TextView followeeCount = findViewById(R.id.followeeCount);
-        followeeCount.setText("Following: " + "20");
+        followeeCount = findViewById(R.id.followeeCount);
+        followerCount = findViewById(R.id.followerCount);
+    }
 
-        TextView followerCount = findViewById(R.id.followerCount);
-        followerCount.setText("Followers: " + "20");
+    public void getFolloweeCount(User user) {
+        NumFollowsRequest request = new NumFollowsRequest(user.getUsername());
+        NumFolloweesTask task = new NumFolloweesTask(followingPresenter, this);
+        task.execute(request);
+    }
+
+    public void getFollowerCount(User user) {
+        NumFollowsRequest request = new NumFollowsRequest(user.getUsername());
+        NumFollowersTask task = new NumFollowersTask(followerPresenter, this);
+        task.execute(request);
     }
 
     public void logout() {
@@ -110,6 +135,19 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
         LogoutTask logoutTask = new LogoutTask(logoutPresenter, this);
         logoutTask.execute(request);
     }
+
+    @Override
+    public void followerCountSuccessful(NumFollowsResponse response) {
+        followerCount.setText("Followers: " + response.getFollowCount());
+    }
+
+
+    @Override
+    public void followeesCountSuccessful(NumFollowsResponse response) {
+        System.out.println("Yoafdosjifajdsfnkadsfasd " + response.getFollowCount());
+        followeeCount.setText("Following: " + response.getFollowCount());
+    }
+
 
     @Override
     public void logoutSuccessful(Response response) {

@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
+import edu.byu.cs.tweeter.model.service.request.NumFollowsRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 
 /**
  * Contains the business logic for getting the followers of a user.
@@ -27,5 +29,9 @@ public class FollowerService extends Service {
         }
 
         return response;
+    }
+
+    public NumFollowsResponse getNumFollowers(NumFollowsRequest request) {
+        return getServerFacade().getNumFollowers(request);
     }
 }
