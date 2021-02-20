@@ -31,7 +31,7 @@ public class NumFollowersTask extends AsyncTask<NumFollowsRequest, Void, NumFoll
      * completes.
      */
     public interface Observer {
-        void followerCountSuccessful(NumFollowsResponse response);
+        void followerCountReturned(NumFollowsResponse response);
         void handleException(Exception exception);
     }
 
@@ -50,7 +50,7 @@ public class NumFollowersTask extends AsyncTask<NumFollowsRequest, Void, NumFoll
         if(exception != null) {
             observer.handleException(exception);
         } else {
-            observer.followerCountSuccessful(response);
+            observer.followerCountReturned(response);
         }
     }
 }

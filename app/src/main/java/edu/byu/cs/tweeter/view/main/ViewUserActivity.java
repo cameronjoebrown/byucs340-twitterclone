@@ -173,14 +173,14 @@ public class ViewUserActivity extends AppCompatActivity implements FollowTask.Ob
     }
 
     @Override
-    public void followerCountSuccessful(NumFollowsResponse response) {
+    public void followerCountReturned(NumFollowsResponse response) {
         followerCount = response.getFollowCount();
         followerCountView.setText("Followers: " + followerCount);
     }
 
 
     @Override
-    public void followeesCountSuccessful(NumFollowsResponse response) {
+    public void followeesCountReturned(NumFollowsResponse response) {
         followeeCount = response.getFollowCount();
         followeeCountView.setText("Following: " + followeeCount);
     }

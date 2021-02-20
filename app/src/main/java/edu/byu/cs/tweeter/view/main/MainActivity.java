@@ -137,13 +137,13 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
     }
 
     @Override
-    public void followerCountSuccessful(NumFollowsResponse response) {
+    public void followerCountReturned(NumFollowsResponse response) {
         followerCount.setText("Followers: " + response.getFollowCount());
     }
 
 
     @Override
-    public void followeesCountSuccessful(NumFollowsResponse response) {
+    public void followeesCountReturned(NumFollowsResponse response) {
         System.out.println("Yoafdosjifajdsfnkadsfasd " + response.getFollowCount());
         followeeCount.setText("Following: " + response.getFollowCount());
     }
