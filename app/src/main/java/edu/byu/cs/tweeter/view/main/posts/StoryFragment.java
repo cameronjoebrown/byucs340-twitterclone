@@ -35,6 +35,7 @@ import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
+import edu.byu.cs.tweeter.presenter.Presenter;
 import edu.byu.cs.tweeter.presenter.StoryPresenter;
 import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetStoryTask;
@@ -42,8 +43,7 @@ import edu.byu.cs.tweeter.view.asyncTasks.ViewUserTask;
 import edu.byu.cs.tweeter.view.main.ViewUserActivity;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
-public class StoryFragment extends Fragment implements StoryPresenter.View,
-        ViewUserPresenter.View  {
+public class StoryFragment extends Fragment implements Presenter.View  {
     private static final String LOG_TAG = "FollowingFragment";
     private static final String USER_KEY = "UserKey";
     private static final String AUTH_TOKEN_KEY = "AuthTokenKey";

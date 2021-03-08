@@ -11,15 +11,7 @@ import edu.byu.cs.tweeter.model.service.response.NumFollowsResponse;
 /**
  * The presenter for the follower functionality of the application.
  */
-public class FollowerPresenter {
-    private final View view;
-
-    /**
-     * The interface by which this presenter communicates with it's view.
-     */
-    public interface View {
-        // If needed, specify methods here that will be called on the view in response to model updates
-    }
+public class FollowerPresenter extends Presenter {
 
     /**
      * Creates an instance.

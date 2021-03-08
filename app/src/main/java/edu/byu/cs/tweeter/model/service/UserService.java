@@ -6,18 +6,16 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.ServerFacade;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
-public class Service {
-
-    /**
-     * Returns an instance of {@link ServerFacade}. Allows mocking of the ServerFacade class for
-     * testing purposes. All usages of ServerFacade should get their ServerFacade instance from this
-     * method to allow for proper mocking.
-     *
-     * @return the instance.
-     */
-    public ServerFacade getServerFacade() {
-        return new ServerFacade();
+public abstract class UserService extends Service {
+    public void runService() throws IOException {
+        boolean success = runMethod(getServerFacade());
+        if(success) {
+            load();
+        }
     }
+
+    abstract boolean runMethod(ServerFacade serverFacade);
+    abstract void load() throws IOException;
 
     /**
      * Loads the profile image data for the user.

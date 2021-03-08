@@ -7,15 +7,7 @@ import edu.byu.cs.tweeter.model.service.response.Response;
 /**
  * The presenter for the unfollow functionality of the application.
  */
-public class UnfollowPresenter {
-    private final View view;
-
-    /**
-     * The interface by which this presenter sends notifications to it's view.
-     */
-    public interface View {
-        // If needed, specify methods here that will be called on the view in response to model updates
-    }
+public class UnfollowPresenter extends Presenter {
 
     /**
      * Creates an instance.

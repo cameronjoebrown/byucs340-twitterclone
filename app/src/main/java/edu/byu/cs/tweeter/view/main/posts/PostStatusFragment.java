@@ -23,11 +23,12 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.presenter.PostStatusPresenter;
+import edu.byu.cs.tweeter.presenter.Presenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostStatusTask;
 import edu.byu.cs.tweeter.view.main.MainActivity;
 
 public class PostStatusFragment extends DialogFragment implements PostStatusTask.Observer,
-        PostStatusPresenter.View {
+        Presenter.View {
 
     private static final String LOG_TAG = "PostStatusFragment";
 
@@ -97,6 +98,7 @@ public class PostStatusFragment extends DialogFragment implements PostStatusTask
 
     @Override
     public void postStatusSuccessful(PostStatusResponse response) {
+        Toast.makeText(getActivity(), "Post status successful.", Toast.LENGTH_LONG).show();
         dismiss();
     }
 

@@ -30,6 +30,7 @@ import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.presenter.LogoutPresenter;
+import edu.byu.cs.tweeter.presenter.Presenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LogoutTask;
 import edu.byu.cs.tweeter.view.asyncTasks.NumFolloweesTask;
 import edu.byu.cs.tweeter.view.asyncTasks.NumFollowersTask;
@@ -40,8 +41,8 @@ import edu.byu.cs.tweeter.view.util.ImageUtils;
 /**
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
-public class MainActivity extends AppCompatActivity implements LogoutPresenter.View, LogoutTask.Observer,
-        FollowingPresenter.View, NumFolloweesTask.Observer, FollowerPresenter.View, NumFollowersTask.Observer {
+public class MainActivity extends AppCompatActivity implements Presenter.View, LogoutTask.Observer,
+        NumFolloweesTask.Observer, NumFollowersTask.Observer {
 
     private static final String LOG_TAG = "MainActivity";
 

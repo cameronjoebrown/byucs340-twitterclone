@@ -24,6 +24,7 @@ import edu.byu.cs.tweeter.model.service.response.Response;
 import edu.byu.cs.tweeter.presenter.FollowPresenter;
 import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
+import edu.byu.cs.tweeter.presenter.Presenter;
 import edu.byu.cs.tweeter.presenter.UnfollowPresenter;
 import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.view.ViewUserSectionsPagerAdapter;
@@ -34,7 +35,7 @@ import edu.byu.cs.tweeter.view.asyncTasks.UnfollowTask;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 public class ViewUserActivity extends AppCompatActivity implements FollowTask.Observer, UnfollowTask.Observer,
-            ViewUserPresenter.View, FollowPresenter.View, UnfollowPresenter.View, FollowingPresenter.View, NumFolloweesTask.Observer, FollowerPresenter.View, NumFollowersTask.Observer {
+        NumFolloweesTask.Observer, Presenter.View, NumFollowersTask.Observer {
 
     private static final String LOG_TAG = "ViewUserActivity";
 

@@ -9,16 +9,24 @@ import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 /**
  * Contains the business logic to support the login operation.
  */
-public class LoginService extends Service {
+public class LoginService extends UserService {
+    LoginRegisterResponse response;
+    LoginRequest request;
 
     public LoginRegisterResponse login(LoginRequest request) throws IOException {
-        ServerFacade serverFacade = getServerFacade();
-        LoginRegisterResponse response = serverFacade.login(request);
-
-        if(response.isSuccess()) {
-            loadImage(response.getUser());
-        }
-
+        this.request = request;
+        runService();
         return response;
+    }
+
+    @Override
+    boolean runMethod(ServerFacade serverFacade) {
+        this.response = serverFacade.login(request);
+        return response.isSuccess();
+    }
+
+    @Override
+    void load() throws IOException {
+        loadImage(response.getUser());
     }
 }

@@ -9,15 +9,24 @@ import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
 /**
  * Contains the business logic to support the register operation.
  */
-public class RegisterService extends Service {
+public class RegisterService extends UserService {
+    LoginRegisterResponse response;
+    RegisterRequest request;
+
     public LoginRegisterResponse register(RegisterRequest request) throws IOException {
-        ServerFacade serverFacade = getServerFacade();
-        LoginRegisterResponse response = serverFacade.register(request);
-
-        if(response.isSuccess()) {
-            loadImage(response.getUser());
-        }
-
+        this.request = request;
+        runService();
         return response;
+    }
+
+    @Override
+    boolean runMethod(ServerFacade serverFacade) {
+        this.response = serverFacade.register(request);
+        return response.isSuccess();
+    }
+
+    @Override
+    void load() throws IOException {
+        loadImage(response.getUser());
     }
 }

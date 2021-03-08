@@ -9,16 +9,7 @@ import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
 /**
  * The presenter for the feed functionality of the application.
  */
-public class FeedPresenter {
-
-    private final View view;
-
-    /**
-     * The interface by which this presenter communicates with it's view.
-     */
-    public interface View {
-        // If needed, specify methods here that will be called on the view in response to model updates
-    }
+public class FeedPresenter extends Presenter {
 
     /**
      * Creates an instance.

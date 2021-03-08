@@ -27,6 +27,7 @@ import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
+import edu.byu.cs.tweeter.presenter.Presenter;
 import edu.byu.cs.tweeter.presenter.ViewUserPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
 import edu.byu.cs.tweeter.view.asyncTasks.ViewUserTask;
@@ -36,8 +37,8 @@ import edu.byu.cs.tweeter.view.util.ImageUtils;
 /**
  * The fragment that displays on the 'Following' tab.
  */
-public class FollowingFragment extends Fragment implements FollowingPresenter.View,
-        ViewUserTask.Observer, ViewUserPresenter.View {
+public class FollowingFragment extends Fragment implements Presenter.View,
+        ViewUserTask.Observer{
 
     private static final String LOG_TAG = "FollowingFragment";
     private static final String USER_KEY = "UserKey";

@@ -9,15 +9,7 @@ import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 /**
  * The presenter for the view user functionality of the application.
  */
-public class ViewUserPresenter {
-    private final View view;
-
-    /**
-     * The interface by which this presenter sends notifications to it's view.
-     */
-    public interface View {
-        // If needed, specify methods here that will be called on the view in response to model updates
-    }
+public class ViewUserPresenter extends Presenter {
 
     /**
      * Creates an instance.
