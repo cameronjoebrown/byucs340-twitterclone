@@ -30,7 +30,7 @@ public class LoginIntegrationTest {
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
         // Setup request objects to use in the tests
-        User user1 = new User("Bob", "Joe", "@bobjoe",
+        User user1 = new User("Test", "User", "@TestUser",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
         validRequest = new LoginRequest(user1.getUsername(), "Iamcool");
         invalidRequest = new LoginRequest(null, null);
