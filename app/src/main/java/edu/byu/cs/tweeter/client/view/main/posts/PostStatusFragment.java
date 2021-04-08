@@ -99,6 +99,7 @@ public class PostStatusFragment extends DialogFragment implements PostStatusTask
 
     @Override
     public void postStatusSuccessful(PostStatusResponse response) {
+        Toast.makeText(getActivity(), "Post status successful.", Toast.LENGTH_LONG).show();
         dismiss();
     }
 
