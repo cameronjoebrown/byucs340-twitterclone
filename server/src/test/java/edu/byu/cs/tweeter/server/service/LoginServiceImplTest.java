@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
-import edu.byu.cs.tweeter.server.dao.LoginDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class LoginServiceImplTest {
     private LoginRequest validRequest;
@@ -34,21 +34,21 @@ public class LoginServiceImplTest {
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new LoginRegisterResponse(user1, new AuthToken("token123123123"));
-        LoginDAO mockLoginDAO = Mockito.mock(LoginDAO.class);
+        UserDAO mockLoginDAO = Mockito.mock(UserDAO.class);
         Mockito.when(mockLoginDAO.login(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new LoginRegisterResponse("An exception occured");
+        failureResponse = new LoginRegisterResponse("An exception occurred");
         Mockito.when(mockLoginDAO.login(invalidRequest)).thenReturn(failureResponse);
 
         // Create a LoginService instance and wrap it with a spy that will use the mock service
         loginServiceProxySpy = Mockito.spy(new LoginServiceImpl());
-        Mockito.when(loginServiceProxySpy.getLoginDAO()).thenReturn(mockLoginDAO);
+        Mockito.when(loginServiceProxySpy.getUserDAO()).thenReturn(mockLoginDAO);
 
     }
 
     /**
      * Verify that for successful requests the {@link LoginServiceImpl#login(LoginRequest)}
-     * method returns the same result as the {@link LoginDAO}.
+     * method returns the same result as the {@link UserDAO}.
      */
     @Test
     public void testLogin_validRequest() {
@@ -58,7 +58,7 @@ public class LoginServiceImplTest {
 
     /**
      * Verify that for invalid requests the {@link LoginServiceImpl#login(LoginRequest)}
-     * method returns the same result as the {@link LoginDAO}.
+     * method returns the same result as the {@link UserDAO}.
      */
     @Test
     public void testLogin_invalidRequest_unableToLogin() {

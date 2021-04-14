@@ -10,7 +10,7 @@ import java.util.Arrays;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
-import edu.byu.cs.tweeter.server.dao.FollowingDAO;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
 public class FollowingServiceImplTest {
 
@@ -34,16 +34,16 @@ public class FollowingServiceImplTest {
 
         // Setup a mock FollowingDAO that will return known responses
         expectedResponse = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
-        FollowingDAO mockFollowingDAO = Mockito.mock(FollowingDAO.class);
+        FollowDAO mockFollowingDAO = Mockito.mock(FollowDAO.class);
         Mockito.when(mockFollowingDAO.getFollowees(request)).thenReturn(expectedResponse);
 
         followingServiceImplSpy = Mockito.spy(FollowingServiceImpl.class);
-        Mockito.when(followingServiceImplSpy.getFollowingDAO()).thenReturn(mockFollowingDAO);
+        Mockito.when(followingServiceImplSpy.getFollowDAO()).thenReturn(mockFollowingDAO);
     }
 
     /**
      * Verify that the {@link FollowingServiceImpl#getFollowees(FollowingRequest)}
-     * method returns the same result as the {@link FollowingDAO} class.
+     * method returns the same result as the {@link FollowDAO} class.
      */
     @Test
     public void testGetFollowees_validRequest_correctResponse() {

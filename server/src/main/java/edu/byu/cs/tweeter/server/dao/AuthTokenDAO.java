@@ -13,15 +13,16 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
 
 public class AuthTokenDAO {
 
-    AmazonDynamoDB client;
+    final AmazonDynamoDB client;
 
-    DynamoDB dynamoDB;
+    final DynamoDB dynamoDB;
 
-    Table table;
+    final Table table;
 
     public AuthTokenDAO() {
         client = AmazonDynamoDBClientBuilder.standard()
@@ -68,5 +69,9 @@ public class AuthTokenDAO {
             System.err.println("Unable to delete item: " + authToken.getAuthToken());
             return new Response(false, "Error deleting AuthToken: " + e.getMessage());
         }
+    }
+
+    public Response logout(LogoutRequest request) {
+        return deleteAuthToken(request.getAuthToken());
     }
 }

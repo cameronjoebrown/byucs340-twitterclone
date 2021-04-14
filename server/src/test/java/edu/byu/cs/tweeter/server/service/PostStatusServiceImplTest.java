@@ -10,7 +10,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.service.response.Response;
-import edu.byu.cs.tweeter.server.dao.PostStatusDAO;
+import edu.byu.cs.tweeter.server.dao.StoryDAO;
 
 public class PostStatusServiceImplTest {
     private PostStatusRequest validRequest;
@@ -39,21 +39,21 @@ public class PostStatusServiceImplTest {
         // Setup a mock PostStatusDAO that will return known responses
         successResponse = new PostStatusResponse(new Status(validRequest.getStatusText(),
                 user1, validRequest.getTimeStamp()));
-        PostStatusDAO mockPostStatusDAO = Mockito.mock(PostStatusDAO.class);
+        StoryDAO mockPostStatusDAO = Mockito.mock(StoryDAO.class);
         Mockito.when(mockPostStatusDAO.postStatus(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new PostStatusResponse("An exception occured");
+        failureResponse = new PostStatusResponse("An exception occurred");
         Mockito.when(mockPostStatusDAO.postStatus(invalidRequest)).thenReturn(failureResponse);
 
         // Create a PostStatusService instance and wrap it with a spy that will use the mock service
         postStatusServiceImplSpy = Mockito.spy(new PostStatusServiceImpl());
-        Mockito.when(postStatusServiceImplSpy.getPostStatusDAO()).thenReturn(mockPostStatusDAO);
+        Mockito.when(postStatusServiceImplSpy.getStoryDAO()).thenReturn(mockPostStatusDAO);
 
     }
 
     /**
      * Verify that for successful requests the {@link PostStatusServiceImpl#postStatus(PostStatusRequest)}
-     * method returns the same result as the {@link PostStatusDAO}.
+     * method returns the same result as the {@link StoryDAO}.
      * .
      */
     @Test
@@ -64,7 +64,7 @@ public class PostStatusServiceImplTest {
 
     /**
      * Verify that for invalid requests the {@link PostStatusServiceImpl#postStatus(PostStatusRequest)}
-     * method returns the same result as the {@link PostStatusDAO}.
+     * method returns the same result as the {@link StoryDAO}.
      *
      */
     @Test

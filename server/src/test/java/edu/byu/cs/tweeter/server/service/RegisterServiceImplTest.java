@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
-import edu.byu.cs.tweeter.server.dao.RegisterDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class RegisterServiceImplTest {
     private RegisterRequest validRequest;
@@ -35,21 +35,21 @@ public class RegisterServiceImplTest {
 
         // Setup a mock RegisterDAO that will return known responses
         successResponse = new LoginRegisterResponse(user1, new AuthToken("cooladfsdfdsfa"));
-        RegisterDAO mockRegisterDAO = Mockito.mock(RegisterDAO.class);
+        UserDAO mockRegisterDAO = Mockito.mock(UserDAO.class);
         Mockito.when(mockRegisterDAO.register(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new LoginRegisterResponse("An exception occured");
+        failureResponse = new LoginRegisterResponse("An exception occurred");
         Mockito.when(mockRegisterDAO.register(invalidRequest)).thenReturn(failureResponse);
 
         // Create a RegisterService instance and wrap it with a spy that will use the mock service
         registerServiceImplSpy = Mockito.spy(new RegisterServiceImpl());
-        Mockito.when(registerServiceImplSpy.getRegisterDAO()).thenReturn(mockRegisterDAO);
+        Mockito.when(registerServiceImplSpy.getUserDAO()).thenReturn(mockRegisterDAO);
 
     }
 
     /**
      * Verify that for successful requests the {@link RegisterServiceImpl#register(RegisterRequest)}
-     * method returns the same result as the {@link RegisterDAO}.
+     * method returns the same result as the {@link UserDAO}.
 
      */
     @Test
@@ -60,7 +60,7 @@ public class RegisterServiceImplTest {
 
     /**
      * Verify that for invalid requests the {@link RegisterServiceImpl#register(RegisterRequest)}
-     * method returns the same result as the {@link RegisterDAO}.
+     * method returns the same result as the {@link UserDAO}.
      */
     @Test
     public void testRegister_invalidRequest() {

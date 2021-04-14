@@ -7,7 +7,9 @@ import java.util.List;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
+import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
+import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 
 public class StoryDAO {
 
@@ -132,6 +134,12 @@ public class StoryDAO {
         return Arrays.asList(user1, user2, user3, user4, user5, user6, user7,
                 user8, user9, user10, user11, user12, user13, user14, user15, user16, user17, user18,
                 user19, user20);
+    }
+
+    public PostStatusResponse postStatus(PostStatusRequest request) {
+        User user = new User("Test", "User",
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        return new PostStatusResponse(new Status(request.getStatusText(), user, request.getTimeStamp()));
     }
 
 }

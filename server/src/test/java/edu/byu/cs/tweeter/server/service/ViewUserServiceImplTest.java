@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
-import edu.byu.cs.tweeter.server.dao.ViewUserDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class ViewUserServiceImplTest {
     private ViewUserRequest validRequest;
@@ -28,7 +28,7 @@ public class ViewUserServiceImplTest {
 
         // Setup a mock ViewUserDAO that will return known responses
         successResponse = new ViewUserResponse(user1, true);
-        ViewUserDAO mockViewUserDAO = Mockito.mock(ViewUserDAO.class);
+        UserDAO mockViewUserDAO = Mockito.mock(UserDAO.class);
         Mockito.when(mockViewUserDAO.viewUser(validRequest)).thenReturn(successResponse);
 
         // Create a ViewUserService instance and wrap it with a spy that will use the mock service
@@ -39,7 +39,7 @@ public class ViewUserServiceImplTest {
 
     /**
      * Verify that for successful requests the {@link ViewUserServiceImpl#viewUser(ViewUserRequest)}
-     * method returns the same result as the {@link ViewUserDAO}.
+     * method returns the same result as the {@link UserDAO}.
      */
     @Test
     public void testViewUser_validRequest_correctResponse() {

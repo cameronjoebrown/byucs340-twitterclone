@@ -8,7 +8,9 @@ import java.util.List;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedStoryRequest;
+import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedStoryResponse;
+import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
 
 public class FeedDAO {
 
@@ -106,5 +108,11 @@ public class FeedDAO {
     List<Status> getDummyFeed() {
         return Arrays.asList(status1, status2, status3, status4, status5, status6, status7, status8,
                 status9, status10, status11, status12, status13, status14, status15);
+    }
+
+    public PostStatusResponse postStatus(PostStatusRequest request) {
+        User user = new User("Test", "User",
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        return new PostStatusResponse(new Status(request.getStatusText(), user, request.getTimeStamp()));
     }
 }

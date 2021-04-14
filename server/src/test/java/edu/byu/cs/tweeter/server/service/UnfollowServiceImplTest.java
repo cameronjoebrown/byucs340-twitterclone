@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowUnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
-import edu.byu.cs.tweeter.server.dao.UnfollowDAO;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
 public class UnfollowServiceImplTest {
     private FollowUnfollowRequest validRequest;
@@ -36,21 +36,21 @@ public class UnfollowServiceImplTest {
 
         // Setup a mock UnfollowDAO that will return known responses
         successResponse = new Response(true);
-        UnfollowDAO mockUnfollowDAO = Mockito.mock(UnfollowDAO.class);
+        FollowDAO mockUnfollowDAO = Mockito.mock(FollowDAO.class);
         Mockito.when(mockUnfollowDAO.unfollow(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new Response(false, "An exception occured");
+        failureResponse = new Response(false, "An exception occurred");
         Mockito.when(mockUnfollowDAO.unfollow(invalidRequest)).thenReturn(failureResponse);
 
         // Create a UnfollowService instance and wrap it with a spy that will use the mock service
         unfollowServiceImplSpy = Mockito.spy(new UnfollowServiceImpl());
-        Mockito.when(unfollowServiceImplSpy.getUnfollowDAO()).thenReturn(mockUnfollowDAO);
+        Mockito.when(unfollowServiceImplSpy.getFollowDAO()).thenReturn(mockUnfollowDAO);
 
     }
 
     /**
      * Verify that for successful requests the {@link UnfollowServiceImpl#unfollow(FollowUnfollowRequest)}
-     * method returns the same result as the {@link UnfollowDAO}.
+     * method returns the same result as the {@link FollowDAO}.
      * .
      */
     @Test
@@ -61,7 +61,7 @@ public class UnfollowServiceImplTest {
 
     /**
      * Verify that for invalid requests the {@link UnfollowServiceImpl#unfollow(FollowUnfollowRequest)}
-     * method returns the same result as the {@link UnfollowDAO}.
+     * method returns the same result as the {@link FollowDAO}.
      *
      */
     @Test

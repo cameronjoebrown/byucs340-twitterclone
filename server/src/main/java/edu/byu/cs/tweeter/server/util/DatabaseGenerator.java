@@ -5,8 +5,8 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.server.dao.FollowerDAO;
-import edu.byu.cs.tweeter.server.dao.RegisterDAO;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 /**
  * This class is for testing purposes only. It generates users and adds them
@@ -22,7 +22,7 @@ public class DatabaseGenerator {
 
         // Generate the users
         for(int i = 0; i < NUM_USERS; i++) {
-            String username = "@TestUser";
+            String username = "@TestUser" + i;
             String firstName = "Test";
             String lastName = "User" + i;
             String profilePicUrl = "https://cbrown-profile-images.s3.us-west-2.amazonaws.com/images/%40BobBobson.png";
@@ -38,11 +38,11 @@ public class DatabaseGenerator {
         }
 
         // Add users to database
-        RegisterDAO registerDAO = new RegisterDAO();
-        registerDAO.addUsers(users);
+        UserDAO userDAO = new UserDAO();
+        userDAO.addUsers(users);
 
         // Add follows to database
-        FollowerDAO followerDAO = new FollowerDAO();
-        followerDAO.addFollows(follows);
+        FollowDAO followDAO = new FollowDAO();
+        followDAO.addFollows(follows);
     }
 }

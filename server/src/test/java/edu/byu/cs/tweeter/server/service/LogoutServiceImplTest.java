@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.response.Response;
-import edu.byu.cs.tweeter.server.dao.LogoutDAO;
+import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
 
 public class LogoutServiceImplTest {
     private LogoutRequest validRequest;
@@ -32,7 +32,7 @@ public class LogoutServiceImplTest {
 
         // Setup a mock LogoutDAO that will return known responses
         successResponse = new Response(true);
-        LogoutDAO mockLogoutDAO = Mockito.mock(LogoutDAO.class);
+        AuthTokenDAO mockLogoutDAO = Mockito.mock(AuthTokenDAO.class);
         Mockito.when((mockLogoutDAO.logout(validRequest))).thenReturn(successResponse);
 
         failureResponse = new Response(false, "error occurred");
@@ -40,13 +40,13 @@ public class LogoutServiceImplTest {
 
         // Create a LogoutService instance and wrap it with a spy that will use the mock service
         LogoutServiceImplSpy = Mockito.spy(new LogoutServiceImpl());
-        Mockito.when(LogoutServiceImplSpy.getLogoutDAO()).thenReturn(mockLogoutDAO);
+        Mockito.when(LogoutServiceImplSpy.getAuthTokenDAO()).thenReturn(mockLogoutDAO);
 
     }
 
     /**
      * Verify that for successful requests the {@link LogoutServiceImpl#logout(LogoutRequest)}
-     * method returns the same result as the {@link LogoutDAO}.
+     * method returns the same result as the {@link AuthTokenDAO}.
      */
     @Test
     public void testLogout_validRequest() {
@@ -56,7 +56,7 @@ public class LogoutServiceImplTest {
 
     /**
      * Verify that for invalid requests the {@link LogoutServiceImpl#logout(LogoutRequest)}
-     * method returns the same result as the {@link LogoutDAO}.
+     * method returns the same result as the {@link AuthTokenDAO}.
      */
     @Test
     public void testLogout_invalidRequest() {

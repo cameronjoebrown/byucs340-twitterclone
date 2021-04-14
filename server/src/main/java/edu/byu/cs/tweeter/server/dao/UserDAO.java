@@ -8,6 +8,7 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
+import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.model.WriteRequest;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -23,14 +24,17 @@ import java.util.Map;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.service.request.ViewUserRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginRegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.ViewUserResponse;
 import edu.byu.cs.tweeter.model.util.ByteArrayUtils;
 
 /**
- * A DAO for accessing 'register' data from the database.
+ * A DAO for accessing and manipulating data in the users table
  */
-public class RegisterDAO {
+public class UserDAO {
     public LoginRegisterResponse register(RegisterRequest request) {
 
         // Save image to S3 bucket
@@ -143,5 +147,81 @@ public class RegisterDAO {
             Map<String, List<WriteRequest>> unprocessedItems = outcome.getUnprocessedItems();
             outcome = dynamoDB.batchWriteItemUnprocessed(unprocessedItems);
         }
+    }
+
+    public LoginRegisterResponse login(LoginRequest request) {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_WEST_2)
+                .build();
+
+        DynamoDB dynamoDB = new DynamoDB(client);
+
+        Table table = dynamoDB.getTable("users");
+
+
+        GetItemSpec spec = new GetItemSpec().withPrimaryKey("username", request.getUsername());
+        Item item;
+
+        try {
+            System.out.println("Attempting to read the item...");
+            item = table.getItem(spec);
+            if(item == null) {
+                throw new RuntimeException("Username does not exist");
+            }
+
+            // Check the password
+            String securePassword = item.getString("password");
+            String salt = item.getString("salt");
+            System.out.println(salt + " " + securePassword);
+            String regeneratedPasswordToVerify = PasswordHasher.getSecurePassword(request.getPassword(), salt);
+            if (!securePassword.equals(regeneratedPasswordToVerify)) {
+                throw new RuntimeException("Password doesn't match");
+            }
+
+            // Create user to be returned
+            User user = new User(item.getString("firstName"), item.getString("lastName"),
+                    request.getUsername(), item.getString("imageUrl"));
+
+            AuthTokenDAO authTokenDAO = new AuthTokenDAO();
+            AuthToken authToken = authTokenDAO.createAuthToken();
+            return new LoginRegisterResponse(user, authToken);
+
+        } catch (Exception e) {
+            System.err.println("Unable to login user: " + request.getUsername());
+            System.err.println(e.getMessage());
+            return new LoginRegisterResponse(e.getMessage());
+        }
+
+    }
+
+    public ViewUserResponse viewUser(ViewUserRequest request) {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_WEST_2)
+                .build();
+
+        DynamoDB dynamoDB = new DynamoDB(client);
+
+        Table table = dynamoDB.getTable("users");
+
+
+        GetItemSpec spec = new GetItemSpec().withPrimaryKey("username", request.getUsername());
+        Item item;
+
+        try {
+            System.out.println("Attempting to read the item...");
+            item = table.getItem(spec);
+            if(item == null) {
+                throw new RuntimeException("Username does not exist");
+            }
+
+            // Create user to be returned
+            User user = new User(item.getString("firstName"), item.getString("lastName"),
+                    request.getUsername(), item.getString("imageUrl"));
+            return new ViewUserResponse(user, true);
+
+        } catch (Exception e) {
+            System.err.println("Unable to find user: " + request.getUsername());
+            System.err.println(e.getMessage());
+            return new ViewUserResponse("Error: " + e.getMessage());
+        }
+
     }
 }
