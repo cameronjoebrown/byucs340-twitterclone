@@ -13,7 +13,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
-class FollowingDAOTest {
+class FollowDAOTest {
 
     private final User user1 = new User("Daffy", "Duck", "");
     private final User user2 = new User("Fred", "Flintstone", "");
@@ -24,11 +24,11 @@ class FollowingDAOTest {
     private final User user7 = new User("Harriett", "Hansen", "");
     private final User user8 = new User("Zoe", "Zabriski", "");
 
-    private FollowingDAO followingDAOSpy;
+    private FollowDAO followingDAOSpy;
 
     @BeforeEach
     void setup() {
-        followingDAOSpy = Mockito.spy(new FollowingDAO());
+        followingDAOSpy = Mockito.spy(new FollowDAO());
     }
 
     @Test
