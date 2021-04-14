@@ -39,7 +39,7 @@ public class FollowServiceImplTest {
         FollowDAO mockFollowDAO = Mockito.mock(FollowDAO.class);
         Mockito.when(mockFollowDAO.follow(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new Response(false, "An exception occured");
+        failureResponse = new Response(false, "An exception occurred");
         Mockito.when(mockFollowDAO.follow(invalidRequest)).thenReturn(failureResponse);
 
         // Create a FollowService instance and wrap it with a spy that will use the mock service

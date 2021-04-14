@@ -38,7 +38,7 @@ public class StoryServiceImplTest {
 
         Status resultStatus1 = new Status("I am the coolest in the world", currentUser, date1);
         Status resultStatus2 = new Status("Hanging out with @coolbob", currentUser, date3);
-        Status resultStatus3 = new Status("Nevermind, I'm no longer the coolest in the world.",
+        Status resultStatus3 = new Status("Never mind, I'm no longer the coolest in the world.",
                 currentUser, date2);
 
         // Setup request objects to use in the tests
@@ -50,7 +50,7 @@ public class StoryServiceImplTest {
         StoryDAO mockStoryDAO = Mockito.mock(StoryDAO.class);
         Mockito.when(mockStoryDAO.getStory(validRequest)).thenReturn(successResponse);
 
-        failureResponse = new FeedStoryResponse("An exception occured");
+        failureResponse = new FeedStoryResponse("An exception occurred");
         Mockito.when(mockStoryDAO.getStory(invalidRequest)).thenReturn(failureResponse);
 
         // Create a FeedStoryService instance and wrap it with a spy that will use the mock service
